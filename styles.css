@@ -1,0 +1,120 @@
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background: linear-gradient(
+    180deg,
+    #64beff -50%,
+    #6e96ff 69.71%,
+    #2a65ff 150%
+  );
+  font-family: "Source Sans Pro", sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.game-container {
+  position: relative;
+  width: 400px;
+  height: 208px;
+  background: #333;
+  transform: scale(3);
+  image-rendering: pixelated;
+  outline: 4px solid #fff;
+  overflow: hidden;
+}
+
+.mapLower {
+  position: absolute;
+  background: url(images/maps/MapLower.png);
+  transform: scale(1);
+  image-rendering: pixelated;
+  z-index: -2;
+  top: -176px;
+  left: -1888px;
+  width: 2400px;
+  height: 2400px;
+  transition: transform 0.4s;
+}
+
+.mapUpper {
+  position: absolute;
+  background: url(images/maps/MapUpper.png);
+  transform: scale(1);
+  image-rendering: pixelated;
+  z-index: 4;
+  top: -176px;
+  left: -1888px;
+  width: 2400px;
+  height: 2400px;
+  transition: transform 0.4s;
+}
+
+/* Characters */
+.grid-cell {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+}
+.Character {
+  transition: transform 0.4s;
+  z-index: 2;
+}
+.Character.you {
+  z-index: 3;
+}
+.Character.you .Character_you-arrow {
+  display: block;
+}
+.Character_you-arrow {
+  display: none;
+  position: absolute;
+  top: -18px;
+  left: 5px;
+  width: 7px;
+  height: 5px;
+  background: url(images/arrow.png) no-repeat no-repeat;
+}
+.Character_sprite {
+  overflow: hidden;
+  top: -3px;
+  background: url(images/characters.png);
+}
+.Character[data-direction="right"] .Character_sprite {
+  background-position-x: 16px;
+}
+.Character[data-color="red"] .Character_sprite {
+  background-position-y: -16px;
+}
+.Character[data-color="orange"] .Character_sprite {
+  background-position-y: -32px;
+}
+.Character[data-color="yellow"] .Character_sprite {
+  background-position-y: -48px;
+}
+.Character[data-color="green"] .Character_sprite {
+  background-position-y: -64px;
+}
+.Character[data-color="purple"] .Character_sprite {
+  background-position-y: -80px;
+}
+.Character_shadow {
+  background: url(images/shadow.png) no-repeat no-repeat;
+}
+
+.Character_name-container {
+  position: absolute;
+  top: -10px;
+  left: 1px;
+  font-size: 5px;
+  color: white;
+  font-weight: bold;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
