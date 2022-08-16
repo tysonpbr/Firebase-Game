@@ -5,6 +5,7 @@ Description:
 Personal project multiplayer game based loosely on the card/party game Mafia and run via Firebase online servers.
 
 Tyson's Tasks
+- start screen
 - character switching 
 - add items
 

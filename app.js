@@ -1374,7 +1374,9 @@ function isSolid(x,y) {
   function nextCharacter() {
     players[playerId].character = (parseInt(players[playerId].character) + 1) % 10;
     playerRef.set(players[playerId]);
-
+    console.log(players[playerId].character);
+    document.querySelector('.stillScreen').classList.remove('still');
+    document.querySelector('.scrollScreen').classList.remove('animScroll');
   }
 
 
@@ -1467,6 +1469,8 @@ function isSolid(x,y) {
   }
 
   firebase.auth().onAuthStateChanged((user) => {
+    document.querySelector('.stillScreen').classList.add('still');
+    document.querySelector('.scrollScreen').classList.add('animScroll');
     //console.log(user)
     if (user) {
       //You're logged in!
