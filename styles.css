@@ -160,3 +160,23 @@ body {
     background-position-x: -114%;
   }
 }
+.button {
+  padding-top: 0px;
+  width: 52px;
+  height: 20px;
+  position: absolute;
+  border-color: transparent;
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  font-size: 5px;
+  top: 88px;
+  background: url(images/startScreen/button_up.png);
+  transform: scale(1.5);
+}
+.b1 {
+  left: 120px;
+}
+.b2 {
+  left: 240px;
+}
