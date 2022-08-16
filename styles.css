@@ -40,7 +40,7 @@ body {
   left: -1888px;
   width: 2400px;
   height: 2400px;
-  transition: transform 0.4s;
+  transition: transform 0.2s;
 }
 
 .mapUpper {
@@ -53,17 +53,17 @@ body {
   left: -1888px;
   width: 2400px;
   height: 2400px;
-  transition: transform 0.4s;
+  transition: transform 0.2s;
 }
 
 /* Characters */
 .grid-cell {
   position: absolute;
-  width: 16px;
-  height: 16px;
+  width: 32px;
+  height: 32px;
 }
 .Character {
-  transition: transform 0.4s;
+  transition: transform 0.2s;
   z-index: 2;
 }
 .Character.you {
@@ -75,46 +75,48 @@ body {
 .Character_you-arrow {
   display: none;
   position: absolute;
-  top: -18px;
-  left: 5px;
+  top: -10px;
+  left: 4px;
   width: 7px;
   height: 5px;
-  background: url(images/arrow.png) no-repeat no-repeat;
+  background: url(images/characters/arrow.png) no-repeat no-repeat;
+}
+.Character_shadow {
+  background: url(images/characters/shadow.png) no-repeat no-repeat;
+  top: -16px;
+  left: -7;
 }
 .Character_sprite {
   overflow: hidden;
-  top: -3px;
-  background: url(images/characters.png);
+  top: -17px;
+  left: -7;
+  background: url(images/characters/0.png);
+}
+.animWalk {
+  animation: walk 0.3s steps(4) infinite;
+  animation-delay: 0s;
+}
+@keyframes walk {
+  from {
+    background-position-x: 0px;
+  }
+  to {
+    background-position-x: -400%;
+  }
 }
 .Character[data-direction="right"] .Character_sprite {
-  background-position-x: 16px;
+  background-position-x: 0px;
+  background-position-y: 96px;
 }
-.Character[data-color="red"] .Character_sprite {
-  background-position-y: -16px;
+.Character[data-direction="left"] .Character_sprite {
+  background-position-x: 0px;
+  background-position-y: 32px;
 }
-.Character[data-color="orange"] .Character_sprite {
-  background-position-y: -32px;
+.Character[data-direction="up"] .Character_sprite {
+  background-position-x: 0px;
+  background-position-y: 64px;
 }
-.Character[data-color="yellow"] .Character_sprite {
-  background-position-y: -48px;
-}
-.Character[data-color="green"] .Character_sprite {
-  background-position-y: -64px;
-}
-.Character[data-color="purple"] .Character_sprite {
-  background-position-y: -80px;
-}
-.Character_shadow {
-  background: url(images/shadow.png) no-repeat no-repeat;
-}
-
-.Character_name-container {
-  position: absolute;
-  top: -10px;
-  left: 1px;
-  font-size: 5px;
-  color: white;
-  font-weight: bold;
-  text-transform: uppercase;
-  white-space: nowrap;
+.Character[data-direction="down"] .Character_sprite {
+  background-position-x: 0px;
+  background-position-y: 0px;
 }

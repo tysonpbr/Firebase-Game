@@ -1286,6 +1286,8 @@ function isSolid(x,y) {
 
 (function () {
 
+  var heldKeys = [];
+  var waitingKeys = [];
   let playerId;
   let playerRef;
   let players = {};
@@ -1295,33 +1297,106 @@ function isSolid(x,y) {
 
   const gameContainer = document.querySelector(".game-container");
 
-  function handleArrowPress(xChange=0, yChange=0) {
-    const newX = players[playerId].x + xChange;
-    const newY = players[playerId].y + yChange;
-    if (!isSolid(newX, newY)) {
-      //move to the next space
-      players[playerId].x = newX;
-      players[playerId].y = newY;
-      if (xChange === 1) {
-        players[playerId].direction = "right";
+  function walk(xChange=0, yChange=0, key) {
+    if (heldKeys.indexOf(key) === 0) {
+      console.log(key);
+      const newX = players[playerId].x + xChange;
+      const newY = players[playerId].y + yChange;
+      if (!isSolid(newX, newY)) {
+        //move to the next space
+        players[playerId].x = newX;
+        players[playerId].y = newY;
+        if (xChange === 1) {
+          players[playerId].direction = "right";
+        }
+        if (xChange === -1) {
+          players[playerId].direction = "left";
+        }
+        if (yChange === -1) {
+          players[playerId].direction = "up";
+        }
+        if (yChange === 1) {
+          players[playerId].direction = "down";
+        }
+        playerRef.set(players[playerId]);
       }
-      if (xChange === -1) {
-        players[playerId].direction = "left";
+    }
+    setTimeout(function() {
+      const i = waitingKeys.indexOf(key);
+      if (i > -1) {
+        waitingKeys.splice(i, 1);
       }
-      playerRef.set(players[playerId]);
+      if (heldKeys.indexOf(key) !== -1){
+        waitingKeys.unshift(key);
+        walk(xChange, yChange, key);
+      }
+    }, 200);
+  }
+
+  function handleArrowPress(key) {
+    document.querySelector('.Character_sprite').classList.add('animWalk');
+    const index = heldKeys.indexOf(key);
+    if (waitingKeys.indexOf(key) === -1) {
+      waitingKeys.unshift(key);
+      if (index === -1) {
+        heldKeys.unshift(key);
+      }
+      if (key === "ArrowUp" || key === "KeyW"){
+        walk(0, -1, key);
+      }
+      if (key === "ArrowDown" || key === "KeyS"){
+        walk(0, 1, key);
+      }
+      if (key === "ArrowLeft" || key === "KeyA"){
+        walk(-1, 0, key);
+      }
+      if (key === "ArrowRight" || key === "KeyD"){
+        walk(1, 0, key);
+      }
+      console.log(heldKeys);
     }
   }
 
+  function handleArrowRelease(key) {
+    const index = heldKeys.indexOf(key);
+    if (index > -1) {
+      heldKeys.splice(index, 1);
+    }
+    console.log(heldKeys);
+    setTimeout(function() {
+      if (heldKeys.length == 0){
+        document.querySelector('.Character_sprite').classList.remove('animWalk');
+      }
+    }, 400);
+  }
+
+  function nextCharacter() {
+    players[playerId].character = (parseInt(players[playerId].character) + 1) % 10;
+    playerRef.set(players[playerId]);
+
+  }
+
+
   function initGame() {
 
-    new KeyPressListener("ArrowUp", () => handleArrowPress(0, -1))
-    new KeyPressListener("ArrowDown", () => handleArrowPress(0, 1))
-    new KeyPressListener("ArrowLeft", () => handleArrowPress(-1, 0))
-    new KeyPressListener("ArrowRight", () => handleArrowPress(1, 0))
-    new KeyPressListener("KeyW", () => handleArrowPress(0, -1))
-    new KeyPressListener("KeyS", () => handleArrowPress(0, 1))
-    new KeyPressListener("KeyA", () => handleArrowPress(-1, 0))
-    new KeyPressListener("KeyD", () => handleArrowPress(1, 0))
+    new KeyPressListener("ArrowUp", () => handleArrowPress("ArrowUp"))
+    new KeyPressListener("ArrowDown", () => handleArrowPress("ArrowDown"))
+    new KeyPressListener("ArrowLeft", () => handleArrowPress("ArrowLeft"))
+    new KeyPressListener("ArrowRight", () => handleArrowPress("ArrowRight"))
+    new KeyPressListener("KeyW", () => handleArrowPress("KeyW"))
+    new KeyPressListener("KeyS", () => handleArrowPress("KeyS"))
+    new KeyPressListener("KeyA", () => handleArrowPress("KeyA"))
+    new KeyPressListener("KeyD", () => handleArrowPress("KeyD"))
+    new KeyPressListener("Space", () => nextCharacter())
+
+    new KeyReleaseListener("ArrowUp", () => handleArrowRelease("ArrowUp"))
+    new KeyReleaseListener("ArrowDown", () => handleArrowRelease("ArrowDown"))
+    new KeyReleaseListener("ArrowLeft", () => handleArrowRelease("ArrowLeft"))
+    new KeyReleaseListener("ArrowRight", () => handleArrowRelease("ArrowRight"))
+    new KeyReleaseListener("KeyW", () => handleArrowRelease("KeyW"))
+    new KeyReleaseListener("KeyS", () => handleArrowRelease("KeyS"))
+    new KeyReleaseListener("KeyA", () => handleArrowRelease("KeyA"))
+    new KeyReleaseListener("KeyD", () => handleArrowRelease("KeyD"))
 
     const allPlayersRef = firebase.database().ref(`players`);
 
@@ -1332,7 +1407,6 @@ function isSolid(x,y) {
         const characterState = players[key];
         let el = playerElements[key];
         // Now update the DOM
-        el.querySelector(".Character_name").innerText = characterState.name;
         el.setAttribute("data-color", characterState.color);
         el.setAttribute("data-direction", characterState.direction);
         const left = 16 * (characterState.x - players[playerId].x + 12) + "px";
@@ -1340,8 +1414,6 @@ function isSolid(x,y) {
         el.style.transform = `translate3d(${left}, ${top}, 0)`;
 
         if (key == playerId) {
-
-          console.log(players[playerId].x + ", " + players[playerId].y);
 
           const ML = ((startingX - players[playerId].x) * 16) + 'px';
           const MT = ((startingY - players[playerId].y) * 16) + 'px';
@@ -1370,15 +1442,11 @@ function isSolid(x,y) {
       characterElement.innerHTML = (`
         <div class="Character_shadow grid-cell"></div>
         <div class="Character_sprite grid-cell"></div>
-        <div class="Character_name-container">
-          <span class="Character_name"></span>
-        </div>
         <div class="Character_you-arrow"></div>
       `);
       playerElements[addedPlayer.id] = characterElement;
 
       //Fill in some initial state
-      characterElement.querySelector(".Character_name").innerText = addedPlayer.name;
       characterElement.setAttribute("data-color", addedPlayer.color);
       characterElement.setAttribute("data-direction", addedPlayer.direction);
       const left = 16 * 12 + "px";
@@ -1398,19 +1466,16 @@ function isSolid(x,y) {
   }
 
   firebase.auth().onAuthStateChanged((user) => {
-    console.log(user)
+    //console.log(user)
     if (user) {
       //You're logged in!
       playerId = user.uid;
       playerRef = firebase.database().ref(`players/${playerId}`);
 
-      const name = "Tyson";
-
       playerRef.set({
         id: playerId,
-        name,
-        direction: "right",
-        color: "green",
+        direction: "down",
+        character: "0",
         x:startingX,
         y:startingY,
       })
@@ -1429,7 +1494,7 @@ function isSolid(x,y) {
     var errorCode = error.code;
     var errorMessage = error.message;
     // ...
-    console.log(errorCode, errorMessage);
+    //console.log(errorCode, errorMessage);
   });
 
 
