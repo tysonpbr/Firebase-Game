@@ -1299,26 +1299,29 @@ function isSolid(x,y) {
 
   function walk(xChange=0, yChange=0, key) {
     if (heldKeys.indexOf(key) === 0) {
-      console.log(key);
       const newX = players[playerId].x + xChange;
       const newY = players[playerId].y + yChange;
+      if (xChange === 1) {
+        players[playerId].direction = "right";
+      }
+      if (xChange === -1) {
+        players[playerId].direction = "left";
+      }
+      if (yChange === -1) {
+        players[playerId].direction = "up";
+      }
+      if (yChange === 1) {
+        players[playerId].direction = "down";
+      }
+      playerRef.set(players[playerId]);
       if (!isSolid(newX, newY)) {
         //move to the next space
         players[playerId].x = newX;
         players[playerId].y = newY;
-        if (xChange === 1) {
-          players[playerId].direction = "right";
-        }
-        if (xChange === -1) {
-          players[playerId].direction = "left";
-        }
-        if (yChange === -1) {
-          players[playerId].direction = "up";
-        }
-        if (yChange === 1) {
-          players[playerId].direction = "down";
-        }
         playerRef.set(players[playerId]);
+      }
+      else {
+
       }
     }
     setTimeout(function() {
@@ -1330,7 +1333,7 @@ function isSolid(x,y) {
         waitingKeys.unshift(key);
         walk(xChange, yChange, key);
       }
-    }, 200);
+    }, 150);
   }
 
   function handleArrowPress(key) {
@@ -1353,7 +1356,6 @@ function isSolid(x,y) {
       if (key === "ArrowRight" || key === "KeyD"){
         walk(1, 0, key);
       }
-      console.log(heldKeys);
     }
   }
 
@@ -1362,7 +1364,6 @@ function isSolid(x,y) {
     if (index > -1) {
       heldKeys.splice(index, 1);
     }
-    console.log(heldKeys);
     setTimeout(function() {
       if (heldKeys.length == 0){
         document.querySelector('.Character_sprite').classList.remove('animWalk');
