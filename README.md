@@ -6,8 +6,9 @@ Personal project multiplayer game based loosely on the card/party game Mafia and
 
 Tyson's Tasks
 - start screen
-- add walking animation for non-main player
 - character switching 
+- give each character their own look 
+- add walking animation for non-main player
 - add items
 
 

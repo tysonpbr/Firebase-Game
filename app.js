@@ -1267,6 +1267,8 @@ const mapData = {
   }
 };
 
+const skinID = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"];
+
 //Misc Helpers
 function getKeyString(x, y) {
   return `${x}x${y}`;
@@ -1283,6 +1285,11 @@ function isSolid(x,y) {
   )
 }
 
+function startGame() {
+	document.querySelector('.still').remove();
+  document.querySelector('.animScroll').remove();
+  document.querySelector('.buttons').remove();
+}
 
 (function () {
 
@@ -1296,6 +1303,16 @@ function isSolid(x,y) {
   const startingY = 17;
 
   const gameContainer = document.querySelector(".game-container");
+  const playerSkinButton = document.querySelector("#b2");
+
+  function nextCharacter() {
+    const mySkinIndex = skinID.indexOf(players[playerId].char);
+    const nextSkin = skinID[mySkinIndex + 1] || skinID[0];
+    playerRef.update({
+      char: nextSkin
+    })
+    console.log(players[playerId].char);
+  }
 
   function walk(xChange=0, yChange=0, key) {
     if (heldKeys.indexOf(key) === 0) {
@@ -1321,7 +1338,7 @@ function isSolid(x,y) {
         playerRef.set(players[playerId]);
       }
       else {
-
+        
       }
     }
     setTimeout(function() {
@@ -1368,17 +1385,8 @@ function isSolid(x,y) {
       if (heldKeys.length == 0){
         document.querySelector('.Character_sprite').classList.remove('animWalk');
       }
-    }, 400);
+    }, 500);
   }
-
-  function nextCharacter() {
-    players[playerId].character = (parseInt(players[playerId].character) + 1) % 10;
-    playerRef.set(players[playerId]);
-    console.log(players[playerId].character);
-    document.querySelector('.still').remove();
-    document.querySelector('.animScroll').remove();
-  }
-
 
   function initGame() {
 
@@ -1410,7 +1418,7 @@ function isSolid(x,y) {
         const characterState = players[key];
         let el = playerElements[key];
         // Now update the DOM
-        el.setAttribute("data-color", characterState.color);
+        el.setAttribute("data-char", characterState.char);
         el.setAttribute("data-direction", characterState.direction);
         const left = 16 * (characterState.x - players[playerId].x + 12) + "px";
         const top = 16 * (characterState.y - players[playerId].y + 7) - 1 + "px";
@@ -1450,7 +1458,7 @@ function isSolid(x,y) {
       playerElements[addedPlayer.id] = characterElement;
 
       //Fill in some initial state
-      characterElement.setAttribute("data-color", addedPlayer.color);
+      characterElement.setAttribute("data-char", addedPlayer.char);
       characterElement.setAttribute("data-direction", addedPlayer.direction);
       const left = 16 * 12 + "px";
       const top = 16 * 7 - 1 + "px";
@@ -1466,6 +1474,15 @@ function isSolid(x,y) {
       delete playerElements[removedKey];
     })
 
+    playerSkinButton.addEventListener("click", () => {
+      const mySkinIndex = skinID.indexOf(players[playerId].char);
+      const nextSkin = skinID[mySkinIndex + 1] || skinID[0];
+      playerRef.update({
+        char: nextSkin
+      })
+      console.log(players[playerId].char);
+    })
+
   }
 
   firebase.auth().onAuthStateChanged((user) => {
@@ -1478,7 +1495,7 @@ function isSolid(x,y) {
       playerRef.set({
         id: playerId,
         direction: "down",
-        character: "0",
+        char: "zero",
         x:startingX,
         y:startingY,
       })

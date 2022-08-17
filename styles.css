@@ -120,6 +120,36 @@ body {
   background-position-x: 0px;
   background-position-y: 0px;
 }
+.Character[data-char="zero"] .Character_sprite {
+  background: url(images/characters/0.png);
+}
+.Character[data-char="one"] .Character_sprite {
+  background: url(images/characters/1.png);
+}
+.Character[data-char="two"] .Character_sprite {
+  background: url(images/characters/2.png);
+}
+.Character[data-char="three"] .Character_sprite {
+  background: url(images/characters/3.png);
+}
+.Character[data-char="four"] .Character_sprite {
+  background: url(images/characters/4.png);
+}
+.Character[data-char="five"] .Character_sprite {
+  background: url(images/characters/5.png);
+}
+.Character[data-char="six"] .Character_sprite {
+  background: url(images/characters/6.png);
+}
+.Character[data-char="seven"] .Character_sprite {
+  background: url(images/characters/7.png);
+}
+.Character[data-char="eight"] .Character_sprite {
+  background: url(images/characters/8.png);
+}
+.Character[data-char="nine"] .Character_sprite {
+  background: url(images/characters/9.png);
+}
 .stillScreen {
   position: absolute;
   transform: scale(3);
@@ -179,4 +209,12 @@ body {
 }
 .b2 {
   left: 240px;
+}
+.buttons {
+  position: absolute;
+  transform: scale(3);
+  image-rendering: pixelated;
+  z-index: 15;
+  width: 400px;
+  height: 208px;
 }
