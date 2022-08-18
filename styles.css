@@ -354,15 +354,15 @@ body {
   text-align: center;
   text-decoration: none;
   font-size: 5px;
-  top: 88px;
+  top: 80px;
   background: url(images/startScreen/button_up.png);
   transform: scale(1.5);
 }
 .b1 {
-  left: 120px;
+  left: 100px;
 }
 .b2 {
-  left: 240px;
+  left: 260px;
 }
 .buttons {
   position: absolute;
@@ -374,12 +374,25 @@ body {
 }
 .skinPreview {
   border: none;
+  background: url(images/characters/0.png);
   position: absolute;
-  width: 16px;
-  height: 16px;
+  width: 32px;
+  height: 32px;
   z-index: 10;
-  left: 197px;
-  top: 90px;
-  transform: scale(1.5);
+  left: 190px;
+  top:60px;
+  transform: scale(2);
 }
+.gameTitle {
+  border: none;
+  background: url(images/startScreen/gameTitle.png);
+  position: absolute;
+  width: 400px;
+  height: 100px;
+  z-index: 10;
+  left: 8px;
+  top: 15px;
+  transform: scale(1);
+}
+
 

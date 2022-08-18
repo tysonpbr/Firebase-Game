@@ -1286,8 +1286,8 @@ function isSolid(x,y) {
 }
 
 function startGame() {
-	document.querySelector('.still').remove();
-  document.querySelector('.animScroll').remove();
+	document.querySelector('.stillScreen').remove();
+  document.querySelector('.scrollScreen').remove();
   document.querySelector('.buttons').remove();
 }
 
@@ -1304,15 +1304,6 @@ function startGame() {
 
   const gameContainer = document.querySelector(".game-container");
   const playerSkinButton = document.querySelector("#b2");
-
-  function nextCharacter() {
-    const mySkinIndex = skinID.indexOf(players[playerId].char);
-    const nextSkin = skinID[mySkinIndex + 1] || skinID[0];
-    playerRef.update({
-      char: nextSkin
-    })
-    console.log(players[playerId].char);
-  }
 
   function walk(xChange=0, yChange=0, key) {
     if (heldKeys.indexOf(key) === 0) {
@@ -1398,7 +1389,6 @@ function startGame() {
     new KeyPressListener("KeyS", () => handleArrowPress("KeyS"))
     new KeyPressListener("KeyA", () => handleArrowPress("KeyA"))
     new KeyPressListener("KeyD", () => handleArrowPress("KeyD"))
-    new KeyPressListener("Space", () => nextCharacter())
 
     new KeyReleaseListener("ArrowUp", () => handleArrowRelease("ArrowUp"))
     new KeyReleaseListener("ArrowDown", () => handleArrowRelease("ArrowDown"))
@@ -1481,6 +1471,37 @@ function startGame() {
         char: nextSkin
       })
       console.log(players[playerId].char);
+      const skinPreview = document.querySelector(".skinPreview");
+      if (nextSkin === "zero") {
+        skinPreview.style.background="url(images/characters/0.png)";
+      }
+      if (nextSkin === "one") {
+        skinPreview.style.background="url(images/characters/1.png)";
+      }
+      if (nextSkin === "two") {
+        skinPreview.style.background="url(images/characters/2.png)";
+      }
+      if (nextSkin === "three") {
+        skinPreview.style.background="url(images/characters/3.png)";
+      }
+      if (nextSkin === "four") {
+        skinPreview.style.background="url(images/characters/4.png)";
+      }
+      if (nextSkin === "five") {
+        skinPreview.style.background="url(images/characters/5.png)";
+      }
+      if (nextSkin === "six") {
+        skinPreview.style.background="url(images/characters/6.png)";
+      }
+      if (nextSkin === "seven") {
+        skinPreview.style.background="url(images/characters/7.png)";
+      }
+      if (nextSkin === "eight") {
+        skinPreview.style.background="url(images/characters/8.png)";
+      }
+      if (nextSkin === "nine") {
+        skinPreview.style.background="url(images/characters/9.png)";
+      }
     })
 
   }
