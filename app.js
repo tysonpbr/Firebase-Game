@@ -1470,7 +1470,6 @@ function startGame() {
       playerRef.update({
         char: nextSkin
       })
-      console.log(players[playerId].char);
       const skinPreview = document.querySelector(".skinPreview");
       if (nextSkin === "zero") {
         skinPreview.style.background="url(images/characters/0.png)";
