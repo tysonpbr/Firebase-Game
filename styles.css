@@ -104,51 +104,205 @@ body {
     background-position-x: -400%;
   }
 }
-.Character[data-direction="right"] .Character_sprite {
+.Character[data-char="zero"][data-direction="right"] .Character_sprite {
+  background: url(images/characters/0.png);
   background-position-x: 0px;
   background-position-y: 96px;
 }
-.Character[data-direction="left"] .Character_sprite {
+.Character[data-char="zero"][data-direction="left"] .Character_sprite {
+  background: url(images/characters/0.png);
   background-position-x: 0px;
   background-position-y: 32px;
 }
-.Character[data-direction="up"] .Character_sprite {
+.Character[data-char="zero"][data-direction="up"] .Character_sprite {
+  background: url(images/characters/0.png);
   background-position-x: 0px;
   background-position-y: 64px;
 }
-.Character[data-direction="down"] .Character_sprite {
+.Character[data-char="zero"][data-direction="down"] .Character_sprite {
+  background: url(images/characters/0.png);
   background-position-x: 0px;
   background-position-y: 0px;
 }
-.Character[data-char="zero"] .Character_sprite {
-  background: url(images/characters/0.png);
-}
-.Character[data-char="one"] .Character_sprite {
+.Character[data-char="one"][data-direction="right"] .Character_sprite {
   background: url(images/characters/1.png);
+  background-position-x: 0px;
+  background-position-y: 96px;
 }
-.Character[data-char="two"] .Character_sprite {
+.Character[data-char="one"][data-direction="left"] .Character_sprite {
+  background: url(images/characters/1.png);
+  background-position-x: 0px;
+  background-position-y: 32px;
+}
+.Character[data-char="one"][data-direction="up"] .Character_sprite {
+  background: url(images/characters/1.png);
+  background-position-x: 0px;
+  background-position-y: 64px;
+}
+.Character[data-char="one"][data-direction="down"] .Character_sprite {
+  background: url(images/characters/1.png);
+  background-position-x: 0px;
+  background-position-y: 0px;
+}
+.Character[data-char="two"][data-direction="right"] .Character_sprite {
   background: url(images/characters/2.png);
+  background-position-x: 0px;
+  background-position-y: 96px;
 }
-.Character[data-char="three"] .Character_sprite {
+.Character[data-char="two"][data-direction="left"] .Character_sprite {
+  background: url(images/characters/2.png);
+  background-position-x: 0px;
+  background-position-y: 32px;
+}
+.Character[data-char="two"][data-direction="up"] .Character_sprite {
+  background: url(images/characters/2.png);
+  background-position-x: 0px;
+  background-position-y: 64px;
+}
+.Character[data-char="two"][data-direction="down"] .Character_sprite {
+  background: url(images/characters/2.png);
+  background-position-x: 0px;
+  background-position-y: 0px;
+}
+.Character[data-char="three"][data-direction="right"] .Character_sprite {
   background: url(images/characters/3.png);
+  background-position-x: 0px;
+  background-position-y: 96px;
 }
-.Character[data-char="four"] .Character_sprite {
+.Character[data-char="three"][data-direction="left"] .Character_sprite {
+  background: url(images/characters/3.png);
+  background-position-x: 0px;
+  background-position-y: 32px;
+}
+.Character[data-char="three"][data-direction="up"] .Character_sprite {
+  background: url(images/characters/3.png);
+  background-position-x: 0px;
+  background-position-y: 64px;
+}
+.Character[data-char="three"][data-direction="down"] .Character_sprite {
+  background: url(images/characters/3.png);
+  background-position-x: 0px;
+  background-position-y: 0px;
+}
+.Character[data-char="four"][data-direction="right"] .Character_sprite {
   background: url(images/characters/4.png);
+  background-position-x: 0px;
+  background-position-y: 96px;
 }
-.Character[data-char="five"] .Character_sprite {
+.Character[data-char="four"][data-direction="left"] .Character_sprite {
+  background: url(images/characters/4.png);
+  background-position-x: 0px;
+  background-position-y: 32px;
+}
+.Character[data-char="four"][data-direction="up"] .Character_sprite {
+  background: url(images/characters/4.png);
+  background-position-x: 0px;
+  background-position-y: 64px;
+}
+.Character[data-char="four"][data-direction="down"] .Character_sprite {
+  background: url(images/characters/4.png);
+  background-position-x: 0px;
+  background-position-y: 0px;
+}
+.Character[data-char="five"][data-direction="right"] .Character_sprite {
   background: url(images/characters/5.png);
+  background-position-x: 0px;
+  background-position-y: 96px;
 }
-.Character[data-char="six"] .Character_sprite {
+.Character[data-char="five"][data-direction="left"] .Character_sprite {
+  background: url(images/characters/5.png);
+  background-position-x: 0px;
+  background-position-y: 32px;
+}
+.Character[data-char="five"][data-direction="up"] .Character_sprite {
+  background: url(images/characters/5.png);
+  background-position-x: 0px;
+  background-position-y: 64px;
+}
+.Character[data-char="five"][data-direction="down"] .Character_sprite {
+  background: url(images/characters/5.png);
+  background-position-x: 0px;
+  background-position-y: 0px;
+}
+.Character[data-char="six"][data-direction="right"] .Character_sprite {
   background: url(images/characters/6.png);
+  background-position-x: 0px;
+  background-position-y: 96px;
 }
-.Character[data-char="seven"] .Character_sprite {
+.Character[data-char="six"][data-direction="left"] .Character_sprite {
+  background: url(images/characters/6.png);
+  background-position-x: 0px;
+  background-position-y: 32px;
+}
+.Character[data-char="six"][data-direction="up"] .Character_sprite {
+  background: url(images/characters/6.png);
+  background-position-x: 0px;
+  background-position-y: 64px;
+}
+.Character[data-char="six"][data-direction="down"] .Character_sprite {
+  background: url(images/characters/6.png);
+  background-position-x: 0px;
+  background-position-y: 0px;
+}
+.Character[data-char="seven"][data-direction="right"] .Character_sprite {
   background: url(images/characters/7.png);
+  background-position-x: 0px;
+  background-position-y: 96px;
 }
-.Character[data-char="eight"] .Character_sprite {
+.Character[data-char="seven"][data-direction="left"] .Character_sprite {
+  background: url(images/characters/7.png);
+  background-position-x: 0px;
+  background-position-y: 32px;
+}
+.Character[data-char="seven"][data-direction="up"] .Character_sprite {
+  background: url(images/characters/7.png);
+  background-position-x: 0px;
+  background-position-y: 64px;
+}
+.Character[data-char="seven"][data-direction="down"] .Character_sprite {
+  background: url(images/characters/7.png);
+  background-position-x: 0px;
+  background-position-y: 0px;
+}
+.Character[data-char="eight"][data-direction="right"] .Character_sprite {
   background: url(images/characters/8.png);
+  background-position-x: 0px;
+  background-position-y: 96px;
 }
-.Character[data-char="nine"] .Character_sprite {
+.Character[data-char="eight"][data-direction="left"] .Character_sprite {
+  background: url(images/characters/8.png);
+  background-position-x: 0px;
+  background-position-y: 32px;
+}
+.Character[data-char="eight"][data-direction="up"] .Character_sprite {
+  background: url(images/characters/8.png);
+  background-position-x: 0px;
+  background-position-y: 64px;
+}
+.Character[data-char="eight"][data-direction="down"] .Character_sprite {
+  background: url(images/characters/8.png);
+  background-position-x: 0px;
+  background-position-y: 0px;
+}
+.Character[data-char="nine"][data-direction="right"] .Character_sprite {
   background: url(images/characters/9.png);
+  background-position-x: 0px;
+  background-position-y: 96px;
+}
+.Character[data-char="nine"][data-direction="left"] .Character_sprite {
+  background: url(images/characters/9.png);
+  background-position-x: 0px;
+  background-position-y: 32px;
+}
+.Character[data-char="nine"][data-direction="up"] .Character_sprite {
+  background: url(images/characters/9.png);
+  background-position-x: 0px;
+  background-position-y: 64px;
+}
+.Character[data-char="nine"][data-direction="down"] .Character_sprite {
+  background: url(images/characters/9.png);
+  background-position-x: 0px;
+  background-position-y: 0px;
 }
 .stillScreen {
   position: absolute;
@@ -218,3 +372,14 @@ body {
   width: 400px;
   height: 208px;
 }
+.skinPreview {
+  border: none;
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  z-index: 10;
+  left: 197px;
+  top: 90px;
+  transform: scale(1.5);
+}
+
