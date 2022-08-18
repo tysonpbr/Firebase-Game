@@ -5,10 +5,9 @@ Description:
 Personal project multiplayer game based loosely on the card/party game Mafia and run via Firebase online servers.
 
 Tyson's Tasks
-- give each character their own look 
 - add walking animation for non-main player
 - add items
-- game title
+- game name
 
 
 Trixie's Tasks
