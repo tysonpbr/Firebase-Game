@@ -1264,7 +1264,7 @@ const mapData = {
     "45x11": true,
     "44x12": true,
     "45x12": true,
-  }
+  },
 };
 
 const skinID = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"];
@@ -1307,6 +1307,7 @@ function startGame() {
 
   function walk(xChange=0, yChange=0, key) {
     if (heldKeys.indexOf(key) === 0) {
+      let playerInNextSpace = false;
       const newX = players[playerId].x + xChange;
       const newY = players[playerId].y + yChange;
       if (xChange === 1) {
@@ -1322,11 +1323,22 @@ function startGame() {
         players[playerId].direction = "down";
       }
       playerRef.set(players[playerId]);
-      if (!isSolid(newX, newY)) {
+      console.log("PLAYERS:");
+      for (const player in players) {
+        console.log(players[player].x + ", " + players[player].y);
+        if (players[player].x === newX && players[player].y === newY) {
+          playerInNextSpace = true;
+        }
+      }
+      console.log("playerInNextSpace: " + playerInNextSpace);
+      if (!isSolid(newX, newY) || (newX == 133 && newY == 11)) {
         //move to the next space
-        players[playerId].x = newX;
-        players[playerId].y = newY;
-        playerRef.set(players[playerId]);
+        if (!playerInNextSpace) {
+          players[playerId].x = newX;
+          players[playerId].y = newY;
+          playerRef.set(players[playerId]);
+          console.log("THIS IS BULLSHIT");
+        }
       }
       else {
         
@@ -1426,10 +1438,9 @@ function startGame() {
           document.querySelector(".mapUpper").style.transform = `translate3d(${ML}, ${MT}, 0)`;
           document.querySelector(".mapLower").style.transform = `translate3d(${ML}, ${MT}, 0)`;
 
-          if (players[playerId].x === 133 && players[playerId].y === 13) {
+          if (players[playerId].x === 133 && players[playerId].y === 11) {
             players[playerId].x = 85;
             players[playerId].y = 60;
-            playerRef.set(players[playerId]);
           }
 
         }
