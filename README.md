@@ -11,7 +11,7 @@ Tyson's Tasks
 
 
 Trixie's Tasks
-- create lobby
+- fade in/out animation
 - create round end meeting map (tyson's pc)
 - create round timers
 

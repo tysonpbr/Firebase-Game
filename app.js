@@ -1341,11 +1341,12 @@ function startGame() {
         waitingKeys.unshift(key);
         walk(xChange, yChange, key);
       }
-    }, 150);
+    }, 200);
   }
 
   function handleArrowPress(key) {
-    document.querySelector('.Character_sprite').classList.add('animWalk');
+    players[playerId].walking = "yes";
+    playerRef.set(players[playerId]);
     const index = heldKeys.indexOf(key);
     if (waitingKeys.indexOf(key) === -1) {
       waitingKeys.unshift(key);
@@ -1374,9 +1375,10 @@ function startGame() {
     }
     setTimeout(function() {
       if (heldKeys.length == 0){
-        document.querySelector('.Character_sprite').classList.remove('animWalk');
+        players[playerId].walking = "no";
+        playerRef.set(players[playerId]);
       }
-    }, 500);
+    }, 200);
   }
 
   function initGame() {
@@ -1410,6 +1412,7 @@ function startGame() {
         // Now update the DOM
         el.setAttribute("data-char", characterState.char);
         el.setAttribute("data-direction", characterState.direction);
+        el.setAttribute("data-walking", characterState.walking);
         const left = 16 * (characterState.x - players[playerId].x + 12) + "px";
         const top = 16 * (characterState.y - players[playerId].y + 7) - 1 + "px";
         el.style.transform = `translate3d(${left}, ${top}, 0)`;
@@ -1450,6 +1453,7 @@ function startGame() {
       //Fill in some initial state
       characterElement.setAttribute("data-char", addedPlayer.char);
       characterElement.setAttribute("data-direction", addedPlayer.direction);
+      characterElement.setAttribute("data-walking", addedPlayer.walking);
       const left = 16 * 12 + "px";
       const top = 16 * 7 - 1 + "px";
       characterElement.style.transform = `translate3d(${left}, ${top}, 0)`;
@@ -1518,6 +1522,7 @@ function startGame() {
         char: "zero",
         x:startingX,
         y:startingY,
+        walking: "no",
       })
 
       //Remove me from Firebase when I diconnect
