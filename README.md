@@ -7,6 +7,7 @@ Personal project multiplayer game based loosely on the card/party game Mafia and
 Tyson's Tasks
 - add item pick-able
 - add item random spawn
+- add multiple items and set unique locations
 - game name
 - only teleport when all players there
 
