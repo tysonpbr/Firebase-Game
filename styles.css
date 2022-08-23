@@ -40,7 +40,8 @@ body {
   left: -1888px;
   width: 2400px;
   height: 2400px;
-  transition: transform 0.5s;
+  transition: transform 0.2s;
+  transition-timing-function: linear;
 }
 
 .mapUpper {
@@ -53,7 +54,8 @@ body {
   left: -1888px;
   width: 2400px;
   height: 2400px;
-  transition: transform 0.5s;
+  transition: transform 0.2s;
+  transition-timing-function: linear;
 }
 
 /* Characters */
@@ -63,7 +65,8 @@ body {
   height: 32px;
 }
 .Character {
-  transition: transform 0.5s;
+  transition: transform 0.2s;
+  transition-timing-function: linear;
   z-index: 2;
 }
 .Character.you {
@@ -671,4 +674,23 @@ body {
   transform: scale(1);
 }
 
+/* ITEMS */
+.Item {
+  transition: transform 0.2s;
+  transition-timing-function: linear;
+}
+
+.Item_sprite {
+  background: url(images/items/voting_card.png);
+  width: 16px;
+  height: 16px;
+  animation: itemFloat 0.8s linear infinite alternate-reverse;
+}
+@keyframes itemFloat {
+  from { transform: translateY(0) }
+  to { transform: translateY(5px) }
+}
+.Item_shadow {
+  background: url(images/items/item_shadow.png) no-repeat no-repeat;
+}
 

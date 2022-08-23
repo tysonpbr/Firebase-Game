@@ -1270,6 +1270,9 @@ const mapData = {
 const skinID = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"];
 
 //Misc Helpers
+function randomFromArray(array) {
+  return array[Math.floor(Math.random() * array.length)];
+}
 function getKeyString(x, y) {
   return `${x}x${y}`;
 }
@@ -1283,6 +1286,15 @@ function isSolid(x,y) {
     y >= mapData.maxY ||
     y < mapData.minY
   )
+}
+
+function getRandomItemSpot() {
+  //We don't look things up by key here, so just return an x/y
+  return randomFromArray([
+    { x: 132, y: 15 },
+    { x: 133, y: 15 },
+    { x: 134, y: 15 },
+  ]);
 }
 
 function startGame() {
@@ -1299,11 +1311,26 @@ function startGame() {
   let playerRef;
   let players = {};
   let playerElements = {};
+  let items = {};
+  let itemElements = {};
   const startingX = 133;
   const startingY = 17;
 
   const gameContainer = document.querySelector(".game-container");
   const playerSkinButton = document.querySelector("#b2");
+
+  function placeItem() {
+    const {x,y} = getRandomItemSpot();
+    const itemRef = firebase.database().ref(`items/${getKeyString(x, y)}`);
+    itemRef.set({
+      x,
+      y,
+    })
+
+    setTimeout(() => {
+      placeItem();
+    }, 2000);
+  }
 
   function walk(xChange=0, yChange=0, key) {
     if (heldKeys.indexOf(key) === 0) {
@@ -1323,21 +1350,17 @@ function startGame() {
         players[playerId].direction = "down";
       }
       playerRef.set(players[playerId]);
-      console.log("PLAYERS:");
       for (const player in players) {
-        console.log(players[player].x + ", " + players[player].y);
         if (players[player].x === newX && players[player].y === newY) {
           playerInNextSpace = true;
         }
       }
-      console.log("playerInNextSpace: " + playerInNextSpace);
       if (!isSolid(newX, newY) || (newX == 133 && newY == 11)) {
         //move to the next space
         if (!playerInNextSpace) {
           players[playerId].x = newX;
           players[playerId].y = newY;
           playerRef.set(players[playerId]);
-          console.log("THIS IS BULLSHIT");
         }
       }
       else {
@@ -1414,6 +1437,7 @@ function startGame() {
     new KeyReleaseListener("KeyD", () => handleArrowRelease("KeyD"))
 
     const allPlayersRef = firebase.database().ref(`players`);
+    const allItemsRef = firebase.database().ref(`items`);
 
     allPlayersRef.on("value", (snapshot) => {
       //Fires whenever a change occurs
@@ -1434,9 +1458,9 @@ function startGame() {
           const ML = ((startingX - players[playerId].x) * 16) + 'px';
           const MT = ((startingY - players[playerId].y) * 16) + 'px';
 
-
           document.querySelector(".mapUpper").style.transform = `translate3d(${ML}, ${MT}, 0)`;
           document.querySelector(".mapLower").style.transform = `translate3d(${ML}, ${MT}, 0)`;
+
 
           if (players[playerId].x === 133 && players[playerId].y === 11) {
             players[playerId].x = 85;
@@ -1444,6 +1468,12 @@ function startGame() {
           }
 
         }
+      })
+      Object.keys(items).forEach((key) => {
+        let el = itemElements[key]
+        const left = 16 * (items[key].x - players[playerId].x + 12) + "px";
+        const top = 16 * (items[key].y - players[playerId].y + 7) + "px";
+        el.style.transform = `translate3d(${left}, ${top}, 0)`;
       })
     })
     allPlayersRef.on("child_added", (snapshot) => {
@@ -1477,6 +1507,35 @@ function startGame() {
       const removedKey = snapshot.val().id;
       gameContainer.removeChild(playerElements[removedKey]);
       delete playerElements[removedKey];
+    })
+
+    allItemsRef.on("child_added", (snapshot) => {
+      const item = snapshot.val();
+      const key = getKeyString(item.x, item.y);
+      items[key] = item;
+
+      // Create the DOM Element
+      const itemElement = document.createElement("div");
+      itemElement.classList.add("Item", "grid-cell");
+      itemElement.innerHTML = `
+        <div class="Item_shadow grid-cell"></div>
+        <div class="Item_sprite grid-cell"></div>
+      `;
+
+      // Position the Element
+      const left = 16 * (item.x - players[playerId].x + 12) + "px";
+      const top = 16 * (item.y - players[playerId].y + 7) + "px";
+      itemElement.style.transform = `translate3d(${left}, ${top}, 0)`;
+
+      // Keep a reference for removal later and add to DOM
+      itemElements[key] = itemElement;
+      gameContainer.appendChild(itemElement);
+    })
+    allItemsRef.on("child_removed", (snapshot) => {
+      const {x,y} = snapshot.val();
+      const keyToRemove = getKeyString(x,y);
+      gameContainer.removeChild( itemElements[keyToRemove] );
+      delete itemElements[keyToRemove];
     })
 
     playerSkinButton.addEventListener("click", () => {
@@ -1534,6 +1593,7 @@ function startGame() {
         x:startingX,
         y:startingY,
         walking: "no",
+        voting_card: false,
       })
 
       //Remove me from Firebase when I diconnect
