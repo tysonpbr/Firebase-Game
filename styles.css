@@ -103,480 +103,560 @@ body {
     background-position-x: -400%;
   }
 }
-.Character[data-char="zero"][data-direction="right"][data-walking="no"] .Character_sprite {
+.Character[data-char="zero"][data-direction="right"][data-walking="no"]
+  .Character_sprite {
   background: url(images/characters/0.png);
   background-position-x: 0px;
   background-position-y: 96px;
 }
-.Character[data-char="zero"][data-direction="right"][data-walking="yes"] .Character_sprite {
+.Character[data-char="zero"][data-direction="right"][data-walking="yes"]
+  .Character_sprite {
   background: url(images/characters/0.png);
   background-position-x: 0px;
   background-position-y: 96px;
   animation: walk 0.3s steps(4) infinite;
   animation-delay: 0s;
 }
-.Character[data-char="zero"][data-direction="left"][data-walking="no"] .Character_sprite {
+.Character[data-char="zero"][data-direction="left"][data-walking="no"]
+  .Character_sprite {
   background: url(images/characters/0.png);
   background-position-x: 0px;
   background-position-y: 32px;
 }
-.Character[data-char="zero"][data-direction="left"][data-walking="yes"] .Character_sprite {
+.Character[data-char="zero"][data-direction="left"][data-walking="yes"]
+  .Character_sprite {
   background: url(images/characters/0.png);
   background-position-x: 0px;
   background-position-y: 32px;
   animation: walk 0.3s steps(4) infinite;
   animation-delay: 0s;
 }
-.Character[data-char="zero"][data-direction="up"][data-walking="no"] .Character_sprite {
+.Character[data-char="zero"][data-direction="up"][data-walking="no"]
+  .Character_sprite {
   background: url(images/characters/0.png);
   background-position-x: 0px;
   background-position-y: 64px;
 }
-.Character[data-char="zero"][data-direction="up"][data-walking="yes"] .Character_sprite {
+.Character[data-char="zero"][data-direction="up"][data-walking="yes"]
+  .Character_sprite {
   background: url(images/characters/0.png);
   background-position-x: 0px;
   background-position-y: 64px;
   animation: walk 0.3s steps(4) infinite;
   animation-delay: 0s;
 }
-.Character[data-char="zero"][data-direction="down"][data-walking="no"] .Character_sprite {
+.Character[data-char="zero"][data-direction="down"][data-walking="no"]
+  .Character_sprite {
   background: url(images/characters/0.png);
   background-position-x: 0px;
   background-position-y: 0px;
 }
-.Character[data-char="zero"][data-direction="down"][data-walking="yes"] .Character_sprite {
+.Character[data-char="zero"][data-direction="down"][data-walking="yes"]
+  .Character_sprite {
   background: url(images/characters/0.png);
   background-position-x: 0px;
   background-position-y: 0px;
   animation: walk 0.3s steps(4) infinite;
   animation-delay: 0s;
 }
-.Character[data-char="one"][data-direction="right"][data-walking="no"] .Character_sprite {
+.Character[data-char="one"][data-direction="right"][data-walking="no"]
+  .Character_sprite {
   background: url(images/characters/1.png);
   background-position-x: 0px;
   background-position-y: 96px;
 }
-.Character[data-char="one"][data-direction="right"][data-walking="yes"] .Character_sprite {
+.Character[data-char="one"][data-direction="right"][data-walking="yes"]
+  .Character_sprite {
   background: url(images/characters/1.png);
   background-position-x: 0px;
   background-position-y: 96px;
   animation: walk 0.3s steps(4) infinite;
   animation-delay: 0s;
 }
-.Character[data-char="one"][data-direction="left"][data-walking="no"] .Character_sprite {
+.Character[data-char="one"][data-direction="left"][data-walking="no"]
+  .Character_sprite {
   background: url(images/characters/1.png);
   background-position-x: 0px;
   background-position-y: 32px;
 }
-.Character[data-char="one"][data-direction="left"][data-walking="yes"] .Character_sprite {
+.Character[data-char="one"][data-direction="left"][data-walking="yes"]
+  .Character_sprite {
   background: url(images/characters/1.png);
   background-position-x: 0px;
   background-position-y: 32px;
   animation: walk 0.3s steps(4) infinite;
   animation-delay: 0s;
 }
-.Character[data-char="one"][data-direction="up"][data-walking="no"] .Character_sprite {
+.Character[data-char="one"][data-direction="up"][data-walking="no"]
+  .Character_sprite {
   background: url(images/characters/1.png);
   background-position-x: 0px;
   background-position-y: 64px;
 }
-.Character[data-char="one"][data-direction="up"][data-walking="yes"] .Character_sprite {
+.Character[data-char="one"][data-direction="up"][data-walking="yes"]
+  .Character_sprite {
   background: url(images/characters/1.png);
   background-position-x: 0px;
   background-position-y: 64px;
   animation: walk 0.3s steps(4) infinite;
   animation-delay: 0s;
 }
-.Character[data-char="one"][data-direction="down"][data-walking="no"] .Character_sprite {
+.Character[data-char="one"][data-direction="down"][data-walking="no"]
+  .Character_sprite {
   background: url(images/characters/1.png);
   background-position-x: 0px;
   background-position-y: 0px;
 }
-.Character[data-char="one"][data-direction="down"][data-walking="yes"] .Character_sprite {
+.Character[data-char="one"][data-direction="down"][data-walking="yes"]
+  .Character_sprite {
   background: url(images/characters/1.png);
   background-position-x: 0px;
   background-position-y: 0px;
   animation: walk 0.3s steps(4) infinite;
   animation-delay: 0s;
 }
-.Character[data-char="two"][data-direction="right"][data-walking="no"] .Character_sprite {
+.Character[data-char="two"][data-direction="right"][data-walking="no"]
+  .Character_sprite {
   background: url(images/characters/2.png);
   background-position-x: 0px;
   background-position-y: 96px;
 }
-.Character[data-char="two"][data-direction="right"][data-walking="yes"] .Character_sprite {
+.Character[data-char="two"][data-direction="right"][data-walking="yes"]
+  .Character_sprite {
   background: url(images/characters/2.png);
   background-position-x: 0px;
   background-position-y: 96px;
   animation: walk 0.3s steps(4) infinite;
   animation-delay: 0s;
 }
-.Character[data-char="two"][data-direction="left"][data-walking="no"] .Character_sprite {
+.Character[data-char="two"][data-direction="left"][data-walking="no"]
+  .Character_sprite {
   background: url(images/characters/2.png);
   background-position-x: 0px;
   background-position-y: 32px;
 }
-.Character[data-char="two"][data-direction="left"][data-walking="yes"] .Character_sprite {
+.Character[data-char="two"][data-direction="left"][data-walking="yes"]
+  .Character_sprite {
   background: url(images/characters/2.png);
   background-position-x: 0px;
   background-position-y: 32px;
   animation: walk 0.3s steps(4) infinite;
   animation-delay: 0s;
 }
-.Character[data-char="two"][data-direction="up"][data-walking="no"] .Character_sprite {
+.Character[data-char="two"][data-direction="up"][data-walking="no"]
+  .Character_sprite {
   background: url(images/characters/2.png);
   background-position-x: 0px;
   background-position-y: 64px;
 }
-.Character[data-char="two"][data-direction="up"][data-walking="yes"] .Character_sprite {
+.Character[data-char="two"][data-direction="up"][data-walking="yes"]
+  .Character_sprite {
   background: url(images/characters/2.png);
   background-position-x: 0px;
   background-position-y: 64px;
   animation: walk 0.3s steps(4) infinite;
   animation-delay: 0s;
 }
-.Character[data-char="two"][data-direction="down"][data-walking="no"] .Character_sprite {
+.Character[data-char="two"][data-direction="down"][data-walking="no"]
+  .Character_sprite {
   background: url(images/characters/2.png);
   background-position-x: 0px;
   background-position-y: 0px;
 }
-.Character[data-char="two"][data-direction="down"][data-walking="yes"] .Character_sprite {
+.Character[data-char="two"][data-direction="down"][data-walking="yes"]
+  .Character_sprite {
   background: url(images/characters/2.png);
   background-position-x: 0px;
   background-position-y: 0px;
   animation: walk 0.3s steps(4) infinite;
   animation-delay: 0s;
 }
-.Character[data-char="three"][data-direction="right"][data-walking="no"] .Character_sprite {
+.Character[data-char="three"][data-direction="right"][data-walking="no"]
+  .Character_sprite {
   background: url(images/characters/3.png);
   background-position-x: 0px;
   background-position-y: 96px;
 }
-.Character[data-char="three"][data-direction="right"][data-walking="yes"] .Character_sprite {
+.Character[data-char="three"][data-direction="right"][data-walking="yes"]
+  .Character_sprite {
   background: url(images/characters/3.png);
   background-position-x: 0px;
   background-position-y: 96px;
   animation: walk 0.3s steps(4) infinite;
   animation-delay: 0s;
 }
-.Character[data-char="three"][data-direction="left"][data-walking="no"] .Character_sprite {
+.Character[data-char="three"][data-direction="left"][data-walking="no"]
+  .Character_sprite {
   background: url(images/characters/3.png);
   background-position-x: 0px;
   background-position-y: 32px;
 }
-.Character[data-char="three"][data-direction="left"][data-walking="yes"] .Character_sprite {
+.Character[data-char="three"][data-direction="left"][data-walking="yes"]
+  .Character_sprite {
   background: url(images/characters/3.png);
   background-position-x: 0px;
   background-position-y: 32px;
   animation: walk 0.3s steps(4) infinite;
   animation-delay: 0s;
 }
-.Character[data-char="three"][data-direction="up"][data-walking="no"] .Character_sprite {
+.Character[data-char="three"][data-direction="up"][data-walking="no"]
+  .Character_sprite {
   background: url(images/characters/3.png);
   background-position-x: 0px;
   background-position-y: 64px;
 }
-.Character[data-char="three"][data-direction="up"][data-walking="yes"] .Character_sprite {
+.Character[data-char="three"][data-direction="up"][data-walking="yes"]
+  .Character_sprite {
   background: url(images/characters/3.png);
   background-position-x: 0px;
   background-position-y: 64px;
   animation: walk 0.3s steps(4) infinite;
   animation-delay: 0s;
 }
-.Character[data-char="three"][data-direction="down"][data-walking="no"] .Character_sprite {
+.Character[data-char="three"][data-direction="down"][data-walking="no"]
+  .Character_sprite {
   background: url(images/characters/3.png);
   background-position-x: 0px;
   background-position-y: 0px;
 }
-.Character[data-char="three"][data-direction="down"][data-walking="yes"] .Character_sprite {
+.Character[data-char="three"][data-direction="down"][data-walking="yes"]
+  .Character_sprite {
   background: url(images/characters/3.png);
   background-position-x: 0px;
   background-position-y: 0px;
   animation: walk 0.3s steps(4) infinite;
   animation-delay: 0s;
 }
-.Character[data-char="four"][data-direction="right"][data-walking="no"] .Character_sprite {
+.Character[data-char="four"][data-direction="right"][data-walking="no"]
+  .Character_sprite {
   background: url(images/characters/4.png);
   background-position-x: 0px;
   background-position-y: 96px;
 }
-.Character[data-char="four"][data-direction="right"][data-walking="yes"] .Character_sprite {
+.Character[data-char="four"][data-direction="right"][data-walking="yes"]
+  .Character_sprite {
   background: url(images/characters/4.png);
   background-position-x: 0px;
   background-position-y: 96px;
   animation: walk 0.3s steps(4) infinite;
   animation-delay: 0s;
 }
-.Character[data-char="four"][data-direction="left"][data-walking="no"] .Character_sprite {
+.Character[data-char="four"][data-direction="left"][data-walking="no"]
+  .Character_sprite {
   background: url(images/characters/4.png);
   background-position-x: 0px;
   background-position-y: 32px;
 }
-.Character[data-char="four"][data-direction="left"][data-walking="yes"] .Character_sprite {
+.Character[data-char="four"][data-direction="left"][data-walking="yes"]
+  .Character_sprite {
   background: url(images/characters/4.png);
   background-position-x: 0px;
   background-position-y: 32px;
   animation: walk 0.3s steps(4) infinite;
   animation-delay: 0s;
 }
-.Character[data-char="four"][data-direction="up"][data-walking="no"] .Character_sprite {
+.Character[data-char="four"][data-direction="up"][data-walking="no"]
+  .Character_sprite {
   background: url(images/characters/4.png);
   background-position-x: 0px;
   background-position-y: 64px;
 }
-.Character[data-char="four"][data-direction="up"][data-walking="yes"] .Character_sprite {
+.Character[data-char="four"][data-direction="up"][data-walking="yes"]
+  .Character_sprite {
   background: url(images/characters/4.png);
   background-position-x: 0px;
   background-position-y: 64px;
   animation: walk 0.3s steps(4) infinite;
   animation-delay: 0s;
 }
-.Character[data-char="four"][data-direction="down"][data-walking="no"] .Character_sprite {
+.Character[data-char="four"][data-direction="down"][data-walking="no"]
+  .Character_sprite {
   background: url(images/characters/4.png);
   background-position-x: 0px;
   background-position-y: 0px;
 }
-.Character[data-char="four"][data-direction="down"][data-walking="yes"] .Character_sprite {
+.Character[data-char="four"][data-direction="down"][data-walking="yes"]
+  .Character_sprite {
   background: url(images/characters/4.png);
   background-position-x: 0px;
   background-position-y: 0px;
   animation: walk 0.3s steps(4) infinite;
   animation-delay: 0s;
 }
-.Character[data-char="five"][data-direction="right"][data-walking="no"] .Character_sprite {
+.Character[data-char="five"][data-direction="right"][data-walking="no"]
+  .Character_sprite {
   background: url(images/characters/5.png);
   background-position-x: 0px;
   background-position-y: 96px;
 }
-.Character[data-char="five"][data-direction="right"][data-walking="yes"] .Character_sprite {
+.Character[data-char="five"][data-direction="right"][data-walking="yes"]
+  .Character_sprite {
   background: url(images/characters/5.png);
   background-position-x: 0px;
   background-position-y: 96px;
   animation: walk 0.3s steps(4) infinite;
   animation-delay: 0s;
 }
-.Character[data-char="five"][data-direction="left"][data-walking="no"] .Character_sprite {
+.Character[data-char="five"][data-direction="left"][data-walking="no"]
+  .Character_sprite {
   background: url(images/characters/5.png);
   background-position-x: 0px;
   background-position-y: 32px;
 }
-.Character[data-char="five"][data-direction="left"][data-walking="yes"] .Character_sprite {
+.Character[data-char="five"][data-direction="left"][data-walking="yes"]
+  .Character_sprite {
   background: url(images/characters/5.png);
-  background-position-x: 0px;
-  background-position-y: 32px;
-  animation: walk 0.3s steps(4) infinite;
-  animation-delay: 0s;
-}
-.Character[data-char="five"][data-direction="up"][data-walking="no"] .Character_sprite {
-  background: url(images/characters/5.png);
-  background-position-x: 0px;
-  background-position-y: 64px;
-}
-.Character[data-char="five"][data-direction="up"][data-walking="yes"] .Character_sprite {
-  background: url(images/characters/5.png);
-  background-position-x: 0px;
-  background-position-y: 64px;
-  animation: walk 0.3s steps(4) infinite;
-  animation-delay: 0s;
-}
-.Character[data-char="five"][data-direction="down"][data-walking="no"] .Character_sprite {
-  background: url(images/characters/5.png);
-  background-position-x: 0px;
-  background-position-y: 0px;
-}
-.Character[data-char="five"][data-direction="down"][data-walking="yes"] .Character_sprite {
-  background: url(images/characters/5.png);
-  background-position-x: 0px;
-  background-position-y: 0px;
-  animation: walk 0.3s steps(4) infinite;
-  animation-delay: 0s;
-}
-.Character[data-char="six"][data-direction="right"][data-walking="no"] .Character_sprite {
-  background: url(images/characters/6.png);
-  background-position-x: 0px;
-  background-position-y: 96px;
-}
-.Character[data-char="six"][data-direction="right"][data-walking="yes"] .Character_sprite {
-  background: url(images/characters/6.png);
-  background-position-x: 0px;
-  background-position-y: 96px;
-  animation: walk 0.3s steps(4) infinite;
-  animation-delay: 0s;
-}
-.Character[data-char="six"][data-direction="left"][data-walking="no"] .Character_sprite {
-  background: url(images/characters/6.png);
-  background-position-x: 0px;
-  background-position-y: 32px;
-}
-.Character[data-char="six"][data-direction="left"][data-walking="yes"] .Character_sprite {
-  background: url(images/characters/6.png);
   background-position-x: 0px;
   background-position-y: 32px;
   animation: walk 0.3s steps(4) infinite;
   animation-delay: 0s;
 }
-.Character[data-char="six"][data-direction="up"][data-walking="no"] .Character_sprite {
-  background: url(images/characters/6.png);
+.Character[data-char="five"][data-direction="up"][data-walking="no"]
+  .Character_sprite {
+  background: url(images/characters/5.png);
   background-position-x: 0px;
   background-position-y: 64px;
 }
-.Character[data-char="six"][data-direction="up"][data-walking="yes"] .Character_sprite {
-  background: url(images/characters/6.png);
+.Character[data-char="five"][data-direction="up"][data-walking="yes"]
+  .Character_sprite {
+  background: url(images/characters/5.png);
   background-position-x: 0px;
   background-position-y: 64px;
   animation: walk 0.3s steps(4) infinite;
   animation-delay: 0s;
 }
-.Character[data-char="six"][data-direction="down"][data-walking="no"] .Character_sprite {
-  background: url(images/characters/6.png);
+.Character[data-char="five"][data-direction="down"][data-walking="no"]
+  .Character_sprite {
+  background: url(images/characters/5.png);
   background-position-x: 0px;
   background-position-y: 0px;
 }
-.Character[data-char="six"][data-direction="down"][data-walking="yes"] .Character_sprite {
-  background: url(images/characters/6.png);
+.Character[data-char="five"][data-direction="down"][data-walking="yes"]
+  .Character_sprite {
+  background: url(images/characters/5.png);
   background-position-x: 0px;
   background-position-y: 0px;
   animation: walk 0.3s steps(4) infinite;
   animation-delay: 0s;
 }
-.Character[data-char="seven"][data-direction="right"][data-walking="no"] .Character_sprite {
-  background: url(images/characters/7.png);
+.Character[data-char="six"][data-direction="right"][data-walking="no"]
+  .Character_sprite {
+  background: url(images/characters/6.png);
   background-position-x: 0px;
   background-position-y: 96px;
 }
-.Character[data-char="seven"][data-direction="right"][data-walking="yes"] .Character_sprite {
-  background: url(images/characters/7.png);
-  background-position-x: 0px;
-  background-position-y: 96px;
-  animation: walk 0.3s steps(4) infinite;
-  animation-delay: 0s;
-}
-.Character[data-char="seven"][data-direction="left"][data-walking="no"] .Character_sprite {
-  background: url(images/characters/7.png);
-  background-position-x: 0px;
-  background-position-y: 32px;
-}
-.Character[data-char="seven"][data-direction="left"][data-walking="yes"] .Character_sprite {
-  background: url(images/characters/7.png);
-  background-position-x: 0px;
-  background-position-y: 32px;
-  animation: walk 0.3s steps(4) infinite;
-  animation-delay: 0s;
-}
-.Character[data-char="seven"][data-direction="up"][data-walking="no"] .Character_sprite {
-  background: url(images/characters/7.png);
-  background-position-x: 0px;
-  background-position-y: 64px;
-}
-.Character[data-char="seven"][data-direction="up"][data-walking="yes"] .Character_sprite {
-  background: url(images/characters/7.png);
-  background-position-x: 0px;
-  background-position-y: 64px;
-  animation: walk 0.3s steps(4) infinite;
-  animation-delay: 0s;
-}
-.Character[data-char="seven"][data-direction="down"][data-walking="no"] .Character_sprite {
-  background: url(images/characters/7.png);
-  background-position-x: 0px;
-  background-position-y: 0px;
-}
-.Character[data-char="seven"][data-direction="down"][data-walking="yes"] .Character_sprite {
-  background: url(images/characters/7.png);
-  background-position-x: 0px;
-  background-position-y: 0px;
-  animation: walk 0.3s steps(4) infinite;
-  animation-delay: 0s;
-}
-.Character[data-char="eight"][data-direction="right"][data-walking="no"] .Character_sprite {
-  background: url(images/characters/8.png);
-  background-position-x: 0px;
-  background-position-y: 96px;
-}
-.Character[data-char="eight"][data-direction="right"][data-walking="yes"] .Character_sprite {
-  background: url(images/characters/8.png);
+.Character[data-char="six"][data-direction="right"][data-walking="yes"]
+  .Character_sprite {
+  background: url(images/characters/6.png);
   background-position-x: 0px;
   background-position-y: 96px;
   animation: walk 0.3s steps(4) infinite;
   animation-delay: 0s;
 }
-.Character[data-char="eight"][data-direction="left"][data-walking="no"] .Character_sprite {
+.Character[data-char="six"][data-direction="left"][data-walking="no"]
+  .Character_sprite {
+  background: url(images/characters/6.png);
+  background-position-x: 0px;
+  background-position-y: 32px;
+}
+.Character[data-char="six"][data-direction="left"][data-walking="yes"]
+  .Character_sprite {
+  background: url(images/characters/6.png);
+  background-position-x: 0px;
+  background-position-y: 32px;
+  animation: walk 0.3s steps(4) infinite;
+  animation-delay: 0s;
+}
+.Character[data-char="six"][data-direction="up"][data-walking="no"]
+  .Character_sprite {
+  background: url(images/characters/6.png);
+  background-position-x: 0px;
+  background-position-y: 64px;
+}
+.Character[data-char="six"][data-direction="up"][data-walking="yes"]
+  .Character_sprite {
+  background: url(images/characters/6.png);
+  background-position-x: 0px;
+  background-position-y: 64px;
+  animation: walk 0.3s steps(4) infinite;
+  animation-delay: 0s;
+}
+.Character[data-char="six"][data-direction="down"][data-walking="no"]
+  .Character_sprite {
+  background: url(images/characters/6.png);
+  background-position-x: 0px;
+  background-position-y: 0px;
+}
+.Character[data-char="six"][data-direction="down"][data-walking="yes"]
+  .Character_sprite {
+  background: url(images/characters/6.png);
+  background-position-x: 0px;
+  background-position-y: 0px;
+  animation: walk 0.3s steps(4) infinite;
+  animation-delay: 0s;
+}
+.Character[data-char="seven"][data-direction="right"][data-walking="no"]
+  .Character_sprite {
+  background: url(images/characters/7.png);
+  background-position-x: 0px;
+  background-position-y: 96px;
+}
+.Character[data-char="seven"][data-direction="right"][data-walking="yes"]
+  .Character_sprite {
+  background: url(images/characters/7.png);
+  background-position-x: 0px;
+  background-position-y: 96px;
+  animation: walk 0.3s steps(4) infinite;
+  animation-delay: 0s;
+}
+.Character[data-char="seven"][data-direction="left"][data-walking="no"]
+  .Character_sprite {
+  background: url(images/characters/7.png);
+  background-position-x: 0px;
+  background-position-y: 32px;
+}
+.Character[data-char="seven"][data-direction="left"][data-walking="yes"]
+  .Character_sprite {
+  background: url(images/characters/7.png);
+  background-position-x: 0px;
+  background-position-y: 32px;
+  animation: walk 0.3s steps(4) infinite;
+  animation-delay: 0s;
+}
+.Character[data-char="seven"][data-direction="up"][data-walking="no"]
+  .Character_sprite {
+  background: url(images/characters/7.png);
+  background-position-x: 0px;
+  background-position-y: 64px;
+}
+.Character[data-char="seven"][data-direction="up"][data-walking="yes"]
+  .Character_sprite {
+  background: url(images/characters/7.png);
+  background-position-x: 0px;
+  background-position-y: 64px;
+  animation: walk 0.3s steps(4) infinite;
+  animation-delay: 0s;
+}
+.Character[data-char="seven"][data-direction="down"][data-walking="no"]
+  .Character_sprite {
+  background: url(images/characters/7.png);
+  background-position-x: 0px;
+  background-position-y: 0px;
+}
+.Character[data-char="seven"][data-direction="down"][data-walking="yes"]
+  .Character_sprite {
+  background: url(images/characters/7.png);
+  background-position-x: 0px;
+  background-position-y: 0px;
+  animation: walk 0.3s steps(4) infinite;
+  animation-delay: 0s;
+}
+.Character[data-char="eight"][data-direction="right"][data-walking="no"]
+  .Character_sprite {
+  background: url(images/characters/8.png);
+  background-position-x: 0px;
+  background-position-y: 96px;
+}
+.Character[data-char="eight"][data-direction="right"][data-walking="yes"]
+  .Character_sprite {
+  background: url(images/characters/8.png);
+  background-position-x: 0px;
+  background-position-y: 96px;
+  animation: walk 0.3s steps(4) infinite;
+  animation-delay: 0s;
+}
+.Character[data-char="eight"][data-direction="left"][data-walking="no"]
+  .Character_sprite {
   background: url(images/characters/8.png);
   background-position-x: 0px;
   background-position-y: 32px;
 }
-.Character[data-char="eight"][data-direction="left"][data-walking="yes"] .Character_sprite {
+.Character[data-char="eight"][data-direction="left"][data-walking="yes"]
+  .Character_sprite {
   background: url(images/characters/8.png);
   background-position-x: 0px;
   background-position-y: 32px;
   animation: walk 0.3s steps(4) infinite;
   animation-delay: 0s;
 }
-.Character[data-char="eight"][data-direction="up"][data-walking="no"] .Character_sprite {
+.Character[data-char="eight"][data-direction="up"][data-walking="no"]
+  .Character_sprite {
   background: url(images/characters/8.png);
   background-position-x: 0px;
   background-position-y: 64px;
 }
-.Character[data-char="eight"][data-direction="up"][data-walking="yes"] .Character_sprite {
+.Character[data-char="eight"][data-direction="up"][data-walking="yes"]
+  .Character_sprite {
   background: url(images/characters/8.png);
   background-position-x: 0px;
   background-position-y: 64px;
   animation: walk 0.3s steps(4) infinite;
   animation-delay: 0s;
 }
-.Character[data-char="eight"][data-direction="down"][data-walking="no"] .Character_sprite {
+.Character[data-char="eight"][data-direction="down"][data-walking="no"]
+  .Character_sprite {
   background: url(images/characters/8.png);
   background-position-x: 0px;
   background-position-y: 0px;
 }
-.Character[data-char="eight"][data-direction="down"][data-walking="yes"] .Character_sprite {
+.Character[data-char="eight"][data-direction="down"][data-walking="yes"]
+  .Character_sprite {
   background: url(images/characters/8.png);
   background-position-x: 0px;
   background-position-y: 0px;
   animation: walk 0.3s steps(4) infinite;
   animation-delay: 0s;
 }
-.Character[data-char="nine"][data-direction="right"][data-walking="no"] .Character_sprite {
+.Character[data-char="nine"][data-direction="right"][data-walking="no"]
+  .Character_sprite {
   background: url(images/characters/9.png);
   background-position-x: 0px;
   background-position-y: 96px;
 }
-.Character[data-char="nine"][data-direction="right"][data-walking="yes"] .Character_sprite {
+.Character[data-char="nine"][data-direction="right"][data-walking="yes"]
+  .Character_sprite {
   background: url(images/characters/9.png);
   background-position-x: 0px;
   background-position-y: 96px;
   animation: walk 0.3s steps(4) infinite;
   animation-delay: 0s;
 }
-.Character[data-char="nine"][data-direction="left"][data-walking="no"] .Character_sprite {
+.Character[data-char="nine"][data-direction="left"][data-walking="no"]
+  .Character_sprite {
   background: url(images/characters/9.png);
   background-position-x: 0px;
   background-position-y: 32px;
 }
-.Character[data-char="nine"][data-direction="left"][data-walking="yes"] .Character_sprite {
+.Character[data-char="nine"][data-direction="left"][data-walking="yes"]
+  .Character_sprite {
   background: url(images/characters/9.png);
   background-position-x: 0px;
   background-position-y: 32px;
   animation: walk 0.3s steps(4) infinite;
   animation-delay: 0s;
 }
-.Character[data-char="nine"][data-direction="up"][data-walking="no"] .Character_sprite {
+.Character[data-char="nine"][data-direction="up"][data-walking="no"]
+  .Character_sprite {
   background: url(images/characters/9.png);
   background-position-x: 0px;
   background-position-y: 64px;
 }
-.Character[data-char="nine"][data-direction="up"][data-walking="yes"] .Character_sprite {
+.Character[data-char="nine"][data-direction="up"][data-walking="yes"]
+  .Character_sprite {
   background: url(images/characters/9.png);
   background-position-x: 0px;
   background-position-y: 64px;
   animation: walk 0.3s steps(4) infinite;
   animation-delay: 0s;
 }
-.Character[data-char="nine"][data-direction="down"][data-walking="no"] .Character_sprite {
+.Character[data-char="nine"][data-direction="down"][data-walking="no"]
+  .Character_sprite {
   background: url(images/characters/9.png);
   background-position-x: 0px;
   background-position-y: 0px;
 }
-.Character[data-char="nine"][data-direction="down"][data-walking="yes"] .Character_sprite {
+.Character[data-char="nine"][data-direction="down"][data-walking="yes"]
+  .Character_sprite {
   background: url(images/characters/9.png);
   background-position-x: 0px;
   background-position-y: 0px;
@@ -659,7 +739,7 @@ body {
   height: 32px;
   z-index: 10;
   left: 190px;
-  top:60px;
+  top: 60px;
   transform: scale(2);
 }
 .gameTitle {
@@ -687,10 +767,47 @@ body {
   animation: itemFloat 0.8s linear infinite alternate-reverse;
 }
 @keyframes itemFloat {
-  from { transform: translateY(0) }
-  to { transform: translateY(5px) }
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(5px);
+  }
 }
 .Item_shadow {
   background: url(images/items/item_shadow.png) no-repeat no-repeat;
 }
 
+.SceneTransition {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #000;
+  z-index: 20;
+  opacity: 0;
+  animation: scene-transition-fade-in 1s forwards;
+}
+
+.SceneTransition.fade-out {
+  animation: scene-transition-fade-out 1s forwards;
+}
+
+@keyframes scene-transition-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scene-transition-fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}

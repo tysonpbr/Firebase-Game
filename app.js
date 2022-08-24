@@ -1463,8 +1463,30 @@ function startGame() {
 
 
           if (players[playerId].x === 133 && players[playerId].y === 11) {
-            players[playerId].x = 85;
-            players[playerId].y = 60;
+            const sceneTransition = new SceneTransition();
+            sceneTransition.init(document.querySelector(".game-container"), () => {
+
+            })
+            setTimeout(function() {   
+              players[playerId].x = 85;
+              players[playerId].y = 60;
+              
+              const ML = ((startingX - players[playerId].x) * 16) + 'px';
+              const MT = ((startingY - players[playerId].y) * 16) + 'px';
+
+              document.querySelector(".mapUpper").style.transform = `translate3d(${ML}, ${MT}, 0)`;
+              document.querySelector(".mapLower").style.transform = `translate3d(${ML}, ${MT}, 0)`;
+              
+              Object.keys(items).forEach((key) => {
+                let el = itemElements[key]
+                const left = 16 * (items[key].x - players[playerId].x + 12) + "px";
+                const top = 16 * (items[key].y - players[playerId].y + 7) + "px";
+                el.style.transform = `translate3d(${left}, ${top}, 0)`;
+              })
+            }, 700);
+            setTimeout(function() {
+              sceneTransition.fadeOut();
+            }, 1000);
           }
 
         }
