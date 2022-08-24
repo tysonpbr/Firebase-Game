@@ -4,6 +4,64 @@ const mapData = {
   minY: 1,
   maxY: 1000,
   blockedSpaces: {
+
+    /* LOBBY */
+    "127x20": true,
+    "128x20": true,
+    "129x20": true,
+    "130x20": true,
+    "131x20": true,
+    "132x20": true,
+    "133x20": true,
+    "134x20": true,
+    "135x20": true,
+    "136x20": true,
+    "137x20": true,
+    "138x20": true,
+    "139x20": true,
+    "140x20": true,
+    "141x20": true,
+
+    "142x19": true,
+    "142x18": true,
+    "142x17": true,
+    "142x16": true,
+    "142x15": true,
+
+    "127x14": true,
+    "128x14": true,
+    "129x14": true,
+    "130x14": true,
+    "131x14": true,
+    "135x14": true,
+    "136x14": true,
+    "137x14": true,
+    "138x14": true,
+    "139x14": true,
+    "140x14": true,
+    "141x14": true,
+
+    "126x19": true,
+    "126x18": true,
+    "126x17": true,
+    "126x16": true,
+    "126x15": true,
+
+    "138x16": true,
+    "139x16": true,
+    "138x17": true,
+    "139x17": true,
+
+    
+    "135x13": true,
+    "134x12": true,
+    "134x11": true,
+    "133x10": true,
+    "132x12": true,
+    "132x11": true,
+    "131x13": true,
+    
+
     /* PERIMETER */
     "54x8": true,
     "55x8": true,
@@ -1455,6 +1513,8 @@ function startGame() {
 
         if (key == playerId) {
 
+          console.log(players[playerId].x + ", " + players[playerId].y)
+
           const ML = ((startingX - players[playerId].x) * 16) + 'px';
           const MT = ((startingY - players[playerId].y) * 16) + 'px';
 
@@ -1463,6 +1523,7 @@ function startGame() {
 
 
           if (players[playerId].x === 133 && players[playerId].y === 11) {
+            //blockedSpaces["85x59"] = true;
             const sceneTransition = new SceneTransition();
             sceneTransition.init(document.querySelector(".game-container"), () => {
 
@@ -1483,10 +1544,10 @@ function startGame() {
                 const top = 16 * (items[key].y - players[playerId].y + 7) + "px";
                 el.style.transform = `translate3d(${left}, ${top}, 0)`;
               })
-            }, 700);
+            }, 350);
             setTimeout(function() {
               sceneTransition.fadeOut();
-            }, 1000);
+            }, 600);
           }
 
         }

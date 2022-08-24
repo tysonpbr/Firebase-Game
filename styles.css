@@ -787,11 +787,11 @@ body {
   background-color: #000;
   z-index: 20;
   opacity: 0;
-  animation: scene-transition-fade-in 1s forwards;
+  animation: scene-transition-fade-in 0.5s forwards;
 }
 
 .SceneTransition.fade-out {
-  animation: scene-transition-fade-out 1s forwards;
+  animation: scene-transition-fade-out 0.5s forwards;
 }
 
 @keyframes scene-transition-fade-in {
