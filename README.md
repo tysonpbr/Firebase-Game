@@ -5,15 +5,11 @@
 Personal project multiplayer game based loosely on the card/party game Mafia and run via Firebase online servers.
 
 Tyson's Tasks
-
 - create vision circle/cone
 - add inter-round movement
 - add multiple items and set unique locations [ongoing]
 - only teleport when all players there
 
 Trixie's Tasks
-
-- fade in/out animation [completed]
 - create round end meeting map (tyson's pc)
-- create round timers [completed]
 - game name
