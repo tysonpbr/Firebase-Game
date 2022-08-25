@@ -19,6 +19,21 @@ body {
   justify-content: center;
 }
 
+p {
+  position: absolute;
+  background-color: #fff;
+  top: 52px;
+  left: 68px;
+  font-size: 50px;
+  align-items: center;
+  justify-content: center;
+  display: inline-flex;
+  margin: 0;
+  width: 200px;
+  height: 70px;
+  z-index: 21;
+}
+
 .game-container {
   position: relative;
   width: 400px;

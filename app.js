@@ -1396,6 +1396,23 @@ function startGame() {
   const gameContainer = document.querySelector(".game-container");
   const playerSkinButton = document.querySelector("#b2");
 
+  const startTime = 1; //min
+  let time = startTime * 60; //secs
+
+  const countdownElement = document.getElementById('countdown');
+
+  setInterval(updateCountdown, 1000);
+
+  function updateCountdown() {
+    const minutes = Math.floor(time/60);
+    let seconds = time % 60;
+
+    seconds = seconds < 10 ? '0' + seconds : seconds;
+
+    countdownElement.innerHTML = `${minutes}: ${seconds}`;
+    time--;
+  }
+
   function placeItems() {
     placeGun();
     placeVotingCard();
