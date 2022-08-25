@@ -1376,12 +1376,6 @@ function startGame() {
 	document.querySelector('.stillScreen').remove();
   document.querySelector('.scrollScreen').remove();
   document.querySelector('.buttons').remove();
-  const shadow = document.createElement("div");
-  shadow.classList.add("shadow");
-  document.querySelector(".gameInterface").appendChild(shadow);
-  //const shadowBig = document.createElement("div");
-  //shadowBig.classList.add("shadowBig");
-  //document.querySelector(".gameInterface").appendChild(shadowBig);
 }
 
 (function () {
@@ -1396,6 +1390,7 @@ function startGame() {
   let votingCardElements = {};
   let guns = {};
   let gunElements = {};
+  let inRound = false;
   const startingX = 133;
   const startingY = 17;
 
@@ -1419,6 +1414,21 @@ function startGame() {
 
     countdownElement.innerHTML = `${minutes}: ${seconds}`;
     time--;
+
+  }
+
+  function startRound() {
+    inRound = true;
+    if (players[playerId].flashlight){
+      const shadowBig = document.createElement("div");
+      shadowBig.classList.add("shadowBig");
+      document.querySelector(".gameInterface").appendChild(shadowBig);
+    }
+    else {
+      const shadow = document.createElement("div");
+      shadow.classList.add("shadow");
+      document.querySelector(".gameInterface").appendChild(shadow);
+    }
 
   }
 
@@ -1488,38 +1498,46 @@ function startGame() {
       const newY = players[playerId].y + yChange;
       if (xChange === 1) {
         players[playerId].direction = "right";
-        if (players[playerId].flashlight) {
-          document.querySelector(".shadowBig").style.background = "url(images/maps/shadowRight.png)";
-        }
-        else {
-          document.querySelector(".shadow").style.background = "url(images/maps/shadowRight.png)";
+        if (inRound) {
+          if (players[playerId].flashlight) {
+            document.querySelector(".shadowBig").style.background = "url(images/maps/shadowRight.png)";
+          }
+          else {
+            document.querySelector(".shadow").style.background = "url(images/maps/shadowRight.png)";
+          }
         }
       }
       if (xChange === -1) {
         players[playerId].direction = "left";
-        if (players[playerId].flashlight) {
-          document.querySelector(".shadowBig").style.background = "url(images/maps/shadowLeft.png)";
-        }
-        else {
-          document.querySelector(".shadow").style.background = "url(images/maps/shadowLeft.png)";
+        if (inRound) {
+          if (players[playerId].flashlight) {
+            document.querySelector(".shadowBig").style.background = "url(images/maps/shadowLeft.png)";
+          }
+          else {
+            document.querySelector(".shadow").style.background = "url(images/maps/shadowLeft.png)";
+          }
         }
       }
       if (yChange === -1) {
         players[playerId].direction = "up";
-        if (players[playerId].flashlight) {
-          document.querySelector(".shadowBig").style.background = "url(images/maps/shadowUp.png)";
-        }
-        else {
-          document.querySelector(".shadow").style.background = "url(images/maps/shadowUp.png)";
+        if (inRound) {
+          if (players[playerId].flashlight) {
+            document.querySelector(".shadowBig").style.background = "url(images/maps/shadowUp.png)";
+          }
+          else {
+            document.querySelector(".shadow").style.background = "url(images/maps/shadowUp.png)";
+          }
         }
       }
       if (yChange === 1) {
         players[playerId].direction = "down";
-        if (players[playerId].flashlight) {
-          document.querySelector(".shadowBig").style.background = "url(images/maps/shadowDown.png)";
-        }
-        else {
-          document.querySelector(".shadow").style.background = "url(images/maps/shadowDown.png)";
+        if (inRound) {
+          if (players[playerId].flashlight) {
+            document.querySelector(".shadowBig").style.background = "url(images/maps/shadowDown.png)";
+          }
+          else {
+            document.querySelector(".shadow").style.background = "url(images/maps/shadowDown.png)";
+          }
         }
       }
       playerRef.set(players[playerId]);
@@ -1644,9 +1662,7 @@ function startGame() {
 
           if (players[playerId].x === 133 && players[playerId].y === 11) {
             const sceneTransition = new SceneTransition();
-            sceneTransition.init(document.querySelector(".game-container"), () => {
-
-            })
+            sceneTransition.init(document.querySelector(".game-container"), () => {})
             setTimeout(function() {   
               players[playerId].x = 85;
               players[playerId].y = 60;
@@ -1684,6 +1700,7 @@ function startGame() {
             }, 350);
             setTimeout(function() {
               sceneTransition.fadeOut();
+              startRound();
             }, 600);
             setInterval(updateCountdown, 1000);
           }

@@ -51,7 +51,7 @@ body {
   position: absolute;
   width: 400px;
   height: 208px;
-  background: url(images/maps/shadowDown.png);
+  background: url(images/maps/shadowUp.png);
   transform: scale(1);
   image-rendering: pixelated;
   overflow: hidden;
@@ -59,7 +59,7 @@ body {
 }
 
 .shadowBig {
-  top: 0;
+  top: -40px;
   left: 0;
   position: absolute;
   width: 400px;
