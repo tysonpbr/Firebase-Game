@@ -1397,13 +1397,15 @@ function startGame() {
   const playerSkinButton = document.querySelector("#b2");
 
   const startTime = 1; //min
+
   let time = startTime * 60; //secs
 
-  const countdownElement = document.getElementById('countdown');
-
-  setInterval(updateCountdown, 1000);
-
   function updateCountdown() {
+
+    const countdownElement = document.createElement("div");
+    countdownElement.classList.add("timer");
+    document.querySelector(".gameInterface").appendChild(countdownElement);
+
     const minutes = Math.floor(time/60);
     let seconds = time % 60;
 
@@ -1411,6 +1413,7 @@ function startGame() {
 
     countdownElement.innerHTML = `${minutes}: ${seconds}`;
     time--;
+
   }
 
   function placeItems() {
@@ -1652,6 +1655,7 @@ function startGame() {
             setTimeout(function() {
               sceneTransition.fadeOut();
             }, 600);
+            setInterval(updateCountdown, 1000);
           }
         }
         Object.keys(votingCards).forEach((key) => {
