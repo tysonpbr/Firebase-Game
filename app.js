@@ -1399,30 +1399,48 @@ function startGame() {
   let flashlights = {};
   let flashlightElements = {};
   let inRound = false;
+  let inLobby = true;
   const startingX = 133;
   const startingY = 17;
+  let startTime;
+  let time;
+  let clock;
+  let clockInterval;
 
   const gameContainer = document.querySelector(".game-container");
   const playerSkinButton = document.querySelector("#b2");
 
-  const startTime = 1; //min
-
-  let time = startTime * 60; //secs
+  function startClock() {
+    startTime = 1; //min
+    time = startTime * 60; //secs
+    clock = document.createElement("div");
+    clock.classList.add("timer");
+    setTimeout(function () {
+      document.querySelector(".gameInterface").appendChild(clock);
+    },1000);
+    clockInterval = setInterval(updateCountdown, 1000);
+  }
 
   function updateCountdown() {
-
-    const countdownElement = document.createElement("div");
-    countdownElement.classList.add("timer");
-    document.querySelector(".gameInterface").appendChild(countdownElement);
 
     const minutes = Math.floor(time/60);
     let seconds = time % 60;
 
     seconds = seconds < 10 ? '0' + seconds : seconds;
 
-    countdownElement.innerHTML = `${minutes}: ${seconds}`;
+    clock.innerHTML = `${minutes}: ${seconds}`;
     time--;
 
+    if (time === 0) {
+      setTimeout(function() {
+        endRound();
+      }, 1500);
+    }
+
+  }
+
+  function firstRound(){
+    inLobby = false;
   }
 
   function startRound() {
@@ -1430,14 +1448,80 @@ function startGame() {
     if (players[playerId].flashlight){
       const shadowBig = document.createElement("div");
       shadowBig.classList.add("shadowBig");
+      shadowBig.style.background = "url(images/maps/shadowUp.png)";
       document.querySelector(".gameInterface").appendChild(shadowBig);
     }
     else {
       const shadow = document.createElement("div");
       shadow.classList.add("shadow");
+      shadow.style.background = "url(images/maps/shadowUp.png)";
       document.querySelector(".gameInterface").appendChild(shadow);
     }
 
+  }
+
+  function endRound() {
+    inRound = false;
+    clearInterval(clockInterval);
+    clock.remove();
+    teleportTo(startingX, startingY);
+    setTimeout(function() {
+      if (players[playerId].flashlight){
+        document.querySelector(".shadowBig").remove();
+      }
+      else {
+        document.querySelector(".shadow").remove();
+      }
+    }, 300);
+  }
+
+  function teleportTo(teleport_x, teleport_y) {
+    players[playerId].x = teleport_x;
+    players[playerId].y = teleport_y;
+    const sceneTransition = new SceneTransition();
+    sceneTransition.init(document.querySelector(".game-container"), () => {})
+    setTimeout(function() {   
+            
+      const ML = ((startingX - players[playerId].x) * 16) + 'px';
+      const MT = ((startingY - players[playerId].y) * 16) + 'px';
+
+      document.querySelector(".mapUpper").style.transform = `translate3d(${ML}, ${MT}, 0)`;
+      document.querySelector(".mapLower").style.transform = `translate3d(${ML}, ${MT}, 0)`;
+
+      Object.keys(players).forEach((key) => {
+        const characterState = players[key];
+        let el = playerElements[key];
+        // Now update the DOM
+        el.setAttribute("data-char", characterState.char);
+        el.setAttribute("data-direction", characterState.direction);
+        el.setAttribute("data-walking", characterState.walking);
+        const left = 16 * (characterState.x - players[playerId].x + 12) + "px";
+        const top = 16 * (characterState.y - players[playerId].y + 7) - 1 + "px";
+        el.style.transform = `translate3d(${left}, ${top}, 0)`;
+      })
+            
+      Object.keys(votingCards).forEach((key) => {
+        let el = votingCardElements[key]
+        const left = 16 * (votingCards[key].x - players[playerId].x + 12) + "px";
+        const top = 16 * (votingCards[key].y - players[playerId].y + 7) + "px";
+        el.style.transform = `translate3d(${left}, ${top}, 0)`;
+      })
+      Object.keys(guns).forEach((key) => {
+        let el = gunElements[key]
+        const left = 16 * (guns[key].x - players[playerId].x + 12) + "px";
+        const top = 16 * (guns[key].y - players[playerId].y + 7) + "px";
+        el.style.transform = `translate3d(${left}, ${top}, 0)`;
+      })
+      Object.keys(flashlights).forEach((key) => {
+        let el = flashlightElements[key]
+        const left = 16 * (flashlights[key].x - players[playerId].x + 12) + "px";
+        const top = 16 * (flashlights[key].y - players[playerId].y + 7) + "px";
+        el.style.transform = `translate3d(${left}, ${top}, 0)`;
+      })
+    }, 350);
+    setTimeout(function() {
+      sceneTransition.fadeOut();
+    }, 600);
   }
 
   function placeItems() {
@@ -1623,6 +1707,10 @@ function startGame() {
   }
 
   function handleArrowPress(key) {
+    //if (!inRound && !inLobby) {
+    //  console.log("In between rounds!!")
+    //  return;
+    //}
     players[playerId].walking = "yes";
     playerRef.set(players[playerId]);
     const index = heldKeys.indexOf(key);
@@ -1715,54 +1803,12 @@ function startGame() {
 
 
           if (players[playerId].x === 133 && players[playerId].y === 11) {
-            const sceneTransition = new SceneTransition();
-            sceneTransition.init(document.querySelector(".game-container"), () => {})
-            setTimeout(function() {   
-              players[playerId].x = 85;
-              players[playerId].y = 60;
-              
-              const ML = ((startingX - players[playerId].x) * 16) + 'px';
-              const MT = ((startingY - players[playerId].y) * 16) + 'px';
-
-              document.querySelector(".mapUpper").style.transform = `translate3d(${ML}, ${MT}, 0)`;
-              document.querySelector(".mapLower").style.transform = `translate3d(${ML}, ${MT}, 0)`;
-
-              Object.keys(players).forEach((key) => {
-                const characterState = players[key];
-                let el = playerElements[key];
-                // Now update the DOM
-                el.setAttribute("data-char", characterState.char);
-                el.setAttribute("data-direction", characterState.direction);
-                el.setAttribute("data-walking", characterState.walking);
-                const left = 16 * (characterState.x - players[playerId].x + 12) + "px";
-                const top = 16 * (characterState.y - players[playerId].y + 7) - 1 + "px";
-                el.style.transform = `translate3d(${left}, ${top}, 0)`;
-              })
-              
-              Object.keys(votingCards).forEach((key) => {
-                let el = votingCardElements[key]
-                const left = 16 * (votingCards[key].x - players[playerId].x + 12) + "px";
-                const top = 16 * (votingCards[key].y - players[playerId].y + 7) + "px";
-                el.style.transform = `translate3d(${left}, ${top}, 0)`;
-              })
-              Object.keys(guns).forEach((key) => {
-                let el = gunElements[key]
-                const left = 16 * (guns[key].x - players[playerId].x + 12) + "px";
-                const top = 16 * (guns[key].y - players[playerId].y + 7) + "px";
-                el.style.transform = `translate3d(${left}, ${top}, 0)`;
-              })
-              Object.keys(flashlights).forEach((key) => {
-                let el = flashlightElements[key]
-                const left = 16 * (flashlights[key].x - players[playerId].x + 12) + "px";
-                const top = 16 * (flashlights[key].y - players[playerId].y + 7) + "px";
-                el.style.transform = `translate3d(${left}, ${top}, 0)`;
-              })
-            }, 350);
+            teleportTo(85,60);
+            firstRound();
             setTimeout(function() {
-              sceneTransition.fadeOut();
               startRound();
-            }, 600);
-            setInterval(updateCountdown, 1000);
+              startClock();
+            }, 200)
           }
         }
         Object.keys(votingCards).forEach((key) => {

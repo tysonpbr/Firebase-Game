@@ -872,7 +872,7 @@ body {
   background-color: #000;
   z-index: 20;
   opacity: 0;
-  animation: scene-transition-fade-in 0.5s forwards;
+  animation: scene-transition-fade-in 0.2s forwards;
 }
 
 .SceneTransition.fade-out {
