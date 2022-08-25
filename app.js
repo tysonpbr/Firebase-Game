@@ -1606,6 +1606,18 @@ function startGame() {
 
               document.querySelector(".mapUpper").style.transform = `translate3d(${ML}, ${MT}, 0)`;
               document.querySelector(".mapLower").style.transform = `translate3d(${ML}, ${MT}, 0)`;
+
+              Object.keys(players).forEach((key) => {
+                const characterState = players[key];
+                let el = playerElements[key];
+                // Now update the DOM
+                el.setAttribute("data-char", characterState.char);
+                el.setAttribute("data-direction", characterState.direction);
+                el.setAttribute("data-walking", characterState.walking);
+                const left = 16 * (characterState.x - players[playerId].x + 12) + "px";
+                const top = 16 * (characterState.y - players[playerId].y + 7) - 1 + "px";
+                el.style.transform = `translate3d(${left}, ${top}, 0)`;
+              })
               
               Object.keys(votingCards).forEach((key) => {
                 let el = votingCardElements[key]
@@ -1624,19 +1636,19 @@ function startGame() {
               sceneTransition.fadeOut();
             }, 600);
           }
-          Object.keys(votingCards).forEach((key) => {
-            let el = votingCardElements[key]
-            const left = 16 * (votingCards[key].x - players[playerId].x + 12) + "px";
-            const top = 16 * (votingCards[key].y - players[playerId].y + 7) + "px";
-            el.style.transform = `translate3d(${left}, ${top}, 0)`;
-          })
-          Object.keys(guns).forEach((key) => {
-            let el = gunElements[key]
-            const left = 16 * (guns[key].x - players[playerId].x + 12) + "px";
-            const top = 16 * (guns[key].y - players[playerId].y + 7) + "px";
-            el.style.transform = `translate3d(${left}, ${top}, 0)`;
-          })
         }
+        Object.keys(votingCards).forEach((key) => {
+          let el = votingCardElements[key]
+          const left = 16 * (votingCards[key].x - players[playerId].x + 12) + "px";
+          const top = 16 * (votingCards[key].y - players[playerId].y + 7) + "px";
+          el.style.transform = `translate3d(${left}, ${top}, 0)`;
+        })
+        Object.keys(guns).forEach((key) => {
+          let el = gunElements[key]
+          const left = 16 * (guns[key].x - players[playerId].x + 12) + "px";
+          const top = 16 * (guns[key].y - players[playerId].y + 7) + "px";
+          el.style.transform = `translate3d(${left}, ${top}, 0)`;
+        })
       })
     })
     allPlayersRef.on("child_added", (snapshot) => {
