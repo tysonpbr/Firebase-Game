@@ -1476,8 +1476,12 @@ function startGame() {
   }
 
   function teleportTo(teleport_x, teleport_y) {
-    players[playerId].x = teleport_x;
-    players[playerId].y = teleport_y;
+    console.log("Teleport to: " + teleport_x + ", " + teleport_y);
+    setTimeout(function() {
+      players[playerId].x = teleport_x;
+      players[playerId].y = teleport_y;
+      playerRef.set(players[playerId]);
+    }, 300);
     const sceneTransition = new SceneTransition();
     sceneTransition.init(document.querySelector(".game-container"), () => {})
     setTimeout(function() {   
@@ -1682,13 +1686,11 @@ function startGame() {
           playerInNextSpace = true;
         }
       }
-      if (!isSolid(newX, newY) || (newX == 133 && newY == 11)) {
+      if ((!isSolid(newX, newY) && !playerInNextSpace) || (newX == 133 && newY == 11)) {
         //move to the next space
-        if (!playerInNextSpace) {
-          players[playerId].x = newX;
-          players[playerId].y = newY;
-          playerRef.set(players[playerId]);
-        }
+        players[playerId].x = newX;
+        players[playerId].y = newY;
+        playerRef.set(players[playerId]);
       }
       else {
         
@@ -1800,15 +1802,21 @@ function startGame() {
 
           document.querySelector(".mapUpper").style.transform = `translate3d(${ML}, ${MT}, 0)`;
           document.querySelector(".mapLower").style.transform = `translate3d(${ML}, ${MT}, 0)`;
-
-
-          if (players[playerId].x === 133 && players[playerId].y === 11) {
+        }
+        if (players[playerId].x === 133 && players[playerId].y === 11) {
+          let allPlayersHere = true;
+          Object.keys(players).forEach((key) => {
+            if (players[key].x !== 133 || players[key].y !== 11) {
+              allPlayersHere = false;
+            }
+          })
+          if (allPlayersHere && key === playerId) {
             teleportTo(85,60);
             firstRound();
             setTimeout(function() {
               startRound();
               startClock();
-            }, 200)
+            }, 300)
           }
         }
         Object.keys(votingCards).forEach((key) => {
