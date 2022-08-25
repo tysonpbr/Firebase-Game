@@ -838,6 +838,22 @@ body {
   background: url(images/items/item_shadow.png) no-repeat no-repeat;
 }
 
+/* flashlight */
+.Flashlight {
+  transition: transform 0.2s;
+  transition-timing-function: linear;
+}
+
+.Flashlight_sprite {
+  background: url(images/items/gun.png);
+  width: 16px;
+  height: 16px;
+  animation: itemFloat 0.8s linear infinite alternate-reverse;
+}
+.Flashlight_shadow {
+  background: url(images/items/item_shadow.png) no-repeat no-repeat;
+}
+
 @keyframes itemFloat {
   from {
     transform: translateY(0);

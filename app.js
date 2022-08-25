@@ -1348,7 +1348,7 @@ function isSolid(x,y) {
 
 function getRandomVotingCardSpot() {
   return randomFromArray([
-    { i: 133, j: 15 },
+    { i: 84, j: 54 },
     //{ i: 103, j: 31 },
     //{ i: 82, j: 24 },
     //{ i: 79, j: 46 },
@@ -1364,10 +1364,16 @@ function getRandomVotingCardSpot() {
 
 function getRandomGunSpot() {
   return randomFromArray([
-    { i: 132, j: 15 },
+    { i: 85, j: 54 },
     //{ i: 9, j: 9 },
     //{ i: 4, j: 29 },
     //{ i: 23, j: 7 },
+  ]);
+}
+
+function getRandomFlashlightSpot() {
+  return randomFromArray([
+    { i: 86, j: 54 },
   ]);
 }
 
@@ -1390,6 +1396,8 @@ function startGame() {
   let votingCardElements = {};
   let guns = {};
   let gunElements = {};
+  let flashlights = {};
+  let flashlightElements = {};
   let inRound = false;
   const startingX = 133;
   const startingY = 17;
@@ -1433,6 +1441,7 @@ function startGame() {
   }
 
   function placeItems() {
+    placeFlashlight();
     placeGun();
     placeVotingCard();
   }
@@ -1467,9 +1476,28 @@ function startGame() {
       y = j;
       key = getKeyString(x, y);
     }
-    console.log("NEW VOTING CARD: " + key + " / " + x + ", " + y);
+    console.log("NEW GUN: " + key + " / " + x + ", " + y);
     const gunRef = firebase.database().ref(`gun/${key}`);
     gunRef.set({
+      x,
+      y,
+    })
+  }
+
+  function placeFlashlight() {
+    const {i,j} = getRandomFlashlightSpot();
+    let x = i;
+    let y = j;
+    let key = getKeyString(x, y);
+    while (flashlights[key] !== undefined) {
+      let {i,j} = getRandomFlashlightSpot();
+      x = i;
+      y = j;
+      key = getKeyString(x, y);
+    }
+    console.log("NEW FLASHLIGHT: " + key + " / " + x + ", " + y);
+    const flashlightRef = firebase.database().ref(`flashlight/${key}`);
+    flashlightRef.set({
       x,
       y,
     })
@@ -1488,6 +1516,30 @@ function startGame() {
     if (guns[key] && !players[playerId].gun) {
       players[playerId].gun = true;
       firebase.database().ref(`gun/${key}`).remove();
+    }
+  }
+
+  function attemptGrabFlashlight(x, y) {
+    const key = getKeyString(x, y);
+    if (flashlights[key] && !players[playerId].flashlight) {
+      players[playerId].flashlight = true;
+      firebase.database().ref(`flashlight/${key}`).remove();
+      const shadowBig = document.createElement("div");
+      shadowBig.classList.add("shadowBig");
+      document.querySelector(".gameInterface").appendChild(shadowBig);
+      document.querySelector(".shadow").remove();
+      if (players[playerId].direction === "right") {
+        document.querySelector(".shadowBig").style.background = "url(images/maps/shadowRight.png)";
+      }
+      else if (players[playerId].direction === "left") {
+        document.querySelector(".shadowBig").style.background = "url(images/maps/shadowLeft.png)";
+      }
+      else if (players[playerId].direction === "up") {
+        document.querySelector(".shadowBig").style.background = "url(images/maps/shadowUp.png)";
+      }
+      else if (players[playerId].direction === "down") {
+        document.querySelector(".shadowBig").style.background = "url(images/maps/shadowDown.png)";
+      }
     }
   }
 
@@ -1631,6 +1683,7 @@ function startGame() {
     const allPlayersRef = firebase.database().ref(`players`);
     const allVotingCardRef = firebase.database().ref(`votingCard`);
     const allGunRef = firebase.database().ref(`gun`);
+    const allFlashlightRef = firebase.database().ref(`flashlight`);
 
     allPlayersRef.on("value", (snapshot) => {
       //Fires whenever a change occurs
@@ -1652,6 +1705,7 @@ function startGame() {
 
           attemptGrabVotingCard(players[playerId].x, players[playerId].y);
           attemptGrabGun(players[playerId].x, players[playerId].y);
+          attemptGrabFlashlight(players[playerId].x, players[playerId].y);
 
           const ML = ((startingX - players[playerId].x) * 16) + 'px';
           const MT = ((startingY - players[playerId].y) * 16) + 'px';
@@ -1697,6 +1751,12 @@ function startGame() {
                 const top = 16 * (guns[key].y - players[playerId].y + 7) + "px";
                 el.style.transform = `translate3d(${left}, ${top}, 0)`;
               })
+              Object.keys(flashlights).forEach((key) => {
+                let el = flashlightElements[key]
+                const left = 16 * (flashlights[key].x - players[playerId].x + 12) + "px";
+                const top = 16 * (flashlights[key].y - players[playerId].y + 7) + "px";
+                el.style.transform = `translate3d(${left}, ${top}, 0)`;
+              })
             }, 350);
             setTimeout(function() {
               sceneTransition.fadeOut();
@@ -1715,6 +1775,12 @@ function startGame() {
           let el = gunElements[key]
           const left = 16 * (guns[key].x - players[playerId].x + 12) + "px";
           const top = 16 * (guns[key].y - players[playerId].y + 7) + "px";
+          el.style.transform = `translate3d(${left}, ${top}, 0)`;
+        })
+        Object.keys(flashlights).forEach((key) => {
+          let el = flashlightElements[key]
+          const left = 16 * (flashlights[key].x - players[playerId].x + 12) + "px";
+          const top = 16 * (flashlights[key].y - players[playerId].y + 7) + "px";
           el.style.transform = `translate3d(${left}, ${top}, 0)`;
         })
       })
@@ -1776,6 +1842,7 @@ function startGame() {
     })
     allVotingCardRef.on("child_removed", (snapshot) => {
       const {x,y} = snapshot.val();
+      console.log("Voting Card removed: " + x + ", " + y);
       const keyToRemove = getKeyString(x,y);
       gameContainer.removeChild( votingCardElements[keyToRemove] );
       delete votingCardElements[keyToRemove];
@@ -1806,9 +1873,41 @@ function startGame() {
     })
     allGunRef.on("child_removed", (snapshot) => {
       const {x,y} = snapshot.val();
+      console.log("Gun removed: " + x + ", " + y);
       const keyToRemove = getKeyString(x,y);
       gameContainer.removeChild( gunElements[keyToRemove] );
       delete gunElements[keyToRemove];
+    })
+
+    // flashlight
+    allFlashlightRef.on("value", (snapshot) => {
+      flashlights = snapshot.val() || {};
+    });
+    allFlashlightRef.on("child_added", (snapshot) => {
+      const flashlight = snapshot.val();
+      const key = getKeyString(flashlight.x, flashlight.y);
+      flashlights[key] = flashlight;
+
+      const flashlightElement = document.createElement("div");
+      flashlightElement.classList.add("flashlight", "grid-cell");
+      flashlightElement.innerHTML = `
+        <div class="Flashlight_shadow grid-cell"></div>
+        <div class="Flashlight_sprite grid-cell"></div>
+      `;
+
+      const left = 16 * (flashlight.x - players[playerId].x + 12) + "px";
+      const top = 16 * (flashlight.y - players[playerId].y + 7) + "px";
+      flashlightElement.style.transform = `translate3d(${left}, ${top}, 0)`;
+
+      flashlightElements[key] = flashlightElement;
+      gameContainer.appendChild(flashlightElement);
+    })
+    allFlashlightRef.on("child_removed", (snapshot) => {
+      const {x,y} = snapshot.val();
+      console.log("Flashlight removed: " + x + ", " + y);
+      const keyToRemove = getKeyString(x,y);
+      gameContainer.removeChild( flashlightElements[keyToRemove] );
+      delete flashlightElements[keyToRemove];
     })
 
 
