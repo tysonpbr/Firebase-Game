@@ -754,18 +754,38 @@ body {
   transform: scale(1);
 }
 
-/* ITEMS */
-.Item {
+/* votingCard */
+.VotingCard {
   transition: transform 0.2s;
   transition-timing-function: linear;
 }
 
-.Item_sprite {
+.VotingCard_sprite {
   background: url(images/items/voting_card.png);
   width: 16px;
   height: 16px;
   animation: itemFloat 0.8s linear infinite alternate-reverse;
 }
+.VotingCard_shadow {
+  background: url(images/items/item_shadow.png) no-repeat no-repeat;
+}
+
+/* gun */
+.Gun {
+  transition: transform 0.2s;
+  transition-timing-function: linear;
+}
+
+.Gun_sprite {
+  background: url(images/items/gun.png);
+  width: 16px;
+  height: 16px;
+  animation: itemFloat 0.8s linear infinite alternate-reverse;
+}
+.Gun_shadow {
+  background: url(images/items/item_shadow.png) no-repeat no-repeat;
+}
+
 @keyframes itemFloat {
   from {
     transform: translateY(0);
@@ -773,9 +793,6 @@ body {
   to {
     transform: translateY(5px);
   }
-}
-.Item_shadow {
-  background: url(images/items/item_shadow.png) no-repeat no-repeat;
 }
 
 .SceneTransition {

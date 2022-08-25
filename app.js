@@ -1346,14 +1346,31 @@ function isSolid(x,y) {
   )
 }
 
-function getRandomItemSpot() {
-  //We don't look things up by key here, so just return an x/y
+function getRandomVotingCardSpot() {
   return randomFromArray([
-    { x: 132, y: 15 },
-    { x: 133, y: 15 },
-    { x: 134, y: 15 },
+    { i: 133, j: 15 },
+    //{ i: 103, j: 31 },
+    //{ i: 82, j: 24 },
+    //{ i: 79, j: 46 },
+    //{ i: 59, j: 29 },
+    //{ i: 81, j: 13 },
+    //{ i: 61, j: 13 },
+    //{ i: 45, j: 3 },
+    //{ i: 32, j: 16 },
+    //{ i: 31, j: 32 },
+    //{ i: 27, j: 15 },
   ]);
 }
+
+function getRandomGunSpot() {
+  return randomFromArray([
+    { i: 132, j: 15 },
+    //{ i: 9, j: 9 },
+    //{ i: 4, j: 29 },
+    //{ i: 23, j: 7 },
+  ]);
+}
+
 
 function startGame() {
 	document.querySelector('.stillScreen').remove();
@@ -1369,25 +1386,73 @@ function startGame() {
   let playerRef;
   let players = {};
   let playerElements = {};
-  let items = {};
-  let itemElements = {};
+  let votingCards = {};
+  let votingCardElements = {};
+  let guns = {};
+  let gunElements = {};
   const startingX = 133;
   const startingY = 17;
 
   const gameContainer = document.querySelector(".game-container");
   const playerSkinButton = document.querySelector("#b2");
 
-  function placeItem() {
-    const {x,y} = getRandomItemSpot();
-    const itemRef = firebase.database().ref(`items/${getKeyString(x, y)}`);
-    itemRef.set({
+  function placeItems() {
+    placeGun();
+    placeVotingCard();
+  }
+
+  function placeVotingCard() {
+    const {i,j} = getRandomVotingCardSpot();
+    let x = i;
+    let y = j;
+    let key = getKeyString(x, y);
+    while (votingCards[key] !== undefined) {
+      let {i,j} = getRandomVotingCardSpot();
+      x = i;
+      y = j;
+      key = getKeyString(x, y);
+    }
+    console.log("NEW VOTING CARD: " + key + " / " + x + ", " + y);
+    const votingCardRef = firebase.database().ref(`votingCard/${key}`);
+    votingCardRef.set({
       x,
       y,
     })
+  }
 
-    setTimeout(() => {
-      placeItem();
-    }, 2000);
+  function placeGun() {
+    const {i,j} = getRandomGunSpot();
+    let x = i;
+    let y = j;
+    let key = getKeyString(x, y);
+    while (guns[key] !== undefined) {
+      let {i,j} = getRandomGunSpot();
+      x = i;
+      y = j;
+      key = getKeyString(x, y);
+    }
+    console.log("NEW VOTING CARD: " + key + " / " + x + ", " + y);
+    const gunRef = firebase.database().ref(`gun/${key}`);
+    gunRef.set({
+      x,
+      y,
+    })
+  }
+
+  function attemptGrabVotingCard(x, y) {
+    const key = getKeyString(x, y);
+    if (votingCards[key] && !players[playerId].votingCard) {
+      players[playerId].votingCard = true;
+      firebase.database().ref(`votingCard/${key}`).remove();
+    }
+  }
+
+  function attemptGrabGun(x, y) {
+    const key = getKeyString(x, y);
+    if (guns[key] && !players[playerId].gun) {
+      players[playerId].gun = true;
+      firebase.database().ref(`gun/${key}`).remove();
+    }
   }
 
   function walk(xChange=0, yChange=0, key) {
@@ -1484,6 +1549,7 @@ function startGame() {
     new KeyPressListener("KeyS", () => handleArrowPress("KeyS"))
     new KeyPressListener("KeyA", () => handleArrowPress("KeyA"))
     new KeyPressListener("KeyD", () => handleArrowPress("KeyD"))
+    new KeyPressListener("Space", () => placeItems())
 
     new KeyReleaseListener("ArrowUp", () => handleArrowRelease("ArrowUp"))
     new KeyReleaseListener("ArrowDown", () => handleArrowRelease("ArrowDown"))
@@ -1495,7 +1561,8 @@ function startGame() {
     new KeyReleaseListener("KeyD", () => handleArrowRelease("KeyD"))
 
     const allPlayersRef = firebase.database().ref(`players`);
-    const allItemsRef = firebase.database().ref(`items`);
+    const allVotingCardRef = firebase.database().ref(`votingCard`);
+    const allGunRef = firebase.database().ref(`gun`);
 
     allPlayersRef.on("value", (snapshot) => {
       //Fires whenever a change occurs
@@ -1513,7 +1580,10 @@ function startGame() {
 
         if (key == playerId) {
 
-          console.log(players[playerId].x + ", " + players[playerId].y)
+          console.log(players[playerId].x + ", " + players[playerId].y);
+
+          attemptGrabVotingCard(players[playerId].x, players[playerId].y);
+          attemptGrabGun(players[playerId].x, players[playerId].y);
 
           const ML = ((startingX - players[playerId].x) * 16) + 'px';
           const MT = ((startingY - players[playerId].y) * 16) + 'px';
@@ -1523,7 +1593,6 @@ function startGame() {
 
 
           if (players[playerId].x === 133 && players[playerId].y === 11) {
-            //blockedSpaces["85x59"] = true;
             const sceneTransition = new SceneTransition();
             sceneTransition.init(document.querySelector(".game-container"), () => {
 
@@ -1538,10 +1607,16 @@ function startGame() {
               document.querySelector(".mapUpper").style.transform = `translate3d(${ML}, ${MT}, 0)`;
               document.querySelector(".mapLower").style.transform = `translate3d(${ML}, ${MT}, 0)`;
               
-              Object.keys(items).forEach((key) => {
-                let el = itemElements[key]
-                const left = 16 * (items[key].x - players[playerId].x + 12) + "px";
-                const top = 16 * (items[key].y - players[playerId].y + 7) + "px";
+              Object.keys(votingCards).forEach((key) => {
+                let el = votingCardElements[key]
+                const left = 16 * (votingCards[key].x - players[playerId].x + 12) + "px";
+                const top = 16 * (votingCards[key].y - players[playerId].y + 7) + "px";
+                el.style.transform = `translate3d(${left}, ${top}, 0)`;
+              })
+              Object.keys(guns).forEach((key) => {
+                let el = gunElements[key]
+                const left = 16 * (guns[key].x - players[playerId].x + 12) + "px";
+                const top = 16 * (guns[key].y - players[playerId].y + 7) + "px";
                 el.style.transform = `translate3d(${left}, ${top}, 0)`;
               })
             }, 350);
@@ -1549,14 +1624,19 @@ function startGame() {
               sceneTransition.fadeOut();
             }, 600);
           }
-
+          Object.keys(votingCards).forEach((key) => {
+            let el = votingCardElements[key]
+            const left = 16 * (votingCards[key].x - players[playerId].x + 12) + "px";
+            const top = 16 * (votingCards[key].y - players[playerId].y + 7) + "px";
+            el.style.transform = `translate3d(${left}, ${top}, 0)`;
+          })
+          Object.keys(guns).forEach((key) => {
+            let el = gunElements[key]
+            const left = 16 * (guns[key].x - players[playerId].x + 12) + "px";
+            const top = 16 * (guns[key].y - players[playerId].y + 7) + "px";
+            el.style.transform = `translate3d(${left}, ${top}, 0)`;
+          })
         }
-      })
-      Object.keys(items).forEach((key) => {
-        let el = itemElements[key]
-        const left = 16 * (items[key].x - players[playerId].x + 12) + "px";
-        const top = 16 * (items[key].y - players[playerId].y + 7) + "px";
-        el.style.transform = `translate3d(${left}, ${top}, 0)`;
       })
     })
     allPlayersRef.on("child_added", (snapshot) => {
@@ -1584,7 +1664,6 @@ function startGame() {
       gameContainer.appendChild(characterElement);
     })
 
-
     //Remove character DOM element after they leave
     allPlayersRef.on("child_removed", (snapshot) => {
       const removedKey = snapshot.val().id;
@@ -1592,34 +1671,66 @@ function startGame() {
       delete playerElements[removedKey];
     })
 
-    allItemsRef.on("child_added", (snapshot) => {
-      const item = snapshot.val();
-      const key = getKeyString(item.x, item.y);
-      items[key] = item;
+    // VotingCards
+    allVotingCardRef.on("value", (snapshot) => {
+      votingCards = snapshot.val() || {};
+    });
+    allVotingCardRef.on("child_added", (snapshot) => {
+      const votingCard = snapshot.val();
+      const key = getKeyString(votingCard.x, votingCard.y);
+      votingCards[key] = votingCard;
 
-      // Create the DOM Element
-      const itemElement = document.createElement("div");
-      itemElement.classList.add("Item", "grid-cell");
-      itemElement.innerHTML = `
-        <div class="Item_shadow grid-cell"></div>
-        <div class="Item_sprite grid-cell"></div>
+      const votingCardElement = document.createElement("div");
+      votingCardElement.classList.add("votingCard", "grid-cell");
+      votingCardElement.innerHTML = `
+        <div class="VotingCard_shadow grid-cell"></div>
+        <div class="VotingCard_sprite grid-cell"></div>
       `;
 
-      // Position the Element
-      const left = 16 * (item.x - players[playerId].x + 12) + "px";
-      const top = 16 * (item.y - players[playerId].y + 7) + "px";
-      itemElement.style.transform = `translate3d(${left}, ${top}, 0)`;
+      const left = 16 * (votingCard.x - players[playerId].x + 12) + "px";
+      const top = 16 * (votingCard.y - players[playerId].y + 7) + "px";
+      votingCardElement.style.transform = `translate3d(${left}, ${top}, 0)`;
 
-      // Keep a reference for removal later and add to DOM
-      itemElements[key] = itemElement;
-      gameContainer.appendChild(itemElement);
+      votingCardElements[key] = votingCardElement;
+      gameContainer.appendChild(votingCardElement);
     })
-    allItemsRef.on("child_removed", (snapshot) => {
+    allVotingCardRef.on("child_removed", (snapshot) => {
       const {x,y} = snapshot.val();
       const keyToRemove = getKeyString(x,y);
-      gameContainer.removeChild( itemElements[keyToRemove] );
-      delete itemElements[keyToRemove];
+      gameContainer.removeChild( votingCardElements[keyToRemove] );
+      delete votingCardElements[keyToRemove];
     })
+
+    // guns
+    allGunRef.on("value", (snapshot) => {
+      guns = snapshot.val() || {};
+    });
+    allGunRef.on("child_added", (snapshot) => {
+      const gun = snapshot.val();
+      const key = getKeyString(gun.x, gun.y);
+      guns[key] = gun;
+
+      const gunElement = document.createElement("div");
+      gunElement.classList.add("gun", "grid-cell");
+      gunElement.innerHTML = `
+        <div class="Gun_shadow grid-cell"></div>
+        <div class="Gun_sprite grid-cell"></div>
+      `;
+
+      const left = 16 * (gun.x - players[playerId].x + 12) + "px";
+      const top = 16 * (gun.y - players[playerId].y + 7) + "px";
+      gunElement.style.transform = `translate3d(${left}, ${top}, 0)`;
+
+      gunElements[key] = gunElement;
+      gameContainer.appendChild(gunElement);
+    })
+    allGunRef.on("child_removed", (snapshot) => {
+      const {x,y} = snapshot.val();
+      const keyToRemove = getKeyString(x,y);
+      gameContainer.removeChild( gunElements[keyToRemove] );
+      delete gunElements[keyToRemove];
+    })
+
 
     playerSkinButton.addEventListener("click", () => {
       const mySkinIndex = skinID.indexOf(players[playerId].char);
@@ -1676,7 +1787,9 @@ function startGame() {
         x:startingX,
         y:startingY,
         walking: "no",
-        voting_card: false,
+        alive: true,
+        votingCard: false,
+        gun: false,
       })
 
       //Remove me from Firebase when I diconnect
