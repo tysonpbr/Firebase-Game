@@ -46,6 +46,17 @@ body {
   overflow: hidden;
 }
 
+.shadow {
+  position: absolute;
+  width: 400px;
+  height: 208px;
+  background: url(images/maps/shadowSmallDown.png);
+  transform: scale(1);
+  image-rendering: pixelated;
+  overflow: hidden;
+  z-index: 5;
+}
+
 .gameInterface {
   position: absolute;
   width: 400px;

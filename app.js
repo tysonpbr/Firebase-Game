@@ -1376,6 +1376,9 @@ function startGame() {
 	document.querySelector('.stillScreen').remove();
   document.querySelector('.scrollScreen').remove();
   document.querySelector('.buttons').remove();
+  const shadow = document.createElement("div");
+  shadow.classList.add("shadow");
+  document.querySelector(".gameInterface").appendChild(shadow);
 }
 
 (function () {
@@ -1482,15 +1485,19 @@ function startGame() {
       const newY = players[playerId].y + yChange;
       if (xChange === 1) {
         players[playerId].direction = "right";
+        document.querySelector(".shadow").style.background = "url(images/maps/shadowSmallRight.png)";
       }
       if (xChange === -1) {
         players[playerId].direction = "left";
+        document.querySelector(".shadow").style.background = "url(images/maps/shadowSmallLeft.png)";
       }
       if (yChange === -1) {
         players[playerId].direction = "up";
+        document.querySelector(".shadow").style.background = "url(images/maps/shadowSmallUp.png)";
       }
       if (yChange === 1) {
         players[playerId].direction = "down";
+        document.querySelector(".shadow").style.background = "url(images/maps/shadowSmallDown.png)";
       }
       playerRef.set(players[playerId]);
       for (const player in players) {
