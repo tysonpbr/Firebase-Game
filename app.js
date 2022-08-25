@@ -1379,6 +1379,9 @@ function startGame() {
   const shadow = document.createElement("div");
   shadow.classList.add("shadow");
   document.querySelector(".gameInterface").appendChild(shadow);
+  //const shadowBig = document.createElement("div");
+  //shadowBig.classList.add("shadowBig");
+  //document.querySelector(".gameInterface").appendChild(shadowBig);
 }
 
 (function () {
@@ -1485,19 +1488,39 @@ function startGame() {
       const newY = players[playerId].y + yChange;
       if (xChange === 1) {
         players[playerId].direction = "right";
-        document.querySelector(".shadow").style.background = "url(images/maps/shadowSmallRight.png)";
+        if (players[playerId].flashlight) {
+          document.querySelector(".shadowBig").style.background = "url(images/maps/shadowRight.png)";
+        }
+        else {
+          document.querySelector(".shadow").style.background = "url(images/maps/shadowRight.png)";
+        }
       }
       if (xChange === -1) {
         players[playerId].direction = "left";
-        document.querySelector(".shadow").style.background = "url(images/maps/shadowSmallLeft.png)";
+        if (players[playerId].flashlight) {
+          document.querySelector(".shadowBig").style.background = "url(images/maps/shadowLeft.png)";
+        }
+        else {
+          document.querySelector(".shadow").style.background = "url(images/maps/shadowLeft.png)";
+        }
       }
       if (yChange === -1) {
         players[playerId].direction = "up";
-        document.querySelector(".shadow").style.background = "url(images/maps/shadowSmallUp.png)";
+        if (players[playerId].flashlight) {
+          document.querySelector(".shadowBig").style.background = "url(images/maps/shadowUp.png)";
+        }
+        else {
+          document.querySelector(".shadow").style.background = "url(images/maps/shadowUp.png)";
+        }
       }
       if (yChange === 1) {
         players[playerId].direction = "down";
-        document.querySelector(".shadow").style.background = "url(images/maps/shadowSmallDown.png)";
+        if (players[playerId].flashlight) {
+          document.querySelector(".shadowBig").style.background = "url(images/maps/shadowDown.png)";
+        }
+        else {
+          document.querySelector(".shadow").style.background = "url(images/maps/shadowDown.png)";
+        }
       }
       playerRef.set(players[playerId]);
       for (const player in players) {
@@ -1830,6 +1853,7 @@ function startGame() {
         alive: true,
         votingCard: false,
         gun: false,
+        flashlight: false,
       })
 
       //Remove me from Firebase when I diconnect

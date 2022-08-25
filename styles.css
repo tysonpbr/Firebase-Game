@@ -33,6 +33,7 @@ body {
   width: 80px;
   height: 30px;
   outline: 4px solid #fff;
+  z-index: 6;
 }
 
 .game-container {
@@ -50,8 +51,21 @@ body {
   position: absolute;
   width: 400px;
   height: 208px;
-  background: url(images/maps/shadowSmallDown.png);
+  background: url(images/maps/shadowDown.png);
   transform: scale(1);
+  image-rendering: pixelated;
+  overflow: hidden;
+  z-index: 5;
+}
+
+.shadowBig {
+  top: 0;
+  left: 0;
+  position: absolute;
+  width: 400px;
+  height: 208px;
+  background: url(images/maps/shadowDown.png);
+  transform: scale(3);
   image-rendering: pixelated;
   overflow: hidden;
   z-index: 5;
