@@ -1327,6 +1327,17 @@ const mapData = {
 
 const skinID = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"];
 
+const meetingSpots = [
+  { i: 126, j: 58 },
+  { i: 127, j: 58 },
+  { i: 128, j: 58 },
+  { i: 129, j: 58 },
+  { i: 134, j: 58 },
+  { i: 135, j: 58 },
+  { i: 136, j: 58 },
+  { i: 137, j: 58 },
+];
+
 //Misc Helpers
 function randomFromArray(array) {
   return array[Math.floor(Math.random() * array.length)];
@@ -1346,18 +1357,6 @@ function isSolid(x,y) {
   )
 }
 
-function getRandomMeetingSpot() {
-  return randomFromArray([
-    { i: 126, j: 58 },
-    { i: 127, j: 58 },
-    { i: 128, j: 58 },
-    { i: 129, j: 58 },
-    { i: 134, j: 58 },
-    { i: 135, j: 58 },
-    { i: 136, j: 58 },
-    { i: 137, j: 58 },
-  ]);
-}
 
 function getRandomVotingCardSpot() {
   return randomFromArray([
@@ -1419,7 +1418,7 @@ function startGame() {
   let time;
   let clock;
   let clockInterval;
-  let meetingSpots = {};
+  let playerOrder = [];
 
   const gameContainer = document.querySelector(".game-container");
   const playerSkinButton = document.querySelector("#b2");
@@ -1454,14 +1453,12 @@ function startGame() {
   }
 
   function firstRound(){
+    console.log("HERE");
     inLobby = false;
-    let admin = playerId;
     Object.keys(players).forEach((key) => {
-      if (admin.localeCompare(key)) {
-        admin = key;
-      }
+      playerOrder.unshift(key);
     })
-    console.log("admin: " + admin);
+    console.log(playerOrder);
   }
 
   function startRound() {
@@ -1485,18 +1482,9 @@ function startGame() {
     inRound = false;
     clearInterval(clockInterval);
     clock.remove();
-    const {i,j} = getRandomMeetingSpot();
-    let x = i;
-    let y = j;
-    let key = getKeyString(x, y);
-    while (meetingSpots[key] !== undefined) {
-      let {i,j} = getRandomVotingCardSpot();
-      x = i;
-      y = j;
-      key = getKeyString(x, y);
-    }
-    meetingSpots[key] = true;
-    teleportTo(x, y);
+    const index = playerOrder.indexOf(playerId);
+    const {i,j} = meetingSpots[index];
+    teleportTo(i, j);
     setTimeout(function() {
       if (players[playerId].flashlight){
         document.querySelector(".shadowBig").remove();
@@ -1508,7 +1496,7 @@ function startGame() {
   }
 
   function teleportTo(teleport_x, teleport_y) {
-    console.log("Teleport to: " + teleport_x + ", " + teleport_y);
+    //console.log("Teleport to: " + teleport_x + ", " + teleport_y);
     setTimeout(function() {
       players[playerId].x = teleport_x;
       players[playerId].y = teleport_y;
@@ -1577,7 +1565,7 @@ function startGame() {
       y = j;
       key = getKeyString(x, y);
     }
-    console.log("NEW VOTING CARD: " + key + " / " + x + ", " + y);
+    //console.log("NEW VOTING CARD: " + key + " / " + x + ", " + y);
     const votingCardRef = firebase.database().ref(`votingCard/${key}`);
     votingCardRef.set({
       x,
@@ -1596,7 +1584,7 @@ function startGame() {
       y = j;
       key = getKeyString(x, y);
     }
-    console.log("NEW GUN: " + key + " / " + x + ", " + y);
+    //console.log("NEW GUN: " + key + " / " + x + ", " + y);
     const gunRef = firebase.database().ref(`gun/${key}`);
     gunRef.set({
       x,
@@ -1615,7 +1603,7 @@ function startGame() {
       y = j;
       key = getKeyString(x, y);
     }
-    console.log("NEW FLASHLIGHT: " + key + " / " + x + ", " + y);
+    //console.log("NEW FLASHLIGHT: " + key + " / " + x + ", " + y);
     const flashlightRef = firebase.database().ref(`flashlight/${key}`);
     flashlightRef.set({
       x,
@@ -1823,7 +1811,7 @@ function startGame() {
 
         if (key == playerId) {
 
-          console.log(players[playerId].x + ", " + players[playerId].y);
+          //console.log(players[playerId].x + ", " + players[playerId].y);
 
           attemptGrabVotingCard(players[playerId].x, players[playerId].y);
           attemptGrabGun(players[playerId].x, players[playerId].y);
@@ -1928,7 +1916,7 @@ function startGame() {
     })
     allVotingCardRef.on("child_removed", (snapshot) => {
       const {x,y} = snapshot.val();
-      console.log("Voting Card removed: " + x + ", " + y);
+      //console.log("Voting Card removed: " + x + ", " + y);
       const keyToRemove = getKeyString(x,y);
       gameContainer.removeChild( votingCardElements[keyToRemove] );
       delete votingCardElements[keyToRemove];
@@ -1959,7 +1947,7 @@ function startGame() {
     })
     allGunRef.on("child_removed", (snapshot) => {
       const {x,y} = snapshot.val();
-      console.log("Gun removed: " + x + ", " + y);
+      //console.log("Gun removed: " + x + ", " + y);
       const keyToRemove = getKeyString(x,y);
       gameContainer.removeChild( gunElements[keyToRemove] );
       delete gunElements[keyToRemove];
@@ -1990,7 +1978,7 @@ function startGame() {
     })
     allFlashlightRef.on("child_removed", (snapshot) => {
       const {x,y} = snapshot.val();
-      console.log("Flashlight removed: " + x + ", " + y);
+      //console.log("Flashlight removed: " + x + ", " + y);
       const keyToRemove = getKeyString(x,y);
       gameContainer.removeChild( flashlightElements[keyToRemove] );
       delete flashlightElements[keyToRemove];
@@ -2046,7 +2034,6 @@ function startGame() {
       playerRef = firebase.database().ref(`players/${playerId}`);
 
       playerRef.set({
-        admin: false,
         id: playerId,
         direction: "down",
         char: "zero",
