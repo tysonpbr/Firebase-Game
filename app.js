@@ -1455,6 +1455,13 @@ function startGame() {
 
   function firstRound(){
     inLobby = false;
+    let admin = playerId;
+    Object.keys(players).forEach((key) => {
+      if (admin.localeCompare(key)) {
+        admin = key;
+      }
+    })
+    console.log("admin: " + admin);
   }
 
   function startRound() {
@@ -2038,20 +2045,8 @@ function startGame() {
       playerId = user.uid;
       playerRef = firebase.database().ref(`players/${playerId}`);
 
-      let _admin = false;
-      let count = 0;
-
-      Object.keys(players).forEach((key) => {
-        count++;
-      })
-
-      if (count == 0) {
-        console.log("ADMIN")
-        _admin = true;
-      }
-
       playerRef.set({
-        admin: _admin,
+        admin: false,
         id: playerId,
         direction: "down",
         char: "zero",
