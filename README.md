@@ -5,13 +5,12 @@
 Personal project multiplayer game based loosely on the card/party game Mafia and run via Firebase online servers.
 
 Tyson's Tasks
-- test inter-round movement will multiple players
-- create flashlight png
-- add inter-round movement to round end meeting map
+- add round end functionality and transition to next round
 - add multiple items and set unique locations [ongoing]
+- randomize end round spawn location order [afterTesting]
+- uncomment the movement blocker [afterTesting]
 
 Trixie's Tasks
-- test inter-round movement will multiple players
-- create round end meeting map (tyson's pc)
-- create round end cycle 
+- create round end meeting map 
+- create randomizer to pick game roles (and how many of each)
 - game name
