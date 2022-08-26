@@ -1346,6 +1346,19 @@ function isSolid(x,y) {
   )
 }
 
+function getRandomMeetingSpot() {
+  return randomFromArray([
+    { i: 126, j: 58 },
+    { i: 127, j: 58 },
+    { i: 128, j: 58 },
+    { i: 129, j: 58 },
+    { i: 134, j: 58 },
+    { i: 135, j: 58 },
+    { i: 136, j: 58 },
+    { i: 137, j: 58 },
+  ]);
+}
+
 function getRandomVotingCardSpot() {
   return randomFromArray([
     { i: 84, j: 54 },
@@ -1406,6 +1419,7 @@ function startGame() {
   let time;
   let clock;
   let clockInterval;
+  let meetingSpots = {};
 
   const gameContainer = document.querySelector(".game-container");
   const playerSkinButton = document.querySelector("#b2");
@@ -1428,7 +1442,7 @@ function startGame() {
 
     seconds = seconds < 10 ? '0' + seconds : seconds;
 
-    clock.innerHTML = `${minutes}: ${seconds}`;
+    clock.innerHTML = `${minutes}:${seconds}`;
     time--;
 
     if (time === 0) {
@@ -1464,7 +1478,18 @@ function startGame() {
     inRound = false;
     clearInterval(clockInterval);
     clock.remove();
-    teleportTo(startingX, startingY);
+    const {i,j} = getRandomMeetingSpot();
+    let x = i;
+    let y = j;
+    let key = getKeyString(x, y);
+    while (meetingSpots[key] !== undefined) {
+      let {i,j} = getRandomVotingCardSpot();
+      x = i;
+      y = j;
+      key = getKeyString(x, y);
+    }
+    meetingSpots[key] = true;
+    teleportTo(x, y);
     setTimeout(function() {
       if (players[playerId].flashlight){
         document.querySelector(".shadowBig").remove();
