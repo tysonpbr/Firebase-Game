@@ -867,7 +867,7 @@ body {
 }
 
 .MagnifyingGlass_sprite {
-  background: url(images/items/gun.png);
+  background: url(images/items/magnifyingGlass.png);
   width: 16px;
   height: 16px;
   animation: itemFloat 0.8s linear infinite alternate-reverse;
@@ -883,7 +883,7 @@ body {
 }
 
 .Halo_sprite {
-  background: url(images/items/gun.png);
+  background: url(images/items/halo.png);
   width: 16px;
   height: 16px;
   animation: itemFloat 0.8s linear infinite alternate-reverse;
