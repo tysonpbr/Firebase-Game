@@ -2038,7 +2038,20 @@ function startGame() {
       playerId = user.uid;
       playerRef = firebase.database().ref(`players/${playerId}`);
 
+      let _admin = false;
+      let count = 0;
+
+      Object.keys(players).forEach((key) => {
+        count++;
+      })
+
+      if (count == 0) {
+        console.log("ADMIN")
+        _admin = true;
+      }
+
       playerRef.set({
+        admin: _admin,
         id: playerId,
         direction: "down",
         char: "zero",
