@@ -860,6 +860,38 @@ body {
   background: url(images/items/item_shadow.png) no-repeat no-repeat;
 }
 
+/* magnifyingGlass */
+.MagnifyingGlass {
+  transition: transform 0.2s;
+  transition-timing-function: linear;
+}
+
+.MagnifyingGlass_sprite {
+  background: url(images/items/gun.png);
+  width: 16px;
+  height: 16px;
+  animation: itemFloat 0.8s linear infinite alternate-reverse;
+}
+.MagnifyingGlass_shadow {
+  background: url(images/items/item_shadow.png) no-repeat no-repeat;
+}
+
+/* halo */
+.Halo {
+  transition: transform 0.2s;
+  transition-timing-function: linear;
+}
+
+.Halo_sprite {
+  background: url(images/items/gun.png);
+  width: 16px;
+  height: 16px;
+  animation: itemFloat 0.8s linear infinite alternate-reverse;
+}
+.Halo_shadow {
+  background: url(images/items/item_shadow.png) no-repeat no-repeat;
+}
+
 @keyframes itemFloat {
   from {
     transform: translateY(0);

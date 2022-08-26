@@ -1389,6 +1389,17 @@ function getRandomFlashlightSpot() {
   ]);
 }
 
+function getRandomMagnifyingGlassSpot() {
+  return randomFromArray([
+    { i: 87, j: 54 },
+  ]);
+}
+
+function getRandomHaloSpot() {
+  return randomFromArray([
+    { i: 88, j: 54 },
+  ]);
+}
 
 function startGame() {
 	document.querySelector('.stillScreen').remove();
@@ -1410,6 +1421,10 @@ function startGame() {
   let gunElements = {};
   let flashlights = {};
   let flashlightElements = {};
+  let magnifyingGlasses = {};
+  let magnifyingGlassElements = {};
+  let halos = {};
+  let haloElements = {};
   let inRound = false;
   let inLobby = true;
   const startingX = 133;
@@ -1542,6 +1557,18 @@ function startGame() {
         const top = 16 * (flashlights[key].y - players[playerId].y + 7) + "px";
         el.style.transform = `translate3d(${left}, ${top}, 0)`;
       })
+      Object.keys(magnifyingGlasses).forEach((key) => {
+        let el = magnifyingGlassElements[key]
+        const left = 16 * (magnifyingGlasses[key].x - players[playerId].x + 12) + "px";
+        const top = 16 * (magnifyingGlasses[key].y - players[playerId].y + 7) + "px";
+        el.style.transform = `translate3d(${left}, ${top}, 0)`;
+      })
+      Object.keys(halos).forEach((key) => {
+        let el = haloElements[key]
+        const left = 16 * (halos[key].x - players[playerId].x + 12) + "px";
+        const top = 16 * (halos[key].y - players[playerId].y + 7) + "px";
+        el.style.transform = `translate3d(${left}, ${top}, 0)`;
+      })
     }, 350);
     setTimeout(function() {
       sceneTransition.fadeOut();
@@ -1552,6 +1579,8 @@ function startGame() {
     placeFlashlight();
     placeGun();
     placeVotingCard();
+    placeMagnifyingGlass();
+    placeHalo();
   }
 
   function placeVotingCard() {
@@ -1611,6 +1640,44 @@ function startGame() {
     })
   }
 
+  function placeMagnifyingGlass() {
+    const {i,j} = getRandomMagnifyingGlassSpot();
+    let x = i;
+    let y = j;
+    let key = getKeyString(x, y);
+    while (magnifyingGlasses[key] !== undefined) {
+      let {i,j} = getRandomMagnifyingGlassSpot();
+      x = i;
+      y = j;
+      key = getKeyString(x, y);
+    }
+    //console.log("NEW MAGNIFYING GLASS: " + key + " / " + x + ", " + y);
+    const magnifyingGlassRef = firebase.database().ref(`magnifyingGlass/${key}`);
+    magnifyingGlassRef.set({
+      x,
+      y,
+    })
+  }
+
+  function placeHalo() {
+    const {i,j} = getRandomHaloSpot();
+    let x = i;
+    let y = j;
+    let key = getKeyString(x, y);
+    while (halos[key] !== undefined) {
+      let {i,j} = getRandomHaloSpot();
+      x = i;
+      y = j;
+      key = getKeyString(x, y);
+    }
+    //console.log("NEW HALO: " + key + " / " + x + ", " + y);
+    const haloRef = firebase.database().ref(`halo/${key}`);
+    haloRef.set({
+      x,
+      y,
+    })
+  }
+
   function attemptGrabVotingCard(x, y) {
     const key = getKeyString(x, y);
     if (votingCards[key] && !players[playerId].votingCard) {
@@ -1648,6 +1715,22 @@ function startGame() {
       else if (players[playerId].direction === "down") {
         document.querySelector(".shadowBig").style.background = "url(images/maps/shadowDown.png)";
       }
+    }
+  }
+
+  function attemptGrabMagnifyingGlass(x, y) {
+    const key = getKeyString(x, y);
+    if (magnifyingGlasses[key] && !players[playerId].magnifyingGlass) {
+      players[playerId].magnifyingGlass = true;
+      firebase.database().ref(`magnifyingGlass/${key}`).remove();
+    }
+  }
+
+  function attemptGrabHalo(x, y) {
+    const key = getKeyString(x, y);
+    if (halos[key] && !players[playerId].halo) {
+      players[playerId].halo = true;
+      firebase.database().ref(`halo/${key}`).remove();
     }
   }
 
@@ -1794,6 +1877,8 @@ function startGame() {
     const allVotingCardRef = firebase.database().ref(`votingCard`);
     const allGunRef = firebase.database().ref(`gun`);
     const allFlashlightRef = firebase.database().ref(`flashlight`);
+    const allMagnifyingGlassRef = firebase.database().ref(`magnifyingGlass`);
+    const allHaloRef = firebase.database().ref(`halo`);
 
     allPlayersRef.on("value", (snapshot) => {
       //Fires whenever a change occurs
@@ -1816,6 +1901,8 @@ function startGame() {
           attemptGrabVotingCard(players[playerId].x, players[playerId].y);
           attemptGrabGun(players[playerId].x, players[playerId].y);
           attemptGrabFlashlight(players[playerId].x, players[playerId].y);
+          attemptGrabMagnifyingGlass(players[playerId].x, players[playerId].y);
+          attemptGrabHalo(players[playerId].x, players[playerId].y);
 
           const ML = ((startingX - players[playerId].x) * 16) + 'px';
           const MT = ((startingY - players[playerId].y) * 16) + 'px';
@@ -1855,6 +1942,18 @@ function startGame() {
           let el = flashlightElements[key]
           const left = 16 * (flashlights[key].x - players[playerId].x + 12) + "px";
           const top = 16 * (flashlights[key].y - players[playerId].y + 7) + "px";
+          el.style.transform = `translate3d(${left}, ${top}, 0)`;
+        })
+        Object.keys(magnifyingGlasses).forEach((key) => {
+          let el = magnifyingGlassElements[key]
+          const left = 16 * (magnifyingGlasses[key].x - players[playerId].x + 12) + "px";
+          const top = 16 * (magnifyingGlasses[key].y - players[playerId].y + 7) + "px";
+          el.style.transform = `translate3d(${left}, ${top}, 0)`;
+        })
+        Object.keys(halos).forEach((key) => {
+          let el = haloElements[key]
+          const left = 16 * (halos[key].x - players[playerId].x + 12) + "px";
+          const top = 16 * (halos[key].y - players[playerId].y + 7) + "px";
           el.style.transform = `translate3d(${left}, ${top}, 0)`;
         })
       })
@@ -1953,7 +2052,7 @@ function startGame() {
       delete gunElements[keyToRemove];
     })
 
-    // flashlight
+    // flashlights
     allFlashlightRef.on("value", (snapshot) => {
       flashlights = snapshot.val() || {};
     });
@@ -1982,6 +2081,68 @@ function startGame() {
       const keyToRemove = getKeyString(x,y);
       gameContainer.removeChild( flashlightElements[keyToRemove] );
       delete flashlightElements[keyToRemove];
+    })
+
+    // magnifyingGlasses
+    allMagnifyingGlassRef.on("value", (snapshot) => {
+      magnifyingGlasses = snapshot.val() || {};
+    });
+    allMagnifyingGlassRef.on("child_added", (snapshot) => {
+      const magnifyingGlass = snapshot.val();
+      const key = getKeyString(magnifyingGlass.x, magnifyingGlass.y);
+      magnifyingGlasses[key] = magnifyingGlass;
+
+      const magnifyingGlassElement = document.createElement("div");
+      magnifyingGlassElement.classList.add("magnifyingGlass", "grid-cell");
+      magnifyingGlassElement.innerHTML = `
+        <div class="MagnifyingGlass_shadow grid-cell"></div>
+        <div class="MagnifyingGlass_sprite grid-cell"></div>
+      `;
+
+      const left = 16 * (magnifyingGlass.x - players[playerId].x + 12) + "px";
+      const top = 16 * (magnifyingGlass.y - players[playerId].y + 7) + "px";
+      magnifyingGlassElement.style.transform = `translate3d(${left}, ${top}, 0)`;
+
+      magnifyingGlassElements[key] = magnifyingGlassElement;
+      gameContainer.appendChild(magnifyingGlassElement);
+    })
+    allMagnifyingGlassRef.on("child_removed", (snapshot) => {
+      const {x,y} = snapshot.val();
+      //console.log("MagnifyingGlass removed: " + x + ", " + y);
+      const keyToRemove = getKeyString(x,y);
+      gameContainer.removeChild( magnifyingGlassElements[keyToRemove] );
+      delete magnifyingGlassElements[keyToRemove];
+    })
+
+    // halos
+    allHaloRef.on("value", (snapshot) => {
+      halos = snapshot.val() || {};
+    });
+    allHaloRef.on("child_added", (snapshot) => {
+      const halo = snapshot.val();
+      const key = getKeyString(halo.x, halo.y);
+      halos[key] = halo;
+
+      const haloElement = document.createElement("div");
+      haloElement.classList.add("halo", "grid-cell");
+      haloElement.innerHTML = `
+        <div class="Halo_shadow grid-cell"></div>
+        <div class="Halo_sprite grid-cell"></div>
+      `;
+
+      const left = 16 * (halo.x - players[playerId].x + 12) + "px";
+      const top = 16 * (halo.y - players[playerId].y + 7) + "px";
+      haloElement.style.transform = `translate3d(${left}, ${top}, 0)`;
+
+      haloElements[key] = haloElement;
+      gameContainer.appendChild(haloElement);
+    })
+    allHaloRef.on("child_removed", (snapshot) => {
+      const {x,y} = snapshot.val();
+      //console.log("Halo removed: " + x + ", " + y);
+      const keyToRemove = getKeyString(x,y);
+      gameContainer.removeChild( haloElements[keyToRemove] );
+      delete haloElements[keyToRemove];
     })
 
 
@@ -2044,6 +2205,8 @@ function startGame() {
         votingCard: false,
         gun: false,
         flashlight: false,
+        magnifyingGlass: false,
+        halo: false,
       })
 
       //Remove me from Firebase when I diconnect
