@@ -1817,7 +1817,7 @@ function startGame() {
       let playerInNextSpace = false;
       const newX = players[playerId].x + xChange;
       const newY = players[playerId].y + yChange;
-      if (xChange === 1) {
+      if (xChange === 1 && (inRound || inLobby)) {
         players[playerId].direction = "right";
         if (inRound) {
           if (players[playerId].flashlight) {
@@ -1828,7 +1828,7 @@ function startGame() {
           }
         }
       }
-      if (xChange === -1) {
+      if (xChange === -1 && (inRound || inLobby)) {
         players[playerId].direction = "left";
         if (inRound) {
           if (players[playerId].flashlight) {
@@ -1839,7 +1839,7 @@ function startGame() {
           }
         }
       }
-      if (yChange === -1) {
+      if (yChange === -1 && (inRound || inLobby)) {
         players[playerId].direction = "up";
         if (inRound) {
           if (players[playerId].flashlight) {
@@ -1850,7 +1850,7 @@ function startGame() {
           }
         }
       }
-      if (yChange === 1) {
+      if (yChange === 1 && (inRound || inLobby)) {
         players[playerId].direction = "down";
         if (inRound) {
           if (players[playerId].flashlight) {
@@ -1867,7 +1867,7 @@ function startGame() {
           playerInNextSpace = true;
         }
       }
-      if ((!isSolid(newX, newY) && !playerInNextSpace) || (newX == 133 && newY == 11)) {
+      if (((!isSolid(newX, newY) && !playerInNextSpace) || (newX == 133 && newY == 11)) && (inRound || inLobby)) {
         //move to the next space
         players[playerId].x = newX;
         players[playerId].y = newY;
