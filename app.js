@@ -1443,7 +1443,7 @@ function startGame() {
   const playerSkinButton = document.querySelector("#b2");
 
   function startClock() {
-    startTime = 3/60; //min
+    startTime = 20/60; //min
     time = startTime * 60; //secs
     clock = document.createElement("div");
     clock.classList.add("timer");
