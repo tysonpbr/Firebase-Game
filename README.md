@@ -19,7 +19,12 @@ Tasks
 
 
 Tyson's Tasks
-- add mafia voting funstionality
+- add mafia voting funstionality 
+    - add only one vote per person
+    - add only mafia see voting 
+    - add waiting screen for non mafia 
+    - add voting completion when vote is unanimous
+    - add voting completion trigger start of angel voting
 
 Trixie's Current Task
 - create round end meeting map 
