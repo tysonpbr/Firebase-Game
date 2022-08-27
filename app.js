@@ -1328,18 +1328,18 @@ const mapData = {
 const skinID = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"];
 
 const meetingSpots = [
-  { i: 126, j: 58 },
-  { i: 127, j: 58 },
-  { i: 128, j: 58 },
-  { i: 129, j: 58 },
-  { i: 130, j: 58 },
-  { i: 131, j: 58 },
-  { i: 132, j: 58 },
-  { i: 133, j: 58 },
-  { i: 134, j: 58 },
-  { i: 135, j: 58 },
-  { i: 136, j: 58 },
-  { i: 137, j: 58 },
+  { i: 72, j: 95 },
+  { i: 73, j: 95 },
+  { i: 74, j: 95 },
+  { i: 75, j: 95 },
+  { i: 76, j: 95 },
+  { i: 77, j: 95 },
+  { i: 78, j: 95 },
+  { i: 79, j: 95 },
+  { i: 80, j: 95 },
+  { i: 81, j: 95 },
+  { i: 82, j: 95 },
+  { i: 83, j: 95 },
 ];
 
 //Misc Helpers
@@ -1971,7 +1971,7 @@ function startGame() {
 
         if (key == playerId) {
 
-          //console.log(players[playerId].x + ", " + players[playerId].y);
+          console.log(players[playerId].x + ", " + players[playerId].y);
 
           attemptGrabVotingCard(players[playerId].x, players[playerId].y);
           attemptGrabGun(players[playerId].x, players[playerId].y);
