@@ -1479,8 +1479,8 @@ function startGame() {
   }
 
   function startRound() {
-    startClock();
     inRound = true;
+    startClock();
     if (players[playerId].flashlight){
       const shadowBig = document.createElement("div");
       shadowBig.classList.add("shadowBig");
@@ -2001,7 +2001,9 @@ function startGame() {
             teleportTo(85,60);
             firstRound();
             setTimeout(function() {
-              startRound();
+              if (!inRound) {
+                startRound();
+              }
             }, 300);
           }
         }
