@@ -1813,9 +1813,6 @@ function startGame() {
   }
 
   function walk(xChange=0, yChange=0, key) {
-    if (!inRound && !inLobby) {
-      return;
-    }
     if (heldKeys.indexOf(key) === 0) {
       let playerInNextSpace = false;
       const newX = players[playerId].x + xChange;
@@ -2001,7 +1998,9 @@ function startGame() {
             teleportTo(85,60);
             firstRound();
             setTimeout(function() {
-              startRound();
+              if (!inRound) {
+                startRound();
+              }
             }, 300);
           }
         }
