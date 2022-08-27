@@ -1502,12 +1502,12 @@ function startGame() {
     clock.remove();
     const index = playerOrder.indexOf(playerId);
     const {i,j} = meetingSpots[index];
+    Object.keys(players).forEach((key) => {
+      players[key].direction = "down";
+      firebase.database().ref(`players/${key}`).set(players[key]);
+    });
     teleportTo(i, j);
     setTimeout(function() {
-      Object.keys(players).forEach((key) => {
-        players[key].direction = "down";
-        firebase.database().ref(`players/${key}`).set(players[key]);
-      });
       if (players[playerId].flashlight){
         document.querySelector(".shadowBig").remove();
       }
