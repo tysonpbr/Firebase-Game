@@ -1327,6 +1327,17 @@ const mapData = {
 
 const skinID = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"];
 
+const meetingSpots = [
+  { i: 126, j: 58 },
+  { i: 127, j: 58 },
+  { i: 128, j: 58 },
+  { i: 129, j: 58 },
+  { i: 134, j: 58 },
+  { i: 135, j: 58 },
+  { i: 136, j: 58 },
+  { i: 137, j: 58 },
+];
+
 //Misc Helpers
 function randomFromArray(array) {
   return array[Math.floor(Math.random() * array.length)];
@@ -1345,6 +1356,7 @@ function isSolid(x,y) {
     y < mapData.minY
   )
 }
+
 
 function getRandomVotingCardSpot() {
   return randomFromArray([
@@ -1377,6 +1389,17 @@ function getRandomFlashlightSpot() {
   ]);
 }
 
+function getRandomMagnifyingGlassSpot() {
+  return randomFromArray([
+    { i: 87, j: 54 },
+  ]);
+}
+
+function getRandomHaloSpot() {
+  return randomFromArray([
+    { i: 88, j: 54 },
+  ]);
+}
 
 function startGame() {
 	document.querySelector('.stillScreen').remove();
@@ -1398,31 +1421,59 @@ function startGame() {
   let gunElements = {};
   let flashlights = {};
   let flashlightElements = {};
+  let magnifyingGlasses = {};
+  let magnifyingGlassElements = {};
+  let halos = {};
+  let haloElements = {};
   let inRound = false;
+  let inLobby = true;
   const startingX = 133;
   const startingY = 17;
+  let startTime;
+  let time;
+  let clock;
+  let clockInterval;
+  let playerOrder = [];
 
   const gameContainer = document.querySelector(".game-container");
   const playerSkinButton = document.querySelector("#b2");
 
-  const startTime = 1; //min
-
-  let time = startTime * 60; //secs
+  function startClock() {
+    startTime = 1; //min
+    time = startTime * 60; //secs
+    clock = document.createElement("div");
+    clock.classList.add("timer");
+    setTimeout(function () {
+      document.querySelector(".gameInterface").appendChild(clock);
+    },1000);
+    clockInterval = setInterval(updateCountdown, 1000);
+  }
 
   function updateCountdown() {
-
-    const countdownElement = document.createElement("div");
-    countdownElement.classList.add("timer");
-    document.querySelector(".gameInterface").appendChild(countdownElement);
 
     const minutes = Math.floor(time/60);
     let seconds = time % 60;
 
     seconds = seconds < 10 ? '0' + seconds : seconds;
 
-    countdownElement.innerHTML = `${minutes}: ${seconds}`;
+    clock.innerHTML = `${minutes}:${seconds}`;
     time--;
 
+    if (time === 0) {
+      setTimeout(function() {
+        endRound();
+      }, 1500);
+    }
+
+  }
+
+  function firstRound(){
+    console.log("HERE");
+    inLobby = false;
+    Object.keys(players).forEach((key) => {
+      playerOrder.unshift(key);
+    })
+    console.log(playerOrder);
   }
 
   function startRound() {
@@ -1430,20 +1481,106 @@ function startGame() {
     if (players[playerId].flashlight){
       const shadowBig = document.createElement("div");
       shadowBig.classList.add("shadowBig");
+      shadowBig.style.background = "url(images/maps/shadowUp.png)";
       document.querySelector(".gameInterface").appendChild(shadowBig);
     }
     else {
       const shadow = document.createElement("div");
       shadow.classList.add("shadow");
+      shadow.style.background = "url(images/maps/shadowUp.png)";
       document.querySelector(".gameInterface").appendChild(shadow);
     }
 
+  }
+
+  function endRound() {
+    inRound = false;
+    clearInterval(clockInterval);
+    clock.remove();
+    const index = playerOrder.indexOf(playerId);
+    const {i,j} = meetingSpots[index];
+    teleportTo(i, j);
+    setTimeout(function() {
+      if (players[playerId].flashlight){
+        document.querySelector(".shadowBig").remove();
+      }
+      else {
+        document.querySelector(".shadow").remove();
+      }
+    }, 300);
+  }
+
+  function teleportTo(teleport_x, teleport_y) {
+    //console.log("Teleport to: " + teleport_x + ", " + teleport_y);
+    setTimeout(function() {
+      players[playerId].x = teleport_x;
+      players[playerId].y = teleport_y;
+      playerRef.set(players[playerId]);
+    }, 300);
+    const sceneTransition = new SceneTransition();
+    sceneTransition.init(document.querySelector(".game-container"), () => {})
+    setTimeout(function() {   
+            
+      const ML = ((startingX - players[playerId].x) * 16) + 'px';
+      const MT = ((startingY - players[playerId].y) * 16) + 'px';
+
+      document.querySelector(".mapUpper").style.transform = `translate3d(${ML}, ${MT}, 0)`;
+      document.querySelector(".mapLower").style.transform = `translate3d(${ML}, ${MT}, 0)`;
+
+      Object.keys(players).forEach((key) => {
+        const characterState = players[key];
+        let el = playerElements[key];
+        // Now update the DOM
+        el.setAttribute("data-char", characterState.char);
+        el.setAttribute("data-direction", characterState.direction);
+        el.setAttribute("data-walking", characterState.walking);
+        const left = 16 * (characterState.x - players[playerId].x + 12) + "px";
+        const top = 16 * (characterState.y - players[playerId].y + 7) - 1 + "px";
+        el.style.transform = `translate3d(${left}, ${top}, 0)`;
+      })
+            
+      Object.keys(votingCards).forEach((key) => {
+        let el = votingCardElements[key]
+        const left = 16 * (votingCards[key].x - players[playerId].x + 12) + "px";
+        const top = 16 * (votingCards[key].y - players[playerId].y + 7) + "px";
+        el.style.transform = `translate3d(${left}, ${top}, 0)`;
+      })
+      Object.keys(guns).forEach((key) => {
+        let el = gunElements[key]
+        const left = 16 * (guns[key].x - players[playerId].x + 12) + "px";
+        const top = 16 * (guns[key].y - players[playerId].y + 7) + "px";
+        el.style.transform = `translate3d(${left}, ${top}, 0)`;
+      })
+      Object.keys(flashlights).forEach((key) => {
+        let el = flashlightElements[key]
+        const left = 16 * (flashlights[key].x - players[playerId].x + 12) + "px";
+        const top = 16 * (flashlights[key].y - players[playerId].y + 7) + "px";
+        el.style.transform = `translate3d(${left}, ${top}, 0)`;
+      })
+      Object.keys(magnifyingGlasses).forEach((key) => {
+        let el = magnifyingGlassElements[key]
+        const left = 16 * (magnifyingGlasses[key].x - players[playerId].x + 12) + "px";
+        const top = 16 * (magnifyingGlasses[key].y - players[playerId].y + 7) + "px";
+        el.style.transform = `translate3d(${left}, ${top}, 0)`;
+      })
+      Object.keys(halos).forEach((key) => {
+        let el = haloElements[key]
+        const left = 16 * (halos[key].x - players[playerId].x + 12) + "px";
+        const top = 16 * (halos[key].y - players[playerId].y + 7) + "px";
+        el.style.transform = `translate3d(${left}, ${top}, 0)`;
+      })
+    }, 350);
+    setTimeout(function() {
+      sceneTransition.fadeOut();
+    }, 600);
   }
 
   function placeItems() {
     placeFlashlight();
     placeGun();
     placeVotingCard();
+    placeMagnifyingGlass();
+    placeHalo();
   }
 
   function placeVotingCard() {
@@ -1457,7 +1594,7 @@ function startGame() {
       y = j;
       key = getKeyString(x, y);
     }
-    console.log("NEW VOTING CARD: " + key + " / " + x + ", " + y);
+    //console.log("NEW VOTING CARD: " + key + " / " + x + ", " + y);
     const votingCardRef = firebase.database().ref(`votingCard/${key}`);
     votingCardRef.set({
       x,
@@ -1476,7 +1613,7 @@ function startGame() {
       y = j;
       key = getKeyString(x, y);
     }
-    console.log("NEW GUN: " + key + " / " + x + ", " + y);
+    //console.log("NEW GUN: " + key + " / " + x + ", " + y);
     const gunRef = firebase.database().ref(`gun/${key}`);
     gunRef.set({
       x,
@@ -1495,9 +1632,47 @@ function startGame() {
       y = j;
       key = getKeyString(x, y);
     }
-    console.log("NEW FLASHLIGHT: " + key + " / " + x + ", " + y);
+    //console.log("NEW FLASHLIGHT: " + key + " / " + x + ", " + y);
     const flashlightRef = firebase.database().ref(`flashlight/${key}`);
     flashlightRef.set({
+      x,
+      y,
+    })
+  }
+
+  function placeMagnifyingGlass() {
+    const {i,j} = getRandomMagnifyingGlassSpot();
+    let x = i;
+    let y = j;
+    let key = getKeyString(x, y);
+    while (magnifyingGlasses[key] !== undefined) {
+      let {i,j} = getRandomMagnifyingGlassSpot();
+      x = i;
+      y = j;
+      key = getKeyString(x, y);
+    }
+    //console.log("NEW MAGNIFYING GLASS: " + key + " / " + x + ", " + y);
+    const magnifyingGlassRef = firebase.database().ref(`magnifyingGlass/${key}`);
+    magnifyingGlassRef.set({
+      x,
+      y,
+    })
+  }
+
+  function placeHalo() {
+    const {i,j} = getRandomHaloSpot();
+    let x = i;
+    let y = j;
+    let key = getKeyString(x, y);
+    while (halos[key] !== undefined) {
+      let {i,j} = getRandomHaloSpot();
+      x = i;
+      y = j;
+      key = getKeyString(x, y);
+    }
+    //console.log("NEW HALO: " + key + " / " + x + ", " + y);
+    const haloRef = firebase.database().ref(`halo/${key}`);
+    haloRef.set({
       x,
       y,
     })
@@ -1540,6 +1715,22 @@ function startGame() {
       else if (players[playerId].direction === "down") {
         document.querySelector(".shadowBig").style.background = "url(images/maps/shadowDown.png)";
       }
+    }
+  }
+
+  function attemptGrabMagnifyingGlass(x, y) {
+    const key = getKeyString(x, y);
+    if (magnifyingGlasses[key] && !players[playerId].magnifyingGlass) {
+      players[playerId].magnifyingGlass = true;
+      firebase.database().ref(`magnifyingGlass/${key}`).remove();
+    }
+  }
+
+  function attemptGrabHalo(x, y) {
+    const key = getKeyString(x, y);
+    if (halos[key] && !players[playerId].halo) {
+      players[playerId].halo = true;
+      firebase.database().ref(`halo/${key}`).remove();
     }
   }
 
@@ -1598,13 +1789,11 @@ function startGame() {
           playerInNextSpace = true;
         }
       }
-      if (!isSolid(newX, newY) || (newX == 133 && newY == 11)) {
+      if ((!isSolid(newX, newY) && !playerInNextSpace) || (newX == 133 && newY == 11)) {
         //move to the next space
-        if (!playerInNextSpace) {
-          players[playerId].x = newX;
-          players[playerId].y = newY;
-          playerRef.set(players[playerId]);
-        }
+        players[playerId].x = newX;
+        players[playerId].y = newY;
+        playerRef.set(players[playerId]);
       }
       else {
         
@@ -1623,6 +1812,10 @@ function startGame() {
   }
 
   function handleArrowPress(key) {
+    //if (!inRound && !inLobby) {
+    //  console.log("In between rounds!!")
+    //  return;
+    //}
     players[playerId].walking = "yes";
     playerRef.set(players[playerId]);
     const index = heldKeys.indexOf(key);
@@ -1684,6 +1877,8 @@ function startGame() {
     const allVotingCardRef = firebase.database().ref(`votingCard`);
     const allGunRef = firebase.database().ref(`gun`);
     const allFlashlightRef = firebase.database().ref(`flashlight`);
+    const allMagnifyingGlassRef = firebase.database().ref(`magnifyingGlass`);
+    const allHaloRef = firebase.database().ref(`halo`);
 
     allPlayersRef.on("value", (snapshot) => {
       //Fires whenever a change occurs
@@ -1701,68 +1896,34 @@ function startGame() {
 
         if (key == playerId) {
 
-          console.log(players[playerId].x + ", " + players[playerId].y);
+          //console.log(players[playerId].x + ", " + players[playerId].y);
 
           attemptGrabVotingCard(players[playerId].x, players[playerId].y);
           attemptGrabGun(players[playerId].x, players[playerId].y);
           attemptGrabFlashlight(players[playerId].x, players[playerId].y);
+          attemptGrabMagnifyingGlass(players[playerId].x, players[playerId].y);
+          attemptGrabHalo(players[playerId].x, players[playerId].y);
 
           const ML = ((startingX - players[playerId].x) * 16) + 'px';
           const MT = ((startingY - players[playerId].y) * 16) + 'px';
 
           document.querySelector(".mapUpper").style.transform = `translate3d(${ML}, ${MT}, 0)`;
           document.querySelector(".mapLower").style.transform = `translate3d(${ML}, ${MT}, 0)`;
-
-
-          if (players[playerId].x === 133 && players[playerId].y === 11) {
-            const sceneTransition = new SceneTransition();
-            sceneTransition.init(document.querySelector(".game-container"), () => {})
-            setTimeout(function() {   
-              players[playerId].x = 85;
-              players[playerId].y = 60;
-              
-              const ML = ((startingX - players[playerId].x) * 16) + 'px';
-              const MT = ((startingY - players[playerId].y) * 16) + 'px';
-
-              document.querySelector(".mapUpper").style.transform = `translate3d(${ML}, ${MT}, 0)`;
-              document.querySelector(".mapLower").style.transform = `translate3d(${ML}, ${MT}, 0)`;
-
-              Object.keys(players).forEach((key) => {
-                const characterState = players[key];
-                let el = playerElements[key];
-                // Now update the DOM
-                el.setAttribute("data-char", characterState.char);
-                el.setAttribute("data-direction", characterState.direction);
-                el.setAttribute("data-walking", characterState.walking);
-                const left = 16 * (characterState.x - players[playerId].x + 12) + "px";
-                const top = 16 * (characterState.y - players[playerId].y + 7) - 1 + "px";
-                el.style.transform = `translate3d(${left}, ${top}, 0)`;
-              })
-              
-              Object.keys(votingCards).forEach((key) => {
-                let el = votingCardElements[key]
-                const left = 16 * (votingCards[key].x - players[playerId].x + 12) + "px";
-                const top = 16 * (votingCards[key].y - players[playerId].y + 7) + "px";
-                el.style.transform = `translate3d(${left}, ${top}, 0)`;
-              })
-              Object.keys(guns).forEach((key) => {
-                let el = gunElements[key]
-                const left = 16 * (guns[key].x - players[playerId].x + 12) + "px";
-                const top = 16 * (guns[key].y - players[playerId].y + 7) + "px";
-                el.style.transform = `translate3d(${left}, ${top}, 0)`;
-              })
-              Object.keys(flashlights).forEach((key) => {
-                let el = flashlightElements[key]
-                const left = 16 * (flashlights[key].x - players[playerId].x + 12) + "px";
-                const top = 16 * (flashlights[key].y - players[playerId].y + 7) + "px";
-                el.style.transform = `translate3d(${left}, ${top}, 0)`;
-              })
-            }, 350);
+        }
+        if (players[playerId].x === 133 && players[playerId].y === 11) {
+          let allPlayersHere = true;
+          Object.keys(players).forEach((key) => {
+            if (players[key].x !== 133 || players[key].y !== 11) {
+              allPlayersHere = false;
+            }
+          })
+          if (allPlayersHere && key === playerId) {
+            teleportTo(85,60);
+            firstRound();
             setTimeout(function() {
-              sceneTransition.fadeOut();
               startRound();
-            }, 600);
-            setInterval(updateCountdown, 1000);
+              startClock();
+            }, 300)
           }
         }
         Object.keys(votingCards).forEach((key) => {
@@ -1781,6 +1942,18 @@ function startGame() {
           let el = flashlightElements[key]
           const left = 16 * (flashlights[key].x - players[playerId].x + 12) + "px";
           const top = 16 * (flashlights[key].y - players[playerId].y + 7) + "px";
+          el.style.transform = `translate3d(${left}, ${top}, 0)`;
+        })
+        Object.keys(magnifyingGlasses).forEach((key) => {
+          let el = magnifyingGlassElements[key]
+          const left = 16 * (magnifyingGlasses[key].x - players[playerId].x + 12) + "px";
+          const top = 16 * (magnifyingGlasses[key].y - players[playerId].y + 7) + "px";
+          el.style.transform = `translate3d(${left}, ${top}, 0)`;
+        })
+        Object.keys(halos).forEach((key) => {
+          let el = haloElements[key]
+          const left = 16 * (halos[key].x - players[playerId].x + 12) + "px";
+          const top = 16 * (halos[key].y - players[playerId].y + 7) + "px";
           el.style.transform = `translate3d(${left}, ${top}, 0)`;
         })
       })
@@ -1842,7 +2015,7 @@ function startGame() {
     })
     allVotingCardRef.on("child_removed", (snapshot) => {
       const {x,y} = snapshot.val();
-      console.log("Voting Card removed: " + x + ", " + y);
+      //console.log("Voting Card removed: " + x + ", " + y);
       const keyToRemove = getKeyString(x,y);
       gameContainer.removeChild( votingCardElements[keyToRemove] );
       delete votingCardElements[keyToRemove];
@@ -1873,13 +2046,13 @@ function startGame() {
     })
     allGunRef.on("child_removed", (snapshot) => {
       const {x,y} = snapshot.val();
-      console.log("Gun removed: " + x + ", " + y);
+      //console.log("Gun removed: " + x + ", " + y);
       const keyToRemove = getKeyString(x,y);
       gameContainer.removeChild( gunElements[keyToRemove] );
       delete gunElements[keyToRemove];
     })
 
-    // flashlight
+    // flashlights
     allFlashlightRef.on("value", (snapshot) => {
       flashlights = snapshot.val() || {};
     });
@@ -1904,10 +2077,72 @@ function startGame() {
     })
     allFlashlightRef.on("child_removed", (snapshot) => {
       const {x,y} = snapshot.val();
-      console.log("Flashlight removed: " + x + ", " + y);
+      //console.log("Flashlight removed: " + x + ", " + y);
       const keyToRemove = getKeyString(x,y);
       gameContainer.removeChild( flashlightElements[keyToRemove] );
       delete flashlightElements[keyToRemove];
+    })
+
+    // magnifyingGlasses
+    allMagnifyingGlassRef.on("value", (snapshot) => {
+      magnifyingGlasses = snapshot.val() || {};
+    });
+    allMagnifyingGlassRef.on("child_added", (snapshot) => {
+      const magnifyingGlass = snapshot.val();
+      const key = getKeyString(magnifyingGlass.x, magnifyingGlass.y);
+      magnifyingGlasses[key] = magnifyingGlass;
+
+      const magnifyingGlassElement = document.createElement("div");
+      magnifyingGlassElement.classList.add("magnifyingGlass", "grid-cell");
+      magnifyingGlassElement.innerHTML = `
+        <div class="MagnifyingGlass_shadow grid-cell"></div>
+        <div class="MagnifyingGlass_sprite grid-cell"></div>
+      `;
+
+      const left = 16 * (magnifyingGlass.x - players[playerId].x + 12) + "px";
+      const top = 16 * (magnifyingGlass.y - players[playerId].y + 7) + "px";
+      magnifyingGlassElement.style.transform = `translate3d(${left}, ${top}, 0)`;
+
+      magnifyingGlassElements[key] = magnifyingGlassElement;
+      gameContainer.appendChild(magnifyingGlassElement);
+    })
+    allMagnifyingGlassRef.on("child_removed", (snapshot) => {
+      const {x,y} = snapshot.val();
+      //console.log("MagnifyingGlass removed: " + x + ", " + y);
+      const keyToRemove = getKeyString(x,y);
+      gameContainer.removeChild( magnifyingGlassElements[keyToRemove] );
+      delete magnifyingGlassElements[keyToRemove];
+    })
+
+    // halos
+    allHaloRef.on("value", (snapshot) => {
+      halos = snapshot.val() || {};
+    });
+    allHaloRef.on("child_added", (snapshot) => {
+      const halo = snapshot.val();
+      const key = getKeyString(halo.x, halo.y);
+      halos[key] = halo;
+
+      const haloElement = document.createElement("div");
+      haloElement.classList.add("halo", "grid-cell");
+      haloElement.innerHTML = `
+        <div class="Halo_shadow grid-cell"></div>
+        <div class="Halo_sprite grid-cell"></div>
+      `;
+
+      const left = 16 * (halo.x - players[playerId].x + 12) + "px";
+      const top = 16 * (halo.y - players[playerId].y + 7) + "px";
+      haloElement.style.transform = `translate3d(${left}, ${top}, 0)`;
+
+      haloElements[key] = haloElement;
+      gameContainer.appendChild(haloElement);
+    })
+    allHaloRef.on("child_removed", (snapshot) => {
+      const {x,y} = snapshot.val();
+      //console.log("Halo removed: " + x + ", " + y);
+      const keyToRemove = getKeyString(x,y);
+      gameContainer.removeChild( haloElements[keyToRemove] );
+      delete haloElements[keyToRemove];
     })
 
 
@@ -1970,6 +2205,8 @@ function startGame() {
         votingCard: false,
         gun: false,
         flashlight: false,
+        magnifyingGlass: false,
+        halo: false,
       })
 
       //Remove me from Firebase when I diconnect

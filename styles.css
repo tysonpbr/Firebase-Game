@@ -2,6 +2,11 @@
   box-sizing: border-box;
 }
 
+@font-face {
+  font-family: silkscreen;
+  src: url(fonts/slkscr.ttf);
+}
+
 html,
 body {
   margin: 0;
@@ -23,16 +28,17 @@ body {
   position: absolute;
   background-color: #333;
   top: 0px;
-  left: 160px;
-  font-size: 24px;
+  left: 178px;
+  font-family: silkscreen;
+  font-size: 14px;
   color: white;
   align-items: center;
   justify-content: center;
   display: inline-flex;
   margin: 0;
-  width: 80px;
-  height: 30px;
-  outline: 4px solid #fff;
+  width: 44px;
+  height: 16px;
+  outline: 2px solid #fff;
   z-index: 6;
 }
 
@@ -845,12 +851,44 @@ body {
 }
 
 .Flashlight_sprite {
-  background: url(images/items/gun.png);
+  background: url(images/items/flashlight.png);
   width: 16px;
   height: 16px;
   animation: itemFloat 0.8s linear infinite alternate-reverse;
 }
 .Flashlight_shadow {
+  background: url(images/items/item_shadow.png) no-repeat no-repeat;
+}
+
+/* magnifyingGlass */
+.MagnifyingGlass {
+  transition: transform 0.2s;
+  transition-timing-function: linear;
+}
+
+.MagnifyingGlass_sprite {
+  background: url(images/items/magnifyingGlass.png);
+  width: 16px;
+  height: 16px;
+  animation: itemFloat 0.8s linear infinite alternate-reverse;
+}
+.MagnifyingGlass_shadow {
+  background: url(images/items/item_shadow.png) no-repeat no-repeat;
+}
+
+/* halo */
+.Halo {
+  transition: transform 0.2s;
+  transition-timing-function: linear;
+}
+
+.Halo_sprite {
+  background: url(images/items/halo.png);
+  width: 16px;
+  height: 16px;
+  animation: itemFloat 0.8s linear infinite alternate-reverse;
+}
+.Halo_shadow {
   background: url(images/items/item_shadow.png) no-repeat no-repeat;
 }
 
@@ -872,7 +910,7 @@ body {
   background-color: #000;
   z-index: 20;
   opacity: 0;
-  animation: scene-transition-fade-in 0.5s forwards;
+  animation: scene-transition-fade-in 0.2s forwards;
 }
 
 .SceneTransition.fade-out {
