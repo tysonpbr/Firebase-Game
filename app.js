@@ -1775,6 +1775,7 @@ function startGame() {
     const key = getKeyString(x, y);
     if (flashlights[key] && !players[playerId].flashlight) {
       players[playerId].flashlight = true;
+      playerRef.set(players[playerId]);
       firebase.database().ref(`flashlight/${key}`).remove();
       const shadowBig = document.createElement("div");
       shadowBig.classList.add("shadowBig");
