@@ -1443,7 +1443,7 @@ function startGame() {
   const playerSkinButton = document.querySelector("#b2");
 
   function startClock() {
-    startTime = 2; //min
+    startTime = 1; //min
     time = startTime * 60; //secs
     clock = document.createElement("div");
     clock.classList.add("timer");
@@ -1503,11 +1503,11 @@ function startGame() {
     const index = playerOrder.indexOf(playerId);
     const {i,j} = meetingSpots[index];
     teleportTo(i, j);
-    Object.keys(players).forEach((key) => {
-      players[key].direction = "down";
-      firebase.database().ref(`players/${key}`).set(players[key]);
-    });
     setTimeout(function() {
+      Object.keys(players).forEach((key) => {
+        players[key].direction = "down";
+        firebase.database().ref(`players/${key}`).set(players[key]);
+      });
       if (players[playerId].flashlight){
         document.querySelector(".shadowBig").remove();
       }
