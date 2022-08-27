@@ -1332,6 +1332,10 @@ const meetingSpots = [
   { i: 127, j: 58 },
   { i: 128, j: 58 },
   { i: 129, j: 58 },
+  { i: 130, j: 58 },
+  { i: 131, j: 58 },
+  { i: 132, j: 58 },
+  { i: 133, j: 58 },
   { i: 134, j: 58 },
   { i: 135, j: 58 },
   { i: 136, j: 58 },
@@ -1354,7 +1358,7 @@ function isSolid(x,y) {
     x < mapData.minX ||
     y >= mapData.maxY ||
     y < mapData.minY
-  )
+  );
 }
 
 
@@ -1440,7 +1444,7 @@ function startGame() {
 
   function startClock() {
     startTime = 1; //min
-    time = startTime * 60; //secs
+    time = startTime * 3; //secs
     clock = document.createElement("div");
     clock.classList.add("timer");
     setTimeout(function () {
@@ -1468,12 +1472,10 @@ function startGame() {
   }
 
   function firstRound(){
-    console.log("HERE");
     inLobby = false;
     Object.keys(players).forEach((key) => {
       playerOrder.unshift(key);
-    })
-    console.log(playerOrder);
+    });
   }
 
   function startRound() {
@@ -1500,6 +1502,10 @@ function startGame() {
     const index = playerOrder.indexOf(playerId);
     const {i,j} = meetingSpots[index];
     teleportTo(i, j);
+    Object.keys(players).forEach((key) => {
+      players[key].direction = "down";
+      firebase.database().ref(`players/${key}`).set(players[key]);
+    });
     setTimeout(function() {
       if (players[playerId].flashlight){
         document.querySelector(".shadowBig").remove();
@@ -1508,6 +1514,76 @@ function startGame() {
         document.querySelector(".shadow").remove();
       }
     }, 300);
+    setTimeout(function() {
+      startMafiaVoting();
+    }, 1500);
+  }
+
+  function startMafiaVoting() {
+    const mafiaVotingUITop = document.createElement("div");
+    mafiaVotingUITop.classList.add("mafiaVotingUITop");
+    mafiaVotingUITop.innerHTML = `WHO WOULD THE MAFIA LIKE TO KILL?`
+    document.querySelector(".gameInterface").appendChild(mafiaVotingUITop);
+
+    Object.keys(players).forEach((key) => {
+      if (!players[key].mafia) {
+        const divLeft = (16 * (players[key].x - players[playerId].x)) + 193 + "px";
+        const button = document.createElement("div");
+        button.classList.add("b3");
+        const p = key
+        button.addEventListener("click", () => {
+          confirmVote(p);
+        });
+        button.style.left = divLeft;
+        document.querySelector(".gameInterface").appendChild(button);
+      }
+    });
+  }
+
+  function confirmVote(ID) {
+    const votingConfirmUI = document.createElement("div");
+    votingConfirmUI.classList.add("votingConfirmUI");
+    votingConfirmUI.innerHTML = `ARE YOU SURE YOU WANT TO CHOOSE ${players[ID].name}?`
+    document.querySelector(".gameInterface").appendChild(votingConfirmUI);
+
+    const buttonYes = document.createElement("div");
+    buttonYes.classList.add("buttonYes");
+    buttonYes.innerHTML = `YES`;
+    buttonYes.addEventListener("click", () => {
+      confirmYes(ID);
+    });
+    document.querySelector(".votingConfirmUI").appendChild(buttonYes);
+
+    const buttonNo = document.createElement("div");
+    buttonNo.classList.add("buttonNo");
+    buttonNo.innerHTML = `NO`;
+    buttonNo.addEventListener("click", () => {
+      confirmNo(ID);
+    });
+    document.querySelector(".votingConfirmUI").appendChild(buttonNo);
+  }
+
+  function confirmYes(ID) {
+    players[ID].votes++;
+    firebase.database().ref(`players/${ID}`).set(players[ID]);
+
+    document.querySelector(".votingConfirmUI").classList.add("votingConfirmUIClose");
+    document.querySelector(".votingConfirmUI").classList.remove("votingConfirmUI");
+    setTimeout(function () {
+      document.querySelector(".votingConfirmUIClose").remove();
+    }, 1200);
+  }
+
+  function confirmNo(ID) {
+    document.querySelector(".votingConfirmUI").classList.add("votingConfirmUIClose");
+    document.querySelector(".votingConfirmUI").classList.remove("votingConfirmUI");
+    setTimeout(function () {
+      document.querySelector(".votingConfirmUIClose").remove();
+    }, 1200);
+  }
+
+  function endMafiaVoting() {
+    document.querySelector(".mafiaVotingUI").remove();
   }
 
   function teleportTo(teleport_x, teleport_y) {
@@ -1537,38 +1613,38 @@ function startGame() {
         const left = 16 * (characterState.x - players[playerId].x + 12) + "px";
         const top = 16 * (characterState.y - players[playerId].y + 7) - 1 + "px";
         el.style.transform = `translate3d(${left}, ${top}, 0)`;
-      })
+      });
             
       Object.keys(votingCards).forEach((key) => {
         let el = votingCardElements[key]
         const left = 16 * (votingCards[key].x - players[playerId].x + 12) + "px";
         const top = 16 * (votingCards[key].y - players[playerId].y + 7) + "px";
         el.style.transform = `translate3d(${left}, ${top}, 0)`;
-      })
+      });
       Object.keys(guns).forEach((key) => {
         let el = gunElements[key]
         const left = 16 * (guns[key].x - players[playerId].x + 12) + "px";
         const top = 16 * (guns[key].y - players[playerId].y + 7) + "px";
         el.style.transform = `translate3d(${left}, ${top}, 0)`;
-      })
+      });
       Object.keys(flashlights).forEach((key) => {
         let el = flashlightElements[key]
         const left = 16 * (flashlights[key].x - players[playerId].x + 12) + "px";
         const top = 16 * (flashlights[key].y - players[playerId].y + 7) + "px";
         el.style.transform = `translate3d(${left}, ${top}, 0)`;
-      })
+      });
       Object.keys(magnifyingGlasses).forEach((key) => {
         let el = magnifyingGlassElements[key]
         const left = 16 * (magnifyingGlasses[key].x - players[playerId].x + 12) + "px";
         const top = 16 * (magnifyingGlasses[key].y - players[playerId].y + 7) + "px";
         el.style.transform = `translate3d(${left}, ${top}, 0)`;
-      })
+      });
       Object.keys(halos).forEach((key) => {
         let el = haloElements[key]
         const left = 16 * (halos[key].x - players[playerId].x + 12) + "px";
         const top = 16 * (halos[key].y - players[playerId].y + 7) + "px";
         el.style.transform = `translate3d(${left}, ${top}, 0)`;
-      })
+      });
     }, 350);
     setTimeout(function() {
       sceneTransition.fadeOut();
@@ -1812,10 +1888,9 @@ function startGame() {
   }
 
   function handleArrowPress(key) {
-    //if (!inRound && !inLobby) {
-    //  console.log("In between rounds!!")
-    //  return;
-    //}
+    if (!inRound && !inLobby) {
+      return;
+    }
     players[playerId].walking = "yes";
     playerRef.set(players[playerId]);
     const index = heldKeys.indexOf(key);
@@ -1916,14 +1991,14 @@ function startGame() {
             if (players[key].x !== 133 || players[key].y !== 11) {
               allPlayersHere = false;
             }
-          })
+          });
           if (allPlayersHere && key === playerId) {
             teleportTo(85,60);
             firstRound();
             setTimeout(function() {
               startRound();
               startClock();
-            }, 300)
+            }, 300);
           }
         }
         Object.keys(votingCards).forEach((key) => {
@@ -1931,33 +2006,33 @@ function startGame() {
           const left = 16 * (votingCards[key].x - players[playerId].x + 12) + "px";
           const top = 16 * (votingCards[key].y - players[playerId].y + 7) + "px";
           el.style.transform = `translate3d(${left}, ${top}, 0)`;
-        })
+        });
         Object.keys(guns).forEach((key) => {
           let el = gunElements[key]
           const left = 16 * (guns[key].x - players[playerId].x + 12) + "px";
           const top = 16 * (guns[key].y - players[playerId].y + 7) + "px";
           el.style.transform = `translate3d(${left}, ${top}, 0)`;
-        })
+        });
         Object.keys(flashlights).forEach((key) => {
           let el = flashlightElements[key]
           const left = 16 * (flashlights[key].x - players[playerId].x + 12) + "px";
           const top = 16 * (flashlights[key].y - players[playerId].y + 7) + "px";
           el.style.transform = `translate3d(${left}, ${top}, 0)`;
-        })
+        });
         Object.keys(magnifyingGlasses).forEach((key) => {
           let el = magnifyingGlassElements[key]
           const left = 16 * (magnifyingGlasses[key].x - players[playerId].x + 12) + "px";
           const top = 16 * (magnifyingGlasses[key].y - players[playerId].y + 7) + "px";
           el.style.transform = `translate3d(${left}, ${top}, 0)`;
-        })
+        });
         Object.keys(halos).forEach((key) => {
           let el = haloElements[key]
           const left = 16 * (halos[key].x - players[playerId].x + 12) + "px";
           const top = 16 * (halos[key].y - players[playerId].y + 7) + "px";
           el.style.transform = `translate3d(${left}, ${top}, 0)`;
-        })
-      })
-    })
+        });
+      });
+    });
     allPlayersRef.on("child_added", (snapshot) => {
       //Fires whenever a new node is added the tree
       const addedPlayer = snapshot.val();
@@ -1981,14 +2056,14 @@ function startGame() {
       const top = 16 * 7 - 1 + "px";
       characterElement.style.transform = `translate3d(${left}, ${top}, 0)`;
       gameContainer.appendChild(characterElement);
-    })
+    });
 
     //Remove character DOM element after they leave
     allPlayersRef.on("child_removed", (snapshot) => {
       const removedKey = snapshot.val().id;
       gameContainer.removeChild(playerElements[removedKey]);
       delete playerElements[removedKey];
-    })
+    });
 
     // VotingCards
     allVotingCardRef.on("value", (snapshot) => {
@@ -2012,14 +2087,14 @@ function startGame() {
 
       votingCardElements[key] = votingCardElement;
       gameContainer.appendChild(votingCardElement);
-    })
+    });
     allVotingCardRef.on("child_removed", (snapshot) => {
       const {x,y} = snapshot.val();
       //console.log("Voting Card removed: " + x + ", " + y);
       const keyToRemove = getKeyString(x,y);
       gameContainer.removeChild( votingCardElements[keyToRemove] );
       delete votingCardElements[keyToRemove];
-    })
+    });
 
     // guns
     allGunRef.on("value", (snapshot) => {
@@ -2043,14 +2118,14 @@ function startGame() {
 
       gunElements[key] = gunElement;
       gameContainer.appendChild(gunElement);
-    })
+    });
     allGunRef.on("child_removed", (snapshot) => {
       const {x,y} = snapshot.val();
       //console.log("Gun removed: " + x + ", " + y);
       const keyToRemove = getKeyString(x,y);
       gameContainer.removeChild( gunElements[keyToRemove] );
       delete gunElements[keyToRemove];
-    })
+    });
 
     // flashlights
     allFlashlightRef.on("value", (snapshot) => {
@@ -2074,14 +2149,14 @@ function startGame() {
 
       flashlightElements[key] = flashlightElement;
       gameContainer.appendChild(flashlightElement);
-    })
+    });
     allFlashlightRef.on("child_removed", (snapshot) => {
       const {x,y} = snapshot.val();
       //console.log("Flashlight removed: " + x + ", " + y);
       const keyToRemove = getKeyString(x,y);
       gameContainer.removeChild( flashlightElements[keyToRemove] );
       delete flashlightElements[keyToRemove];
-    })
+    });
 
     // magnifyingGlasses
     allMagnifyingGlassRef.on("value", (snapshot) => {
@@ -2105,14 +2180,14 @@ function startGame() {
 
       magnifyingGlassElements[key] = magnifyingGlassElement;
       gameContainer.appendChild(magnifyingGlassElement);
-    })
+    });
     allMagnifyingGlassRef.on("child_removed", (snapshot) => {
       const {x,y} = snapshot.val();
       //console.log("MagnifyingGlass removed: " + x + ", " + y);
       const keyToRemove = getKeyString(x,y);
       gameContainer.removeChild( magnifyingGlassElements[keyToRemove] );
       delete magnifyingGlassElements[keyToRemove];
-    })
+    });
 
     // halos
     allHaloRef.on("value", (snapshot) => {
@@ -2136,22 +2211,21 @@ function startGame() {
 
       haloElements[key] = haloElement;
       gameContainer.appendChild(haloElement);
-    })
+    });
     allHaloRef.on("child_removed", (snapshot) => {
       const {x,y} = snapshot.val();
       //console.log("Halo removed: " + x + ", " + y);
       const keyToRemove = getKeyString(x,y);
       gameContainer.removeChild( haloElements[keyToRemove] );
       delete haloElements[keyToRemove];
-    })
-
+    });
 
     playerSkinButton.addEventListener("click", () => {
       const mySkinIndex = skinID.indexOf(players[playerId].char);
       const nextSkin = skinID[mySkinIndex + 1] || skinID[0];
       playerRef.update({
         char: nextSkin
-      })
+      });
       const skinPreview = document.querySelector(".skinPreview");
       if (nextSkin === "zero") {
         skinPreview.style.background="url(images/characters/0.png)";
@@ -2183,7 +2257,7 @@ function startGame() {
       if (nextSkin === "nine") {
         skinPreview.style.background="url(images/characters/9.png)";
       }
-    })
+    });
 
   }
 
@@ -2195,6 +2269,7 @@ function startGame() {
       playerRef = firebase.database().ref(`players/${playerId}`);
 
       playerRef.set({
+        name: "Name",
         id: playerId,
         direction: "down",
         char: "zero",
@@ -2207,7 +2282,9 @@ function startGame() {
         flashlight: false,
         magnifyingGlass: false,
         halo: false,
-      })
+        votes: 0,
+        voteFor: "none",
+      });
 
       //Remove me from Firebase when I diconnect
       playerRef.onDisconnect().remove();
@@ -2217,7 +2294,7 @@ function startGame() {
     } else {
       //You're logged out.
     }
-  })
+  });
 
   firebase.auth().signInAnonymously().catch((error) => {
     var errorCode = error.code;

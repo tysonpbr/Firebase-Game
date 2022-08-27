@@ -763,22 +763,26 @@ body {
 }
 .button {
   padding-top: 0px;
-  width: 52px;
-  height: 20px;
   position: absolute;
   border-color: transparent;
   color: white;
   text-align: center;
   text-decoration: none;
-  font-size: 5px;
-  top: 80px;
+  font-family: silkscreen;
+  font-size: 4px;
   background: url(images/startScreen/button_up.png);
   transform: scale(1.5);
 }
 .b1 {
+  width: 52px;
+  height: 20px;
+  top: 80px;
   left: 100px;
 }
 .b2 {
+  width: 52px;
+  height: 20px;
+  top: 80px;
   left: 260px;
 }
 .buttons {
@@ -934,3 +938,139 @@ body {
     opacity: 0;
   }
 }
+
+.mafiaVotingUITop {
+  top: -0px;
+  left: 0px;
+  position: absolute;
+  width: 400px;
+  height: 60px;
+  background: #333;
+  outline: 4px solid #fff;
+  image-rendering: pixelated;
+  overflow: hidden;
+  z-index: 5;
+  font-family: silkscreen;
+  font-size: 14px;
+  color: white;
+  align-items: center;
+  justify-content: center;
+  display: inline-flex;
+  animation: mafiaVotingUITopSlide 0.8s steps(30);
+}
+@keyframes mafiaVotingUITopSlide {
+  from {
+    top: -60px;
+  }
+  to {
+    top: 0px;
+  }
+}
+
+.votingConfirmUI {
+  padding-top: 8px;
+  top: 148px;
+  left: 70px;
+  position: absolute;
+  width: 260px;
+  height: 60px;
+  background: #333;
+  outline: 4px solid #fff;
+  image-rendering: pixelated;
+  overflow: hidden;
+  z-index: 5;
+  font-family: silkscreen;
+  font-size: 10px;
+  color: white;
+  justify-content: center;
+  display: inline-flex;
+  animation: votingConfirmUISlide 0.2s steps(30);
+}
+@keyframes votingConfirmUISlide {
+  from {
+    top: 208px;
+  }
+  to {
+    top: 148px;
+  }
+}
+
+.votingConfirmUIClose {
+  padding-top: 8px;
+  top: 212px;
+  left: 70px;
+  position: absolute;
+  width: 260px;
+  height: 60px;
+  background: #333;
+  outline: 4px solid #fff;
+  image-rendering: pixelated;
+  overflow: hidden;
+  z-index: 5;
+  font-family: silkscreen;
+  font-size: 10px;
+  color: white;
+  justify-content: center;
+  display: inline-flex;
+  animation: votingConfirmUISlideDown 0.2s steps(30);
+}
+@keyframes votingConfirmUISlideDown {
+  from {
+    top: 148px;
+  }
+  to {
+    top: 212px;
+  }
+}
+
+.buttonYes {
+  padding-top: 5px;
+  position: absolute;
+  border-color: transparent;
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  font-size: 5px;
+  background: url(images/startScreen/button_up.png);;
+  transform: scale(1.5);
+  width: 48px;
+  height: 16px;
+  top: 28px;
+  left: 55px;
+  z-index: 30;
+} 
+
+.buttonNo {
+  padding-top: 5px;
+  position: absolute;
+  border-color: transparent;
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  font-size: 5px;
+  background: url(images/startScreen/button_up.png);;
+  transform: scale(1.5);
+  width: 48px;
+  height: 16px;
+  top: 28px;
+  left: 155px;
+  z-index: 30;
+} 
+
+.b3 {
+  padding-top: 0px;
+  position: absolute;
+  border-color: transparent;
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  font-size: 5px;
+  background: none;
+  transform: scale(1);
+  width: 14px;
+  height: 24px;
+  top: 106px;
+  left: 193px;
+  outline: 2px solid red;
+  z-index: 30;
+} 
