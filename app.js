@@ -1443,8 +1443,8 @@ function startGame() {
   const playerSkinButton = document.querySelector("#b2");
 
   function startClock() {
-    startTime = 1; //min
-    time = startTime * 3; //secs
+    startTime = 2; //min
+    time = startTime * 60; //secs
     clock = document.createElement("div");
     clock.classList.add("timer");
     setTimeout(function () {
@@ -1479,6 +1479,7 @@ function startGame() {
   }
 
   function startRound() {
+    startClock();
     inRound = true;
     if (players[playerId].flashlight){
       const shadowBig = document.createElement("div");
@@ -1997,7 +1998,6 @@ function startGame() {
             firstRound();
             setTimeout(function() {
               startRound();
-              startClock();
             }, 300);
           }
         }
