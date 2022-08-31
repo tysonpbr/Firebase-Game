@@ -18,9 +18,9 @@ Tasks
 - game name
 
 Tyson's Tasks
-
 - add mafia voting funstionality
-  - add only one vote per person
+  - add UI to show your current vote
+  - add UI to show vote counter
   - add only mafia see voting
   - add waiting screen for non mafia
   - add voting completion when vote is unanimous

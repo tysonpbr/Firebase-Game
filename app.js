@@ -1443,7 +1443,7 @@ function startGame() {
   const playerSkinButton = document.querySelector("#b2");
 
   function startClock() {
-    startTime = 20/60; //min
+    startTime = 3/60; //min
     time = startTime * 60; //secs
     clock = document.createElement("div");
     clock.classList.add("timer");
@@ -1533,7 +1533,12 @@ function startGame() {
         button.classList.add("b3");
         const p = key
         button.addEventListener("click", () => {
-          confirmVote(p);
+          if (players[playerId].voteFor === "none") {
+            confirmVote(p);
+          }
+          else if (players[playerId].voteFor !== p) {
+            removeVote(p);
+          }
         });
         button.style.left = divLeft;
         document.querySelector(".gameInterface").appendChild(button);
@@ -1541,10 +1546,57 @@ function startGame() {
     });
   }
 
-  function confirmVote(ID) {
+  function removeVote(ID) {
+    const mafiaBlocker = document.createElement("div");
+    mafiaBlocker.classList.add("mafiaBlocker");
+    document.querySelector(".gameInterface").appendChild(mafiaBlocker);
+
     const votingConfirmUI = document.createElement("div");
     votingConfirmUI.classList.add("votingConfirmUI");
-    votingConfirmUI.innerHTML = `ARE YOU SURE YOU WANT TO CHOOSE ${players[ID].name}?`
+    votingConfirmUI.innerHTML = `ARE YOU SURE YOU WANT TO CHANGE YOUR VOTE TO ${players[ID].name}?`
+    document.querySelector(".gameInterface").appendChild(votingConfirmUI);
+
+    const buttonYes = document.createElement("div");
+    buttonYes.classList.add("buttonYes");
+    buttonYes.innerHTML = `YES`;
+    buttonYes.addEventListener("click", () => {
+      const oldVote = players[playerId].voteFor;
+      players[oldVote].votes--;
+      firebase.database().ref(`players/${oldVote}`).set(players[oldVote]);
+      
+      players[ID].votes++;
+      firebase.database().ref(`players/${ID}`).set(players[ID]);
+
+      players[playerId].voteFor = ID;
+      playerRef.set(players[playerId]);
+
+      document.querySelector(".mafiaBlocker").remove();
+      document.querySelector(".votingConfirmUI").classList.add("votingConfirmUIClose");
+      document.querySelector(".votingConfirmUI").classList.remove("votingConfirmUI");
+      setTimeout(function () {
+        document.querySelector(".votingConfirmUIClose").remove();
+      }, 1200);
+    });
+    document.querySelector(".votingConfirmUI").appendChild(buttonYes);
+
+    const buttonNo = document.createElement("div");
+    buttonNo.classList.add("buttonNo");
+    buttonNo.innerHTML = `NO`;
+    buttonNo.addEventListener("click", () => {
+      document.querySelector(".mafiaBlocker").remove();
+      document.querySelector(".votingConfirmUI").remove();
+    });
+    document.querySelector(".votingConfirmUI").appendChild(buttonNo);
+  }
+
+  function confirmVote(ID) {
+    const mafiaBlocker = document.createElement("div");
+    mafiaBlocker.classList.add("mafiaBlocker");
+    document.querySelector(".gameInterface").appendChild(mafiaBlocker);
+
+    const votingConfirmUI = document.createElement("div");
+    votingConfirmUI.classList.add("votingConfirmUI");
+    votingConfirmUI.innerHTML = `ARE YOU SURE YOU WANT TO VOTE FOR ${players[ID].name}?`
     document.querySelector(".gameInterface").appendChild(votingConfirmUI);
 
     const buttonYes = document.createElement("div");
@@ -1568,6 +1620,10 @@ function startGame() {
     players[ID].votes++;
     firebase.database().ref(`players/${ID}`).set(players[ID]);
 
+    players[playerId].voteFor = ID;
+    playerRef.set(players[playerId]);
+
+    document.querySelector(".mafiaBlocker").remove();
     document.querySelector(".votingConfirmUI").classList.add("votingConfirmUIClose");
     document.querySelector(".votingConfirmUI").classList.remove("votingConfirmUI");
     setTimeout(function () {
@@ -1576,6 +1632,7 @@ function startGame() {
   }
 
   function confirmNo(ID) {
+    document.querySelector(".mafiaBlocker").remove();
     document.querySelector(".votingConfirmUI").classList.add("votingConfirmUIClose");
     document.querySelector(".votingConfirmUI").classList.remove("votingConfirmUI");
     setTimeout(function () {
