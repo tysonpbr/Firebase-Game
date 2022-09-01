@@ -5,7 +5,6 @@
 Personal project multiplayer game based loosely on the card/party game Mafia and run via Firebase online servers.
 
 Tasks
-- create randomizer to pick game roles (and how many of each)
 - add angel voting functionality
 - add officer voting functionality
 - add shooter voting functionality
@@ -17,6 +16,7 @@ Tasks
 - game name
 
 Tyson's Tasks
+- create randomizer to pick game roles (and how many of each)
 - add mafia voting funstionality
   - add "this person" UI
   - add only mafia see voting
@@ -25,4 +25,4 @@ Tyson's Tasks
   - add voting completion trigger start of angel voting
 
 Trixie's Current Task
-- create randomizer to pick game roles (and how many of each)
+
