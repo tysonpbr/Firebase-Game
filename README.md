@@ -22,7 +22,7 @@ Tasks
 - game name
 
 Tyson's Current Task
-- create randomizer to pick game roles (and how many of each)
+- create randomizer to pick mafia (test and add short waiting screen)
 
 Trixie's Current Task
 - 

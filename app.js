@@ -1477,7 +1477,49 @@ function startGame() {
       playerOrder.unshift(key);
     });
     if (playerOrder[0] === playerId) {
-
+      let numMafia = 0;
+      const numPlayer = playerOrder.length;
+      if (numPlayer === 2) {
+        numMafia = 1;
+      }
+      if (numPlayer === 3) {
+        numMafia = 1;
+      }
+      if (numPlayer === 4) {
+        numMafia = 1;
+      }
+      if (numPlayer === 5) {
+        numMafia = 2;
+      }
+      if (numPlayer === 6) {
+        numMafia = 2;
+      }
+      if (numPlayer === 7) {
+        numMafia = 2;
+      }
+      if (numPlayer === 8) {
+        numMafia = 3;
+      }
+      if (numPlayer === 9) {
+        numMafia = 3;
+      }
+      if (numPlayer === 10) {
+        numMafia = 3;
+      }
+      if (numPlayer === 11) {
+        numMafia = 4;
+      }
+      if (numPlayer === 12) {
+        numMafia = 4;
+      }
+      for (let i = 0; i < numMafia; i++) {
+        let currPlayer = playerOrder[Math.floor(Math.random() * numPlayer)];
+        while (players[currPlayer].mafia) {
+          currPlayer = playerOrder[Math.floor(Math.random() * numPlayer)];
+        }
+        players[currPlayer].mafia = true;
+        firebase.database().ref(`players/${currPlayer}`).set(players[currPlayer]);
+      }
     }
   }
 
