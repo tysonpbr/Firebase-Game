@@ -1537,7 +1537,7 @@ function startGame() {
             confirmVote(p);
           }
           else if (players[playerId].voteFor !== p) {
-            removeVote(p);
+            changeVote(p);
           }
         });
         button.style.left = divLeft;
@@ -1546,7 +1546,7 @@ function startGame() {
     });
   }
 
-  function removeVote(ID) {
+  function changeVote(ID) {
     const mafiaBlocker = document.createElement("div");
     mafiaBlocker.classList.add("mafiaBlocker");
     document.querySelector(".gameInterface").appendChild(mafiaBlocker);
@@ -1566,6 +1566,8 @@ function startGame() {
       
       players[ID].votes++;
       firebase.database().ref(`players/${ID}`).set(players[ID]);
+
+      document.querySelector(".myVote").style.left = (16 * (players[ID].x - players[playerId].x)) + 185 + "px";
 
       players[playerId].voteFor = ID;
       playerRef.set(players[playerId]);
@@ -1623,6 +1625,12 @@ function startGame() {
     players[playerId].voteFor = ID;
     playerRef.set(players[playerId]);
 
+    const myVote = document.createElement("div");
+    myVote.classList.add("myVote");
+    const divLeft = (16 * (players[ID].x - players[playerId].x)) + 185 + "px";
+    myVote.style.left = divLeft;
+    document.querySelector(".gameInterface").appendChild(myVote);
+    
     document.querySelector(".mafiaBlocker").remove();
     document.querySelector(".votingConfirmUI").classList.add("votingConfirmUIClose");
     document.querySelector(".votingConfirmUI").classList.remove("votingConfirmUI");
