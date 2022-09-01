@@ -1476,6 +1476,9 @@ function startGame() {
     Object.keys(players).forEach((key) => {
       playerOrder.unshift(key);
     });
+    if (playerOrder[0] === playerId) {
+
+    }
   }
 
   function startRound() {
@@ -1560,7 +1563,7 @@ function startGame() {
 
     const votingConfirmUI = document.createElement("div");
     votingConfirmUI.classList.add("votingConfirmUI");
-    votingConfirmUI.innerHTML = `ARE YOU SURE YOU WANT TO CHANGE YOUR VOTE TO ${players[ID].name}?`
+    votingConfirmUI.innerHTML = `ARE YOU SURE YOU WANT TO CHANGE YOUR VOTE THIS PERSON?`
     document.querySelector(".gameInterface").appendChild(votingConfirmUI);
 
     const buttonYes = document.createElement("div");
@@ -1605,7 +1608,7 @@ function startGame() {
 
     const votingConfirmUI = document.createElement("div");
     votingConfirmUI.classList.add("votingConfirmUI");
-    votingConfirmUI.innerHTML = `ARE YOU SURE YOU WANT TO VOTE FOR ${players[ID].name}?`
+    votingConfirmUI.innerHTML = `ARE YOU SURE YOU WANT TO VOTE FOR THIS PERSON?`
     document.querySelector(".gameInterface").appendChild(votingConfirmUI);
 
     const buttonYes = document.createElement("div");
@@ -2352,7 +2355,6 @@ function startGame() {
       playerRef = firebase.database().ref(`players/${playerId}`);
 
       playerRef.set({
-        name: "Name",
         id: playerId,
         direction: "down",
         char: "zero",
