@@ -1542,6 +1542,13 @@ function startGame() {
         });
         button.style.left = divLeft;
         document.querySelector(".gameInterface").appendChild(button);
+
+        const voteCounter = document.createElement("div");
+        voteCounter.classList.add("voteCounter");
+        voteCounter.classList.add(p);
+        voteCounter.style.left = divLeft;
+        voteCounter.innerHTML = `0`;
+        document.querySelector(".gameInterface").appendChild(voteCounter);
       }
     });
   }
@@ -2026,6 +2033,14 @@ function startGame() {
       //Fires whenever a change occurs
       players = snapshot.val() || {};
       Object.keys(players).forEach((key) => {
+
+        if (!inRound && !inLobby && !players[key].mafia) {
+          const voteCounter = document.querySelector("." + key);
+          if (voteCounter) {
+            voteCounter.innerHTML = `${players[key].votes}`;
+          }
+        }
+
         const characterState = players[key];
         let el = playerElements[key];
         // Now update the DOM
@@ -2344,6 +2359,7 @@ function startGame() {
         x:startingX,
         y:startingY,
         walking: "no",
+        mafia: false,
         alive: true,
         votingCard: false,
         gun: false,

@@ -18,7 +18,6 @@ Tasks
 
 Tyson's Tasks
 - add mafia voting funstionality
-  - add UI to show vote counter
   - add only mafia see voting
   - add waiting screen for non mafia
   - add voting completion when vote is unanimous
