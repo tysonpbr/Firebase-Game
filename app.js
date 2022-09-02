@@ -1438,13 +1438,12 @@ function startGame() {
   let clock;
   let clockInterval;
   let playerOrder = [];
-  let haveRoles = false;
 
   const gameContainer = document.querySelector(".game-container");
   const playerSkinButton = document.querySelector("#b2");
 
   function startClock() {
-    startTime = 3/60; //min
+    startTime = 20/60; //min
     time = startTime * 60; //secs
     clock = document.createElement("div");
     clock.classList.add("timer");
@@ -1473,66 +1472,15 @@ function startGame() {
   }
 
   function firstRound(){
-    console.log("HERE")
+    inLobby = false;
     Object.keys(players).forEach((key) => {
-      const index = playerOrder.indexOf(key)
-      if (index == -1) {
-        playerOrder.unshift(key);
-      }
+      playerOrder.unshift(key);
     });
-    if (playerOrder[0] === playerId) {
-      console.log("I am the admin")
-      let numMafia = 0;
-      const numPlayer = playerOrder.length;
-      if (numPlayer === 2) {
-        numMafia = 1;
-      }
-      else if (numPlayer === 3) {
-        numMafia = 1;
-      }
-      else if (numPlayer === 4) {
-        numMafia = 1;
-      }
-      else if (numPlayer === 5) {
-        numMafia = 2;
-      }
-      else if (numPlayer === 6) {
-        numMafia = 2;
-      }
-      else if (numPlayer === 7) {
-        numMafia = 2;
-      }
-      else if (numPlayer === 8) {
-        numMafia = 3;
-      }
-      else if (numPlayer === 9) {
-        numMafia = 3;
-      }
-      else if (numPlayer === 10) {
-        numMafia = 3;
-      }
-      else if (numPlayer === 11) {
-        numMafia = 4;
-      }
-      else if (numPlayer === 12) {
-        numMafia = 4;
-      }
-      console.log("numMafia: " + numMafia)
-      console.log("numPlayer: " + numPlayer)
-      for (let i = 0; i < numMafia; i++) {
-        let currPlayer = playerOrder[Math.floor(Math.random() * numPlayer)];
-        while (players[currPlayer].mafia) {
-          currPlayer = playerOrder[Math.floor(Math.random() * numPlayer)];
-        }
-        firebase.database().ref(`players/${currPlayer}/mafia`).set(true);
-        console.log(currPlayer);
-      }
-    }
   }
 
   function startRound() {
-    inRound = true;
     startClock();
+    inRound = true;
     if (players[playerId].flashlight){
       const shadowBig = document.createElement("div");
       shadowBig.classList.add("shadowBig");
@@ -1554,8 +1502,10 @@ function startGame() {
     clock.remove();
     const index = playerOrder.indexOf(playerId);
     const {i,j} = meetingSpots[index];
-    players[playerId].direction = "down";
-    players[playerId].walking = "no";
+    Object.keys(players).forEach((key) => {
+      players[key].direction = "down";
+      firebase.database().ref(`players/${key}`).set(players[key]);
+    });
     teleportTo(i, j);
     setTimeout(function() {
       if (players[playerId].flashlight){
@@ -1566,20 +1516,8 @@ function startGame() {
       }
     }, 300);
     setTimeout(function() {
-      if (players[playerId].mafia) {
-        startMafiaVoting();
-      }
-      else {
-        startMafiaWaiting();
-      }
+      startMafiaVoting();
     }, 1500);
-  }
-
-  function startMafiaWaiting() {
-    const mafiaVotingUITop = document.createElement("div");
-    mafiaVotingUITop.classList.add("mafiaVotingUITop");
-    mafiaVotingUITop.innerHTML = `THE MAFIA ARE MEETING`
-    document.querySelector(".gameInterface").appendChild(mafiaVotingUITop);
   }
 
   function startMafiaVoting() {
@@ -1595,79 +1533,18 @@ function startGame() {
         button.classList.add("b3");
         const p = key
         button.addEventListener("click", () => {
-          if (players[playerId].voteFor === "none") {
-            confirmVote(p);
-          }
-          else if (players[playerId].voteFor !== p) {
-            changeVote(p);
-          }
+          confirmVote(p);
         });
         button.style.left = divLeft;
         document.querySelector(".gameInterface").appendChild(button);
-
-        const voteCounter = document.createElement("div");
-        voteCounter.classList.add("voteCounter");
-        voteCounter.classList.add(p);
-        voteCounter.style.left = divLeft;
-        voteCounter.innerHTML = `0`;
-        document.querySelector(".gameInterface").appendChild(voteCounter);
       }
     });
   }
 
-  function changeVote(ID) {
-    const mafiaBlocker = document.createElement("div");
-    mafiaBlocker.classList.add("mafiaBlocker");
-    document.querySelector(".gameInterface").appendChild(mafiaBlocker);
-
-    const votingConfirmUI = document.createElement("div");
-    votingConfirmUI.classList.add("votingConfirmUI");
-    votingConfirmUI.innerHTML = `ARE YOU SURE YOU WANT TO CHANGE YOUR VOTE THIS PERSON?`
-    document.querySelector(".gameInterface").appendChild(votingConfirmUI);
-
-    const buttonYes = document.createElement("div");
-    buttonYes.classList.add("buttonYes");
-    buttonYes.innerHTML = `YES`;
-    buttonYes.addEventListener("click", () => {
-      const oldVote = players[playerId].voteFor;
-      players[oldVote].votes--;
-      firebase.database().ref(`players/${oldVote}`).set(players[oldVote]);
-      
-      players[ID].votes++;
-      firebase.database().ref(`players/${ID}`).set(players[ID]);
-
-      document.querySelector(".myVote").style.left = (16 * (players[ID].x - players[playerId].x)) + 185 + "px";
-
-      players[playerId].voteFor = ID;
-      playerRef.set(players[playerId]);
-
-      document.querySelector(".mafiaBlocker").remove();
-      document.querySelector(".votingConfirmUI").classList.add("votingConfirmUIClose");
-      document.querySelector(".votingConfirmUI").classList.remove("votingConfirmUI");
-      setTimeout(function () {
-        document.querySelector(".votingConfirmUIClose").remove();
-      }, 1200);
-    });
-    document.querySelector(".votingConfirmUI").appendChild(buttonYes);
-
-    const buttonNo = document.createElement("div");
-    buttonNo.classList.add("buttonNo");
-    buttonNo.innerHTML = `NO`;
-    buttonNo.addEventListener("click", () => {
-      document.querySelector(".mafiaBlocker").remove();
-      document.querySelector(".votingConfirmUI").remove();
-    });
-    document.querySelector(".votingConfirmUI").appendChild(buttonNo);
-  }
-
   function confirmVote(ID) {
-    const mafiaBlocker = document.createElement("div");
-    mafiaBlocker.classList.add("mafiaBlocker");
-    document.querySelector(".gameInterface").appendChild(mafiaBlocker);
-
     const votingConfirmUI = document.createElement("div");
     votingConfirmUI.classList.add("votingConfirmUI");
-    votingConfirmUI.innerHTML = `ARE YOU SURE YOU WANT TO VOTE FOR THIS PERSON?`
+    votingConfirmUI.innerHTML = `ARE YOU SURE YOU WANT TO CHOOSE ${players[ID].name}?`
     document.querySelector(".gameInterface").appendChild(votingConfirmUI);
 
     const buttonYes = document.createElement("div");
@@ -1691,16 +1568,6 @@ function startGame() {
     players[ID].votes++;
     firebase.database().ref(`players/${ID}`).set(players[ID]);
 
-    players[playerId].voteFor = ID;
-    playerRef.set(players[playerId]);
-
-    const myVote = document.createElement("div");
-    myVote.classList.add("myVote");
-    const divLeft = (16 * (players[ID].x - players[playerId].x)) + 185 + "px";
-    myVote.style.left = divLeft;
-    document.querySelector(".gameInterface").appendChild(myVote);
-    
-    document.querySelector(".mafiaBlocker").remove();
     document.querySelector(".votingConfirmUI").classList.add("votingConfirmUIClose");
     document.querySelector(".votingConfirmUI").classList.remove("votingConfirmUI");
     setTimeout(function () {
@@ -1709,7 +1576,6 @@ function startGame() {
   }
 
   function confirmNo(ID) {
-    document.querySelector(".mafiaBlocker").remove();
     document.querySelector(".votingConfirmUI").classList.add("votingConfirmUIClose");
     document.querySelector(".votingConfirmUI").classList.remove("votingConfirmUI");
     setTimeout(function () {
@@ -1741,6 +1607,10 @@ function startGame() {
       Object.keys(players).forEach((key) => {
         const characterState = players[key];
         let el = playerElements[key];
+        // Now update the DOM
+        el.setAttribute("data-char", characterState.char);
+        el.setAttribute("data-direction", characterState.direction);
+        el.setAttribute("data-walking", characterState.walking);
         const left = 16 * (characterState.x - players[playerId].x + 12) + "px";
         const top = 16 * (characterState.y - players[playerId].y + 7) - 1 + "px";
         el.style.transform = `translate3d(${left}, ${top}, 0)`;
@@ -2091,14 +1961,6 @@ function startGame() {
       //Fires whenever a change occurs
       players = snapshot.val() || {};
       Object.keys(players).forEach((key) => {
-
-        if (!inRound && !inLobby && !players[key].mafia) {
-          const voteCounter = document.querySelector("." + key);
-          if (voteCounter) {
-            voteCounter.innerHTML = `${players[key].votes}`;
-          }
-        }
-
         const characterState = players[key];
         let el = playerElements[key];
         // Now update the DOM
@@ -2111,7 +1973,7 @@ function startGame() {
 
         if (key == playerId) {
 
-          //console.log(players[playerId].x + ", " + players[playerId].y);
+          console.log(players[playerId].x + ", " + players[playerId].y);
 
           attemptGrabVotingCard(players[playerId].x, players[playerId].y);
           attemptGrabGun(players[playerId].x, players[playerId].y);
@@ -2133,21 +1995,13 @@ function startGame() {
             }
           });
           if (allPlayersHere && key === playerId) {
-            if (!haveRoles){
-              haveRoles = true;
-              firstRound();
-            }
+            teleportTo(85,60);
+            firstRound();
             setTimeout(function() {
-              if (inLobby) {
-                inLobby = false;
-                teleportTo(85,60);
+              if (!inRound) {
+                startRound();
               }
-              setTimeout(function() {
-                if (!inRound) {
-                  startRound();
-                }
-              }, 300);
-            }, 500);
+            }, 300);
           }
         }
         Object.keys(votingCards).forEach((key) => {
@@ -2418,13 +2272,13 @@ function startGame() {
       playerRef = firebase.database().ref(`players/${playerId}`);
 
       playerRef.set({
+        name: "Name",
         id: playerId,
         direction: "down",
         char: "zero",
         x:startingX,
         y:startingY,
         walking: "no",
-        mafia: false,
         alive: true,
         votingCard: false,
         gun: false,
