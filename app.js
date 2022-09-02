@@ -1504,7 +1504,7 @@ function startGame() {
     const {i,j} = meetingSpots[index];
     Object.keys(players).forEach((key) => {
       players[key].direction = "down";
-      firebase.database().ref(`players/${key}`).set(players[key]);
+      firebase.database().ref(`players/${key}/direction`).set("down");
     });
     teleportTo(i, j);
     setTimeout(function() {
@@ -1590,9 +1590,10 @@ function startGame() {
   function teleportTo(teleport_x, teleport_y) {
     //console.log("Teleport to: " + teleport_x + ", " + teleport_y);
     setTimeout(function() {
-      players[playerId].x = teleport_x;
-      players[playerId].y = teleport_y;
-      playerRef.set(players[playerId]);
+      playerRef.update({
+        x: teleport_x,
+        y: teleport_y,
+      });
     }, 300);
     const sceneTransition = new SceneTransition();
     sceneTransition.init(document.querySelector(".game-container"), () => {})
@@ -1774,8 +1775,9 @@ function startGame() {
   function attemptGrabFlashlight(x, y) {
     const key = getKeyString(x, y);
     if (flashlights[key] && !players[playerId].flashlight) {
-      players[playerId].flashlight = true;
-      playerRef.set(players[playerId]);
+      playerRef.update({
+        flashlight: true,
+      });
       firebase.database().ref(`flashlight/${key}`).remove();
       const shadowBig = document.createElement("div");
       shadowBig.classList.add("shadowBig");
@@ -1869,9 +1871,10 @@ function startGame() {
       }
       if (((!isSolid(newX, newY) && !playerInNextSpace) || (newX == 133 && newY == 11)) && (inRound || inLobby)) {
         //move to the next space
-        players[playerId].x = newX;
-        players[playerId].y = newY;
-        playerRef.set(players[playerId]);
+        playerRef.update({
+          x: newX,
+          y: newY,
+        });
       }
       else {
         
@@ -1893,8 +1896,9 @@ function startGame() {
     if (!inRound && !inLobby) {
       return;
     }
-    players[playerId].walking = "yes";
-    playerRef.set(players[playerId]);
+    playerRef.update({
+      walking: "yes"
+    });
     const index = heldKeys.indexOf(key);
     if (waitingKeys.indexOf(key) === -1) {
       waitingKeys.unshift(key);
@@ -1923,8 +1927,9 @@ function startGame() {
     }
     setTimeout(function() {
       if (heldKeys.length == 0){
-        players[playerId].walking = "no";
-        playerRef.set(players[playerId]);
+        playerRef.update({
+          walking: "no"
+        });
       }
     }, 200);
   }
@@ -1961,6 +1966,7 @@ function startGame() {
       //Fires whenever a change occurs
       players = snapshot.val() || {};
       Object.keys(players).forEach((key) => {
+        console.log(allPlayersRef[key]);
         const characterState = players[key];
         let el = playerElements[key];
         // Now update the DOM
