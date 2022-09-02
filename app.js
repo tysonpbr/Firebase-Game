@@ -1743,10 +1743,6 @@ function startGame() {
       Object.keys(players).forEach((key) => {
         const characterState = players[key];
         let el = playerElements[key];
-        // Now update the DOM
-        el.setAttribute("data-char", characterState.char);
-        el.setAttribute("data-direction", characterState.direction);
-        el.setAttribute("data-walking", characterState.walking);
         const left = 16 * (characterState.x - players[playerId].x + 12) + "px";
         const top = 16 * (characterState.y - players[playerId].y + 7) - 1 + "px";
         el.style.transform = `translate3d(${left}, ${top}, 0)`;
