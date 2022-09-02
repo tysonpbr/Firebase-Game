@@ -5,12 +5,6 @@
 Personal project multiplayer game based loosely on the card/party game Mafia and run via Firebase online servers.
 
 Tasks
-- add mafia voting funstionality
-  - add "this person" UI
-  - add only mafia see voting
-  - add waiting screen for non mafia
-  - add voting completion when vote is unanimous
-  - add voting completion trigger start of angel voting
 - add angel voting functionality
 - add officer voting functionality
 - add shooter voting functionality
@@ -22,7 +16,10 @@ Tasks
 - game name
 
 Tyson's Current Task
-- create randomizer to pick mafia (test and add short waiting screen)
+- add mafia voting funstionality
+  - add "this person" UI
+  - add voting completion when vote is unanimous
+  - add voting completion trigger start of angel voting
 
 Trixie's Current Task
 - 

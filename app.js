@@ -1473,15 +1473,15 @@ function startGame() {
   }
 
   function firstRound(){
-    inLobby = false;
+    console.log("HERE")
     Object.keys(players).forEach((key) => {
       const index = playerOrder.indexOf(key)
-      if (index === -1) {
+      if (index == -1) {
         playerOrder.unshift(key);
       }
     });
-    if (playerOrder[0] === playerId && !haveRoles) {
-      haveRoles = true;
+    if (playerOrder[0] === playerId) {
+      console.log("I am the admin")
       let numMafia = 0;
       const numPlayer = playerOrder.length;
       if (numPlayer === 2) {
@@ -1517,23 +1517,22 @@ function startGame() {
       else if (numPlayer === 12) {
         numMafia = 4;
       }
+      console.log("numMafia: " + numMafia)
+      console.log("numPlayer: " + numPlayer)
       for (let i = 0; i < numMafia; i++) {
         let currPlayer = playerOrder[Math.floor(Math.random() * numPlayer)];
-        console.log(currPlayer);
         while (players[currPlayer].mafia) {
-          console.log(currPlayer);
           currPlayer = playerOrder[Math.floor(Math.random() * numPlayer)];
-          console.log("REROLL");
         }
-        players[currPlayer].mafia = true;
-        firebase.database().ref(`players/${currPlayer}`).set(players[currPlayer]);
+        firebase.database().ref(`players/${currPlayer}/mafia`).set(true);
+        console.log(currPlayer);
       }
     }
   }
 
   function startRound() {
-    startClock();
     inRound = true;
+    startClock();
     if (players[playerId].flashlight){
       const shadowBig = document.createElement("div");
       shadowBig.classList.add("shadowBig");
@@ -1569,8 +1568,20 @@ function startGame() {
       }
     }, 300);
     setTimeout(function() {
-      startMafiaVoting();
+      if (players[playerId].mafia) {
+        startMafiaVoting();
+      }
+      else {
+        startMafiaWaiting();
+      }
     }, 1500);
+  }
+
+  function startMafiaWaiting() {
+    const mafiaVotingUITop = document.createElement("div");
+    mafiaVotingUITop.classList.add("mafiaVotingUITop");
+    mafiaVotingUITop.innerHTML = `THE MAFIA ARE MEETING`
+    document.querySelector(".gameInterface").appendChild(mafiaVotingUITop);
   }
 
   function startMafiaVoting() {
@@ -2106,7 +2117,7 @@ function startGame() {
 
         if (key == playerId) {
 
-          console.log(players[playerId].x + ", " + players[playerId].y);
+          //console.log(players[playerId].x + ", " + players[playerId].y);
 
           attemptGrabVotingCard(players[playerId].x, players[playerId].y);
           attemptGrabGun(players[playerId].x, players[playerId].y);
@@ -2128,15 +2139,21 @@ function startGame() {
             }
           });
           if (allPlayersHere && key === playerId) {
-            firstRound();
+            if (!haveRoles){
+              haveRoles = true;
+              firstRound();
+            }
             setTimeout(function() {
-              teleportTo(85,60);
+              if (inLobby) {
+                inLobby = false;
+                teleportTo(85,60);
+              }
               setTimeout(function() {
                 if (!inRound) {
                   startRound();
                 }
               }, 300);
-            }, 1000);
+            }, 500);
           }
         }
         Object.keys(votingCards).forEach((key) => {
