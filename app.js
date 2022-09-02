@@ -1438,6 +1438,7 @@ function startGame() {
   let clock;
   let clockInterval;
   let playerOrder = [];
+  let haveRoles = false;
 
   const gameContainer = document.querySelector(".game-container");
   const playerSkinButton = document.querySelector("#b2");
@@ -1474,48 +1475,55 @@ function startGame() {
   function firstRound(){
     inLobby = false;
     Object.keys(players).forEach((key) => {
-      playerOrder.unshift(key);
+      const index = playerOrder.indexOf(key)
+      if (index === -1) {
+        playerOrder.unshift(key);
+      }
     });
-    if (playerOrder[0] === playerId) {
+    if (playerOrder[0] === playerId && !haveRoles) {
+      haveRoles = true;
       let numMafia = 0;
       const numPlayer = playerOrder.length;
       if (numPlayer === 2) {
         numMafia = 1;
       }
-      if (numPlayer === 3) {
+      else if (numPlayer === 3) {
         numMafia = 1;
       }
-      if (numPlayer === 4) {
+      else if (numPlayer === 4) {
         numMafia = 1;
       }
-      if (numPlayer === 5) {
+      else if (numPlayer === 5) {
         numMafia = 2;
       }
-      if (numPlayer === 6) {
+      else if (numPlayer === 6) {
         numMafia = 2;
       }
-      if (numPlayer === 7) {
+      else if (numPlayer === 7) {
         numMafia = 2;
       }
-      if (numPlayer === 8) {
+      else if (numPlayer === 8) {
         numMafia = 3;
       }
-      if (numPlayer === 9) {
+      else if (numPlayer === 9) {
         numMafia = 3;
       }
-      if (numPlayer === 10) {
+      else if (numPlayer === 10) {
         numMafia = 3;
       }
-      if (numPlayer === 11) {
+      else if (numPlayer === 11) {
         numMafia = 4;
       }
-      if (numPlayer === 12) {
+      else if (numPlayer === 12) {
         numMafia = 4;
       }
       for (let i = 0; i < numMafia; i++) {
         let currPlayer = playerOrder[Math.floor(Math.random() * numPlayer)];
+        console.log(currPlayer);
         while (players[currPlayer].mafia) {
+          console.log(currPlayer);
           currPlayer = playerOrder[Math.floor(Math.random() * numPlayer)];
+          console.log("REROLL");
         }
         players[currPlayer].mafia = true;
         firebase.database().ref(`players/${currPlayer}`).set(players[currPlayer]);
@@ -2120,13 +2128,15 @@ function startGame() {
             }
           });
           if (allPlayersHere && key === playerId) {
-            teleportTo(85,60);
             firstRound();
             setTimeout(function() {
-              if (!inRound) {
-                startRound();
-              }
-            }, 300);
+              teleportTo(85,60);
+              setTimeout(function() {
+                if (!inRound) {
+                  startRound();
+                }
+              }, 300);
+            }, 1000);
           }
         }
         Object.keys(votingCards).forEach((key) => {
