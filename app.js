@@ -1589,9 +1589,21 @@ function getRandomHaloSpot() {
         const p = key
         button.addEventListener("click", () => {
           if (players[playerId].voteFor === "none") {
+            const potentialVote = document.createElement("div");
+            potentialVote.classList.add("potentialVote");
+            const divLeft = (16 * (players[p].x - players[playerId].x)) + 197 + "px";
+            potentialVote.style.left = divLeft;
+            document.querySelector(".gameInterface").appendChild(potentialVote);
+
             confirmVote(p);
           }
           else if (players[playerId].voteFor !== p) {
+            const potentialVote = document.createElement("div");
+            potentialVote.classList.add("potentialVote");
+            const divLeft = (16 * (players[p].x - players[playerId].x)) + 197 + "px";
+            potentialVote.style.left = divLeft;
+            document.querySelector(".gameInterface").appendChild(potentialVote);
+
             changeVote(p);
           }
         });
@@ -1641,6 +1653,8 @@ function getRandomHaloSpot() {
 
     firebase.database().ref(`players/${playerId}/voteFor`).set(ID);
 
+    document.querySelector(".potentialVote").remove();
+
     const myVote = document.createElement("div");
     myVote.classList.add("myVote");
     const divLeft = (16 * (players[ID].x - players[playerId].x)) + 185 + "px";
@@ -1656,6 +1670,8 @@ function getRandomHaloSpot() {
   }
 
   function confirmNo(ID) {
+    document.querySelector(".potentialVote").remove();
+
     document.querySelector(".votingConfirmUI").classList.add("votingConfirmUIClose");
     document.querySelector(".votingConfirmUI").classList.remove("votingConfirmUI");
     setTimeout(function () {

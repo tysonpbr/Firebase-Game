@@ -1069,7 +1069,7 @@ body {
   height: 24px;
   top: 106px;
   left: 193px;
-  outline: 2px solid red;
+  outline: none;
   z-index: 30;
 }
 
@@ -1094,11 +1094,24 @@ body {
   width: 32px;
   height: 32px;
   background: url(images/votingUI/yourVoteRed.png);
-  outline: non;
+  outline: none;
   image-rendering: pixelated;
   overflow: hidden;
   z-index: 5;
   animation: itemFloat 0.8s linear infinite alternate-reverse;
+}
+
+.potentialVote {
+  top: 100px;
+  left: 197px;
+  position: absolute;
+  width: 7px;
+  height: 5px;
+  background: url(images/characters/arrow.png);
+  outline: none;
+  image-rendering: pixelated;
+  overflow: hidden;
+  z-index: 5;
 }
 
 .voteCounter {
@@ -1108,7 +1121,7 @@ body {
   width: 14px;
   height: 16px;
   background: none;
-  outline: 2px solid blue;
+  outline: none;
   overflow: hidden;
   z-index: 5;
   font-family: silkscreen;
