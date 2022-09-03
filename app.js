@@ -1433,6 +1433,7 @@ function getRandomHaloSpot() {
   let clockInterval;
   let playerOrder = [];
   let inTitleScreen = true;
+  let inMafiaVoting = false;
 
   const gameContainer = document.querySelector(".game-container");
   const playerSkinButton = document.querySelector("#b2");
@@ -1508,15 +1509,13 @@ function getRandomHaloSpot() {
       else if (numPlayer === 12) {
         numMafia = 4;
       }
-      console.log("numMafia: " + numMafia)
-      console.log("numPlayer: " + numPlayer)
       for (let i = 0; i < numMafia; i++) {
         let currPlayer = playerOrder[Math.floor(Math.random() * numPlayer)];
         while (players[currPlayer].mafia) {
           currPlayer = playerOrder[Math.floor(Math.random() * numPlayer)];
         }
         firebase.database().ref(`players/${currPlayer}/mafia`).set(true);
-        console.log(currPlayer);
+        console.log("Mafia: " + currPlayer);
       }
     }
   }
@@ -1569,6 +1568,7 @@ function getRandomHaloSpot() {
   }
 
   function startMafiaWaiting() {
+    inMafiaVoting = true;
     const mafiaVotingUITop = document.createElement("div");
     mafiaVotingUITop.classList.add("mafiaVotingUITop");
     mafiaVotingUITop.innerHTML = `THE MAFIA ARE MEETING`
@@ -1576,6 +1576,7 @@ function getRandomHaloSpot() {
   }
 
   function startMafiaVoting() {
+    inMafiaVoting = true;
     const mafiaVotingUITop = document.createElement("div");
     mafiaVotingUITop.classList.add("mafiaVotingUITop");
     mafiaVotingUITop.innerHTML = `WHO WOULD THE MAFIA LIKE TO KILL?`
@@ -1712,9 +1713,59 @@ function getRandomHaloSpot() {
     });
     document.querySelector(".votingConfirmUI").appendChild(buttonNo);
   }
+  
+  function checkMafiaVoting(){
+    let numMafia = 0;
+    const numPlayer = playerOrder.length;
+    if (numPlayer === 2) {
+      numMafia = 1;
+    }
+    else if (numPlayer === 3) {
+      numMafia = 1;
+    }
+    else if (numPlayer === 4) {
+      numMafia = 1;
+    }
+    else if (numPlayer === 5) {
+      numMafia = 2;
+    }
+    else if (numPlayer === 6) {
+      numMafia = 2;
+    }
+    else if (numPlayer === 7) {
+      numMafia = 2;
+    }
+    else if (numPlayer === 8) {
+      numMafia = 3;
+    }
+    else if (numPlayer === 9) {
+      numMafia = 3;
+    }
+    else if (numPlayer === 10) {
+      numMafia = 3;
+    }
+    else if (numPlayer === 11) {
+      numMafia = 4;
+    }
+    else if (numPlayer === 12) {
+      numMafia = 4;
+    }
+    Object.keys(players).forEach((key) => {
+      if (players[key].votes === numMafia && inMafiaVoting) {
+        inMafiaVoting = false;
+        endMafiaVoting();
+      }
+    });
+  }
 
   function endMafiaVoting() {
-    document.querySelector(".mafiaVotingUI").remove();
+    console.log("END MAFIA VOTING");
+    if (players[playerId.mafia]) {
+      document.querySelector(".mafiaVotingUITop").remove();
+    }
+    else {
+      document.querySelector(".mafiaVotingUITop").remove();
+    }
   }
 
   function teleportTo(teleport_x, teleport_y) {
@@ -2102,6 +2153,10 @@ function getRandomHaloSpot() {
         el.style.transform = `translate3d(${left}, ${top}, 0)`;
 
         if (key == playerId) {
+
+          if (inMafiaVoting) {
+            checkMafiaVoting();
+          }
 
           //console.log(players[playerId].x + ", " + players[playerId].y);
 

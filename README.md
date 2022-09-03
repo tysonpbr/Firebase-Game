@@ -17,7 +17,7 @@ Tasks
 
 Tyson's Current Task
 - add mafia voting funstionality
-  - add voting completion when vote is unanimous
+  - fix voting div organization for removal
   - add voting completion trigger start of angel voting
 
 Trixie's Current Task
