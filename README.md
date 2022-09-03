@@ -17,8 +17,7 @@ Tasks
 
 Tyson's Current Task
 - add mafia voting funstionality
-  - add change vote 
-  - add voting number under characters
+  - test with bunch of players
   - add "this person" UI
   - add voting completion when vote is unanimous
   - add voting completion trigger start of angel voting

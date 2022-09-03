@@ -1592,11 +1592,18 @@ function getRandomHaloSpot() {
             confirmVote(p);
           }
           else if (players[playerId].voteFor !== p) {
-            console.log("CHANGE VOTE")
+            changeVote(p);
           }
         });
         button.style.left = divLeft;
         document.querySelector(".gameInterface").appendChild(button);
+
+        const voteCounter = document.createElement("div");
+        voteCounter.classList.add("voteCounter");
+        voteCounter.classList.add(p);
+        voteCounter.style.left = divLeft;
+        voteCounter.innerHTML = `0`;
+        document.querySelector(".gameInterface").appendChild(voteCounter);
       }
     });
   }
@@ -1644,6 +1651,7 @@ function getRandomHaloSpot() {
     document.querySelector(".votingConfirmUI").classList.remove("votingConfirmUI");
     setTimeout(function () {
       document.querySelector(".votingConfirmUIClose").remove();
+      document.querySelector(".mafiaBlocker").remove();
     }, 1200);
   }
 
@@ -1652,7 +1660,41 @@ function getRandomHaloSpot() {
     document.querySelector(".votingConfirmUI").classList.remove("votingConfirmUI");
     setTimeout(function () {
       document.querySelector(".votingConfirmUIClose").remove();
+      document.querySelector(".mafiaBlocker").remove();
     }, 1200);
+  }
+
+  function changeVote(ID) {
+    const mafiaBlocker = document.createElement("div");
+    mafiaBlocker.classList.add("mafiaBlocker");
+    document.querySelector(".gameInterface").appendChild(mafiaBlocker);
+
+    const votingConfirmUI = document.createElement("div");
+    votingConfirmUI.classList.add("votingConfirmUI");
+    votingConfirmUI.innerHTML = `ARE YOU SURE YOU WANT TO CHANGE YOUR VOTE TO THIS PERSON?`
+    document.querySelector(".gameInterface").appendChild(votingConfirmUI);
+
+    const buttonYes = document.createElement("div");
+    buttonYes.classList.add("buttonYes");
+    buttonYes.innerHTML = `YES`;
+    buttonYes.addEventListener("click", () => {
+      const oldVote = players[playerId].voteFor;
+      players[oldVote].votes--;
+      firebase.database().ref(`players/${oldVote}/votes`).set(players[oldVote].votes);
+
+      document.querySelector(".myVote").remove();
+      
+      confirmYes(ID);
+    });
+    document.querySelector(".votingConfirmUI").appendChild(buttonYes);
+
+    const buttonNo = document.createElement("div");
+    buttonNo.classList.add("buttonNo");
+    buttonNo.innerHTML = `NO`;
+    buttonNo.addEventListener("click", () => {
+      confirmNo(ID)
+    });
+    document.querySelector(".votingConfirmUI").appendChild(buttonNo);
   }
 
   function endMafiaVoting() {
@@ -2078,36 +2120,42 @@ function getRandomHaloSpot() {
             }
           }
         }
-        Object.keys(votingCards).forEach((key) => {
-          let el = votingCardElements[key]
-          const left = 16 * (votingCards[key].x - players[playerId].x + 12) + "px";
-          const top = 16 * (votingCards[key].y - players[playerId].y + 7) + "px";
-          el.style.transform = `translate3d(${left}, ${top}, 0)`;
-        });
-        Object.keys(guns).forEach((key) => {
-          let el = gunElements[key]
-          const left = 16 * (guns[key].x - players[playerId].x + 12) + "px";
-          const top = 16 * (guns[key].y - players[playerId].y + 7) + "px";
-          el.style.transform = `translate3d(${left}, ${top}, 0)`;
-        });
-        Object.keys(flashlights).forEach((key) => {
-          let el = flashlightElements[key]
-          const left = 16 * (flashlights[key].x - players[playerId].x + 12) + "px";
-          const top = 16 * (flashlights[key].y - players[playerId].y + 7) + "px";
-          el.style.transform = `translate3d(${left}, ${top}, 0)`;
-        });
-        Object.keys(magnifyingGlasses).forEach((key) => {
-          let el = magnifyingGlassElements[key]
-          const left = 16 * (magnifyingGlasses[key].x - players[playerId].x + 12) + "px";
-          const top = 16 * (magnifyingGlasses[key].y - players[playerId].y + 7) + "px";
-          el.style.transform = `translate3d(${left}, ${top}, 0)`;
-        });
-        Object.keys(halos).forEach((key) => {
-          let el = haloElements[key]
-          const left = 16 * (halos[key].x - players[playerId].x + 12) + "px";
-          const top = 16 * (halos[key].y - players[playerId].y + 7) + "px";
-          el.style.transform = `translate3d(${left}, ${top}, 0)`;
-        });
+        if (!inRound && !inLobby && !players[key].mafia) {
+          const voteCounter = document.querySelector("." + key);
+          if (voteCounter) {
+            voteCounter.innerHTML = `${players[key].votes}`;
+          }
+        }
+      });
+      Object.keys(votingCards).forEach((key) => {
+        let el = votingCardElements[key]
+        const left = 16 * (votingCards[key].x - players[playerId].x + 12) + "px";
+        const top = 16 * (votingCards[key].y - players[playerId].y + 7) + "px";
+        el.style.transform = `translate3d(${left}, ${top}, 0)`;
+      });
+      Object.keys(guns).forEach((key) => {
+        let el = gunElements[key]
+        const left = 16 * (guns[key].x - players[playerId].x + 12) + "px";
+        const top = 16 * (guns[key].y - players[playerId].y + 7) + "px";
+        el.style.transform = `translate3d(${left}, ${top}, 0)`;
+      });
+      Object.keys(flashlights).forEach((key) => {
+        let el = flashlightElements[key]
+        const left = 16 * (flashlights[key].x - players[playerId].x + 12) + "px";
+        const top = 16 * (flashlights[key].y - players[playerId].y + 7) + "px";
+        el.style.transform = `translate3d(${left}, ${top}, 0)`;
+      });
+      Object.keys(magnifyingGlasses).forEach((key) => {
+        let el = magnifyingGlassElements[key]
+        const left = 16 * (magnifyingGlasses[key].x - players[playerId].x + 12) + "px";
+        const top = 16 * (magnifyingGlasses[key].y - players[playerId].y + 7) + "px";
+        el.style.transform = `translate3d(${left}, ${top}, 0)`;
+      });
+      Object.keys(halos).forEach((key) => {
+        let el = haloElements[key]
+        const left = 16 * (halos[key].x - players[playerId].x + 12) + "px";
+        const top = 16 * (halos[key].y - players[playerId].y + 7) + "px";
+        el.style.transform = `translate3d(${left}, ${top}, 0)`;
       });
     });
     allPlayersRef.on("child_added", (snapshot) => {
