@@ -912,11 +912,11 @@ body {
   background-color: #000;
   z-index: 20;
   opacity: 0;
-  animation: scene-transition-fade-in 0.2s forwards;
+  animation: scene-transition-fade-in 0.8s forwards;
 }
 
 .SceneTransition.fade-out {
-  animation: scene-transition-fade-out 0.5s forwards;
+  animation: scene-transition-fade-out 0.8s forwards;
 }
 
 @keyframes scene-transition-fade-in {

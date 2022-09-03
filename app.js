@@ -1557,7 +1557,7 @@ function getRandomHaloSpot() {
       else {
         document.querySelector(".shadow").remove();
       }
-    }, 300);
+    }, 800);
     setTimeout(function() {
       if (players[playerId].mafia) {
         startMafiaVoting();
@@ -1565,7 +1565,7 @@ function getRandomHaloSpot() {
       else {
         startMafiaWaiting();
       }
-    }, 1500);
+    }, 2000);
   }
 
   function startMafiaWaiting() {
@@ -1666,7 +1666,7 @@ function getRandomHaloSpot() {
         x: teleport_x,
         y: teleport_y,
       });
-    }, 300);
+    }, 800);
     const sceneTransition = new SceneTransition();
     sceneTransition.init(document.querySelector(".game-container"), () => {})
     setTimeout(function() {   
@@ -1719,10 +1719,10 @@ function getRandomHaloSpot() {
         const top = 16 * (halos[key].y - players[playerId].y + 7) + "px";
         el.style.transform = `translate3d(${left}, ${top}, 0)`;
       });
-    }, 350);
+    }, 800);
     setTimeout(function() {
       sceneTransition.fadeOut();
-    }, 1000);
+    }, 1200);
   }
 
   function placeItems() {
@@ -2074,7 +2074,7 @@ function getRandomHaloSpot() {
                 if (!inRound) {
                   startRound();
                 }
-              }, 500);
+              }, 800);
             }
           }
         }
