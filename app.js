@@ -1559,8 +1559,20 @@ function getRandomHaloSpot() {
       }
     }, 300);
     setTimeout(function() {
-      startMafiaVoting();
+      if (players[playerId].mafia) {
+        startMafiaVoting();
+      }
+      else {
+        startMafiaWaiting();
+      }
     }, 1500);
+  }
+
+  function startMafiaWaiting() {
+    const mafiaVotingUITop = document.createElement("div");
+    mafiaVotingUITop.classList.add("mafiaVotingUITop");
+    mafiaVotingUITop.innerHTML = `THE MAFIA ARE MEETING`
+    document.querySelector(".gameInterface").appendChild(mafiaVotingUITop);
   }
 
   function startMafiaVoting() {
@@ -2313,7 +2325,7 @@ function getRandomHaloSpot() {
       document.querySelector('.buttons').remove();
       setTimeout(function () {
         inTitleScreen = false;
-      },500);
+      },200);
     });
 
   }
@@ -2341,6 +2353,7 @@ function getRandomHaloSpot() {
         halo: false,
         votes: 0,
         voteFor: "none",
+        mafia: false,
       });
 
       //Remove me from Firebase when I diconnect
