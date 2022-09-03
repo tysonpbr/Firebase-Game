@@ -1588,7 +1588,12 @@ function getRandomHaloSpot() {
         button.classList.add("b3");
         const p = key
         button.addEventListener("click", () => {
-          confirmVote(p);
+          if (players[playerId].voteFor === "none") {
+            confirmVote(p);
+          }
+          else if (players[playerId].voteFor !== p) {
+            console.log("CHANGE VOTE")
+          }
         });
         button.style.left = divLeft;
         document.querySelector(".gameInterface").appendChild(button);
@@ -1597,9 +1602,13 @@ function getRandomHaloSpot() {
   }
 
   function confirmVote(ID) {
+    const mafiaBlocker = document.createElement("div");
+    mafiaBlocker.classList.add("mafiaBlocker");
+    document.querySelector(".gameInterface").appendChild(mafiaBlocker);
+
     const votingConfirmUI = document.createElement("div");
     votingConfirmUI.classList.add("votingConfirmUI");
-    votingConfirmUI.innerHTML = `ARE YOU SURE YOU WANT TO CHOOSE ${players[ID].name}?`
+    votingConfirmUI.innerHTML = `ARE YOU SURE YOU WANT TO VOTE FOR THIS PERSON?`
     document.querySelector(".gameInterface").appendChild(votingConfirmUI);
 
     const buttonYes = document.createElement("div");
@@ -1622,6 +1631,14 @@ function getRandomHaloSpot() {
   function confirmYes(ID) {
     players[ID].votes++;
     firebase.database().ref(`players/${ID}`).set(players[ID]);
+
+    firebase.database().ref(`players/${playerId}/voteFor`).set(ID);
+
+    const myVote = document.createElement("div");
+    myVote.classList.add("myVote");
+    const divLeft = (16 * (players[ID].x - players[playerId].x)) + 185 + "px";
+    myVote.style.left = divLeft;
+    document.querySelector(".gameInterface").appendChild(myVote);
 
     document.querySelector(".votingConfirmUI").classList.add("votingConfirmUIClose");
     document.querySelector(".votingConfirmUI").classList.remove("votingConfirmUI");
@@ -2338,7 +2355,6 @@ function getRandomHaloSpot() {
       playerRef = firebase.database().ref(`players/${playerId}`);
 
       playerRef.set({
-        name: "Name",
         id: playerId,
         direction: "down",
         char: "zero",
