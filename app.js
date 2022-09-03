@@ -1405,12 +1405,6 @@ function getRandomHaloSpot() {
   ]);
 }
 
-function startGame() {
-	document.querySelector('.stillScreen').remove();
-  document.querySelector('.scrollScreen').remove();
-  document.querySelector('.buttons').remove();
-}
-
 (function () {
 
   var heldKeys = [];
@@ -1438,12 +1432,14 @@ function startGame() {
   let clock;
   let clockInterval;
   let playerOrder = [];
+  let inTitleScreen = true;
 
   const gameContainer = document.querySelector(".game-container");
   const playerSkinButton = document.querySelector("#b2");
+  const startButton = document.querySelector("#b1");
 
   function startClock() {
-    startTime = 20/60; //min
+    startTime = 5/60; //min
     time = startTime * 60; //secs
     clock = document.createElement("div");
     clock.classList.add("timer");
@@ -1472,10 +1468,57 @@ function startGame() {
   }
 
   function firstRound(){
-    inLobby = false;
     Object.keys(players).forEach((key) => {
       playerOrder.unshift(key);
     });
+    if (playerOrder[0] === playerId) {
+      console.log("I am the admin")
+      let numMafia = 0;
+      const numPlayer = playerOrder.length;
+      if (numPlayer === 2) {
+        numMafia = 1;
+      }
+      else if (numPlayer === 3) {
+        numMafia = 1;
+      }
+      else if (numPlayer === 4) {
+        numMafia = 1;
+      }
+      else if (numPlayer === 5) {
+        numMafia = 2;
+      }
+      else if (numPlayer === 6) {
+        numMafia = 2;
+      }
+      else if (numPlayer === 7) {
+        numMafia = 2;
+      }
+      else if (numPlayer === 8) {
+        numMafia = 3;
+      }
+      else if (numPlayer === 9) {
+        numMafia = 3;
+      }
+      else if (numPlayer === 10) {
+        numMafia = 3;
+      }
+      else if (numPlayer === 11) {
+        numMafia = 4;
+      }
+      else if (numPlayer === 12) {
+        numMafia = 4;
+      }
+      console.log("numMafia: " + numMafia)
+      console.log("numPlayer: " + numPlayer)
+      for (let i = 0; i < numMafia; i++) {
+        let currPlayer = playerOrder[Math.floor(Math.random() * numPlayer)];
+        while (players[currPlayer].mafia) {
+          currPlayer = playerOrder[Math.floor(Math.random() * numPlayer)];
+        }
+        firebase.database().ref(`players/${currPlayer}/mafia`).set(true);
+        console.log(currPlayer);
+      }
+    }
   }
 
   function startRound() {
@@ -1650,7 +1693,7 @@ function startGame() {
     }, 350);
     setTimeout(function() {
       sceneTransition.fadeOut();
-    }, 600);
+    }, 1000);
   }
 
   function placeItems() {
@@ -1863,7 +1906,6 @@ function startGame() {
           }
         }
       }
-      playerRef.set(players[playerId]);
       for (const player in players) {
         if (players[player].x === newX && players[player].y === newY) {
           playerInNextSpace = true;
@@ -1871,14 +1913,10 @@ function startGame() {
       }
       if (((!isSolid(newX, newY) && !playerInNextSpace) || (newX == 133 && newY == 11)) && (inRound || inLobby)) {
         //move to the next space
-        playerRef.update({
-          x: newX,
-          y: newY,
-        });
+        players[playerId].x = newX;
+        players[playerId].y = newY;
       }
-      else {
-        
-      }
+      playerRef.set(players[playerId]);
     }
     setTimeout(function() {
       const i = waitingKeys.indexOf(key);
@@ -1893,7 +1931,7 @@ function startGame() {
   }
 
   function handleArrowPress(key) {
-    if (!inRound && !inLobby) {
+    if ((!inRound && !inLobby) || inTitleScreen) {
       return;
     }
     playerRef.update({
@@ -1966,7 +2004,6 @@ function startGame() {
       //Fires whenever a change occurs
       players = snapshot.val() || {};
       Object.keys(players).forEach((key) => {
-        console.log(allPlayersRef[key]);
         const characterState = players[key];
         let el = playerElements[key];
         // Now update the DOM
@@ -1979,7 +2016,7 @@ function startGame() {
 
         if (key == playerId) {
 
-          console.log(players[playerId].x + ", " + players[playerId].y);
+          //console.log(players[playerId].x + ", " + players[playerId].y);
 
           attemptGrabVotingCard(players[playerId].x, players[playerId].y);
           attemptGrabGun(players[playerId].x, players[playerId].y);
@@ -1992,22 +2029,24 @@ function startGame() {
 
           document.querySelector(".mapUpper").style.transform = `translate3d(${ML}, ${MT}, 0)`;
           document.querySelector(".mapLower").style.transform = `translate3d(${ML}, ${MT}, 0)`;
-        }
-        if (players[playerId].x === 133 && players[playerId].y === 11) {
-          let allPlayersHere = true;
-          Object.keys(players).forEach((key) => {
-            if (players[key].x !== 133 || players[key].y !== 11) {
-              allPlayersHere = false;
-            }
-          });
-          if (allPlayersHere && key === playerId) {
-            teleportTo(85,60);
-            firstRound();
-            setTimeout(function() {
-              if (!inRound) {
-                startRound();
+
+          if (players[playerId].x === 133 && players[playerId].y === 11) {
+            let allPlayersHere = true;
+            Object.keys(players).forEach((key) => {
+              if (players[key].x !== 133 || players[key].y !== 11) {
+                allPlayersHere = false;
               }
-            }, 300);
+            });
+            if (allPlayersHere && inLobby) {
+              inLobby = false;
+              teleportTo(85,60);
+              firstRound();
+              setTimeout(function() {
+                if (!inRound) {
+                  startRound();
+                }
+              }, 500);
+            }
           }
         }
         Object.keys(votingCards).forEach((key) => {
@@ -2266,6 +2305,15 @@ function startGame() {
       if (nextSkin === "nine") {
         skinPreview.style.background="url(images/characters/9.png)";
       }
+    });
+
+    startButton.addEventListener("click", () => {
+      document.querySelector('.stillScreen').remove();
+      document.querySelector('.scrollScreen').remove();
+      document.querySelector('.buttons').remove();
+      setTimeout(function () {
+        inTitleScreen = false;
+      },500);
     });
 
   }
