@@ -1803,7 +1803,7 @@ function getRandomHaloSpot() {
             votes: 0,
           });
         });
-      }, 2000);
+      }, 2200);
     }
 
     const blocker = document.createElement("div");
@@ -1912,7 +1912,7 @@ function getRandomHaloSpot() {
               votes: 0,
             });
           });
-        }, 2000);
+        }, 2200);
       }
   
       const blocker = document.createElement("div");
