@@ -1441,7 +1441,7 @@ function getRandomHaloSpot() {
   const startButton = document.querySelector("#b1");
 
   function startClock() {
-    startTime = 5/60; //min
+    startTime = 15/60; //min
     time = startTime * 60; //secs
     clock = document.createElement("div");
     clock.classList.add("timer");
@@ -1583,21 +1583,24 @@ function getRandomHaloSpot() {
 
   // GENERAL VOTING 
 
-  function confirmVote(ID) {
-    const mafiaBlocker = document.createElement("div");
-    mafiaBlocker.classList.add("mafiaBlocker");
-    document.querySelector(".mafiaInterface").appendChild(mafiaBlocker);
+  function confirmVote(ID, roundInterface) {
+    const blocker = document.createElement("div");
+    blocker.classList.add("blocker");
+    roundInterface.appendChild(blocker);
 
     const votingConfirmUI = document.createElement("div");
     votingConfirmUI.classList.add("votingConfirmUI");
     votingConfirmUI.innerHTML = `ARE YOU SURE YOU WANT TO VOTE FOR THIS PERSON?`
-    document.querySelector(".mafiaInterface").appendChild(votingConfirmUI);
+    if (inAngelVoting) {
+      votingConfirmUI.innerHTML = `ARE YOU SURE YOU WANT TO SAVE THIS PERSON?`
+    }
+    roundInterface.appendChild(votingConfirmUI);
 
     const buttonYes = document.createElement("div");
     buttonYes.classList.add("buttonYes");
     buttonYes.innerHTML = `YES`;
     buttonYes.addEventListener("click", () => {
-      confirmYes(ID);
+      confirmYes(ID, roundInterface);
     });
     document.querySelector(".votingConfirmUI").appendChild(buttonYes);
 
@@ -1610,7 +1613,7 @@ function getRandomHaloSpot() {
     document.querySelector(".votingConfirmUI").appendChild(buttonNo);
   }
 
-  function confirmYes(ID) {
+  function confirmYes(ID, roundInterface) {
     const voteUpdate = players[ID].votes + 1;
     firebase.database().ref(`players/${ID}/votes`).set(voteUpdate);
 
@@ -1622,11 +1625,11 @@ function getRandomHaloSpot() {
     myVote.classList.add("myVote");
     const divLeft = (16 * (players[ID].x - players[playerId].x)) + 185 + "px";
     myVote.style.left = divLeft;
-    document.querySelector(".mafiaInterface").appendChild(myVote);
+    roundInterface.appendChild(myVote);
 
     document.querySelector(".votingConfirmUI").classList.add("votingConfirmUIClose");
     document.querySelector(".votingConfirmUI").classList.remove("votingConfirmUI");
-    document.querySelector(".mafiaBlocker").remove();
+    document.querySelector(".blocker").remove();
     setTimeout(function () {
       document.querySelector(".votingConfirmUIClose").remove();
     }, 1200);
@@ -1637,21 +1640,21 @@ function getRandomHaloSpot() {
 
     document.querySelector(".votingConfirmUI").classList.add("votingConfirmUIClose");
     document.querySelector(".votingConfirmUI").classList.remove("votingConfirmUI");
-    document.querySelector(".mafiaBlocker").remove();
+    document.querySelector(".blocker").remove();
     setTimeout(function () {
       document.querySelector(".votingConfirmUIClose").remove();
     }, 1200);
   }
 
-  function changeVote(ID) {
-    const mafiaBlocker = document.createElement("div");
-    mafiaBlocker.classList.add("mafiaBlocker");
-    document.querySelector(".mafiaInterface").appendChild(mafiaBlocker);
+  function changeVote(ID, roundInterface) {
+    const blocker = document.createElement("div");
+    blocker.classList.add("blocker");
+    roundInterface.appendChild(blocker);
 
     const votingConfirmUI = document.createElement("div");
     votingConfirmUI.classList.add("votingConfirmUI");
     votingConfirmUI.innerHTML = `ARE YOU SURE YOU WANT TO CHANGE YOUR VOTE TO THIS PERSON?`
-    document.querySelector(".mafiaInterface").appendChild(votingConfirmUI);
+    roundInterface.appendChild(votingConfirmUI);
 
     const buttonYes = document.createElement("div");
     buttonYes.classList.add("buttonYes");
@@ -1663,7 +1666,7 @@ function getRandomHaloSpot() {
 
       document.querySelector(".myVote").remove();
       
-      confirmYes(ID);
+      confirmYes(ID, roundInterface);
     });
     document.querySelector(".votingConfirmUI").appendChild(buttonYes);
 
@@ -1716,7 +1719,7 @@ function getRandomHaloSpot() {
             potentialVote.style.left = divLeft;
             document.querySelector(".mafiaInterface").appendChild(potentialVote);
 
-            confirmVote(p);
+            confirmVote(p, mafiaInterface);
           }
           else if (players[playerId].voteFor !== p) {
             const potentialVote = document.createElement("div");
@@ -1725,7 +1728,7 @@ function getRandomHaloSpot() {
             potentialVote.style.left = divLeft;
             document.querySelector(".mafiaInterface").appendChild(potentialVote);
 
-            changeVote(p);
+            changeVote(p, mafiaInterface);
           }
         });
         button.style.left = divLeft;
@@ -1795,9 +1798,9 @@ function getRandomHaloSpot() {
       });
     }
 
-    const mafiaBlocker = document.createElement("div");
-    mafiaBlocker.classList.add("mafiaBlocker");
-    document.querySelector(".mafiaInterface").appendChild(mafiaBlocker);
+    const blocker = document.createElement("div");
+    blocker.classList.add("blocker");
+    document.querySelector(".mafiaInterface").appendChild(blocker);
 
     document.querySelector(".votingUITop").classList.add("votingUITopClose");
     document.querySelector(".votingUITop").classList.remove("votingUITop");
@@ -1815,6 +1818,16 @@ function getRandomHaloSpot() {
     // ANGEL VOTING
 
     function startAngelWaiting() {
+      let angelExists = false;
+      Object.keys(players).forEach((key) => {
+        if (players[key].halo) {
+          angelExists = true;
+        }
+      });
+      if (!angelExists) {
+        return;
+      }
+
       const angelInterface = document.createElement("div");
       angelInterface.classList.add("angelInterface");
       document.querySelector(".gameInterface").appendChild(angelInterface);
@@ -1837,107 +1850,63 @@ function getRandomHaloSpot() {
       votingUITop.innerHTML = `WHO WOULD THE ANGEL LIKE TO SAVE?`
       document.querySelector(".angelInterface").appendChild(votingUITop);
   
-      //Object.keys(players).forEach((key) => {
-      //  if (!players[key].halo) {
-      //    const divLeft = (16 * (players[key].x - players[playerId].x)) + 193 + "px";
-      //    const button = document.createElement("div");
-      //    button.classList.add("b3");
-      //    const p = key
-      //    button.addEventListener("click", () => {
-      //      if (players[playerId].voteFor === "none") {
-      //        const potentialVote = document.createElement("div");
-      //        potentialVote.classList.add("potentialVote");
-      //        const divLeft = (16 * (players[p].x - players[playerId].x)) + 197 + "px";
-      //        potentialVote.style.left = divLeft;
-      //        document.querySelector(".angelInterface").appendChild(potentialVote);
-  //
-      //        confirmVote(p);
-      //      }
-      //      else if (players[playerId].voteFor !== p) {
-      //        const potentialVote = document.createElement("div");
-      //        potentialVote.classList.add("potentialVote");
-      //        const divLeft = (16 * (players[p].x - players[playerId].x)) + 197 + "px";
-      //        potentialVote.style.left = divLeft;
-      //        document.querySelector(".mafiaInterface").appendChild(potentialVote);
-  //
-      //        changeVote(p);
-      //      }
-      //    });
-      //    button.style.left = divLeft;
-      //    document.querySelector(".mafiaInterface").appendChild(button);
-  //
-      //    const voteCounter = document.createElement("div");
-      //    voteCounter.classList.add("voteCounter");
-      //    voteCounter.classList.add("user-" + p);
-      //    voteCounter.style.left = divLeft;
-      //    voteCounter.innerHTML = `0`;
-      //    document.querySelector(".mafiaInterface").appendChild(voteCounter);
-      //  }
-      //});
+      Object.keys(players).forEach((key) => {
+       if (!players[key].halo) {
+         const divLeft = (16 * (players[key].x - players[playerId].x)) + 193 + "px";
+         const button = document.createElement("div");
+         button.classList.add("b3");
+         const p = key
+         button.addEventListener("click", () => {
+           if (players[playerId].voteFor === "none") {
+             const potentialVote = document.createElement("div");
+             potentialVote.classList.add("potentialVote");
+             const divLeft = (16 * (players[p].x - players[playerId].x)) + 197 + "px";
+             potentialVote.style.left = divLeft;
+             document.querySelector(".angelInterface").appendChild(potentialVote);
+  
+             confirmVote(p, angelInterface);
+           }
+         });
+         button.style.left = divLeft;
+         document.querySelector(".angelInterface").appendChild(button);
+  
+         const voteCounter = document.createElement("div");
+         voteCounter.classList.add("voteCounter");
+         voteCounter.classList.add("user-" + p);
+         voteCounter.style.left = divLeft;
+         voteCounter.innerHTML = `0`;
+         document.querySelector(".angelInterface").appendChild(voteCounter);
+       }
+      });
       inAngelVoting = true;
     }
     
     function checkAngelVoting(){
-      let numMafia = 0;
-      const numPlayer = playerOrder.length;
-      if (numPlayer === 2) {
-        numMafia = 1;
-      }
-      else if (numPlayer === 3) {
-        numMafia = 1;
-      }
-      else if (numPlayer === 4) {
-        numMafia = 1;
-      }
-      else if (numPlayer === 5) {
-        numMafia = 2;
-      }
-      else if (numPlayer === 6) {
-        numMafia = 2;
-      }
-      else if (numPlayer === 7) {
-        numMafia = 2;
-      }
-      else if (numPlayer === 8) {
-        numMafia = 3;
-      }
-      else if (numPlayer === 9) {
-        numMafia = 3;
-      }
-      else if (numPlayer === 10) {
-        numMafia = 3;
-      }
-      else if (numPlayer === 11) {
-        numMafia = 4;
-      }
-      else if (numPlayer === 12) {
-        numMafia = 4;
-      }
       Object.keys(players).forEach((key) => {
-        if (players[key].votes === numMafia && inMafiaVoting) {
-          inMafiaVoting = false;
-          endMafiaVoting(key);
+        if (players[key].votes === 1 && inAngelVoting) {
+          inAngelVoting = false;
+          endAngelVoting(key);
         }
       });
     }
   
     function endAngelVoting(votedPlayer) {
-      console.log("END MAFIA VOTING");
+      console.log("END ANGEL VOTING");
   
       if (playerOrder[0] === playerId) {
         firebase.database().ref(`votes`).update({
-          mafiaVote: votedPlayer,
+          angelVote: votedPlayer,
         });
       }
   
-      const mafiaBlocker = document.createElement("div");
-      mafiaBlocker.classList.add("mafiaBlocker");
-      document.querySelector(".mafiaInterface").appendChild(mafiaBlocker);
+      const blocker = document.createElement("div");
+      blocker.classList.add("blocker");
+      document.querySelector(".angelInterface").appendChild(blocker);
   
-      document.querySelector(".mafiaVotingUITop").classList.add("mafiaVotingUITopClose");
-      document.querySelector(".mafiaVotingUITop").classList.remove("mafiaVotingUITop");
+      document.querySelector(".votingUITop").classList.add("votingUITopClose");
+      document.querySelector(".votingUITop").classList.remove("votingUITop");
       setTimeout(function () {
-        document.querySelector(".mafiaInterface").remove();
+        document.querySelector(".angelInterface").remove();
       }, 2000);
     }
 
@@ -1958,6 +1927,10 @@ function getRandomHaloSpot() {
       if (key == playerId) {
         if (inMafiaVoting) {
           checkMafiaVoting();
+        }
+
+        if (inAngelVoting) {
+          checkAngelVoting();
         }
 
         attemptGrabVotingCard(players[playerId].x, players[playerId].y);
@@ -2130,7 +2103,9 @@ function getRandomHaloSpot() {
   function attemptGrabVotingCard(x, y) {
     const key = getKeyString(x, y);
     if (votingCards[key] && !players[playerId].votingCard) {
-      players[playerId].votingCard = true;
+      playerRef.update({
+        votingCard: true,
+      })
       firebase.database().ref(`votingCard/${key}`).remove();
     }
   }
@@ -2138,7 +2113,9 @@ function getRandomHaloSpot() {
   function attemptGrabGun(x, y) {
     const key = getKeyString(x, y);
     if (guns[key] && !players[playerId].gun) {
-      players[playerId].gun = true;
+      playerRef.update({
+        gun: true,
+      })
       firebase.database().ref(`gun/${key}`).remove();
     }
   }
@@ -2172,7 +2149,9 @@ function getRandomHaloSpot() {
   function attemptGrabMagnifyingGlass(x, y) {
     const key = getKeyString(x, y);
     if (magnifyingGlasses[key] && !players[playerId].magnifyingGlass) {
-      players[playerId].magnifyingGlass = true;
+      playerRef.update({
+        magnifyingGlass: true,
+      })
       firebase.database().ref(`magnifyingGlass/${key}`).remove();
     }
   }
@@ -2180,7 +2159,9 @@ function getRandomHaloSpot() {
   function attemptGrabHalo(x, y) {
     const key = getKeyString(x, y);
     if (halos[key] && !players[playerId].halo) {
-      players[playerId].halo = true;
+      playerRef.update({
+        halo: true,
+      })
       firebase.database().ref(`halo/${key}`).remove();
     }
   }
@@ -2342,7 +2323,7 @@ function getRandomHaloSpot() {
         const top = 16 * (characterState.y - players[playerId].y + 7) - 1 + "px";
         el.style.transform = `translate3d(${left}, ${top}, 0)`;
 
-        if (inMafiaVoting && !players[key].mafia) {
+        if (!inRound && !inLobby) {
           const voteCounter = document.querySelector(".user-" + key);
           if (voteCounter) {
             voteCounter.innerHTML = `${players[key].votes}`;
@@ -2353,6 +2334,10 @@ function getRandomHaloSpot() {
 
           if (inMafiaVoting) {
             checkMafiaVoting();
+          }
+
+          if (inAngelVoting) {
+            checkAngelVoting();
           }
 
           //console.log(players[playerId].x + ", " + players[playerId].y);

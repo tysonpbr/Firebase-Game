@@ -1094,6 +1094,17 @@ body {
   outline: none;
 }
 
+.angelInterface {
+  position: absolute;
+  width: 400px;
+  height: 208px;
+  background: none;
+  image-rendering: pixelated;
+  overflow: hidden;
+  z-index: 7;
+  outline: none;
+}
+
 .b3 {
   padding-top: 0px;
   position: absolute;
@@ -1112,7 +1123,7 @@ body {
   z-index: 30;
 }
 
-.mafiaBlocker {
+.blocker {
   position: absolute;
   top: 100px;
   left: 0px;
