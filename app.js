@@ -1844,13 +1844,13 @@ function getRandomHaloSpot() {
         y: teleport_y,
       });
     }, 800);
-    //const sceneTransition = new SceneTransition();
-    //sceneTransition.init(document.querySelector(".game-container"), () => {})
+    const sceneTransition = new SceneTransition();
+    sceneTransition.init(document.querySelector(".game-container"), () => {})
     setTimeout(function() {   
       updateDom();
     }, 800);
     setTimeout(function() {
-      //sceneTransition.fadeOut();
+      sceneTransition.fadeOut();
       updateDom();
     }, 1200);
   }
