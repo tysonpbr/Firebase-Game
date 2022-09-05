@@ -1202,3 +1202,79 @@ body {
   justify-content: center;
   display: inline-flex;
 }
+
+.youAreMafiaBig {
+  position: absolute;
+  padding-top: 2px;
+  width: 130px;
+  height: 18px;
+  top: 100px;
+  left: 135px;
+  outline: 3px solid white;
+  background: #333;
+  font-family: silkscreen;
+  font-size: 14px;
+  color: rgb(201, 2, 2);
+  justify-content: center;
+  display: inline-flex;
+  transform: scale(2.5);
+  z-index: 6;
+}
+
+.youAreMafia {
+  position: absolute;
+  padding-top: 2px;
+  width: 130px;
+  height: 18px;
+  top: 190px;
+  left: 135px;
+  outline: 3px solid white;
+  background: #333;
+  font-family: silkscreen;
+  font-size: 14px;
+  color: rgb(201, 0, 0);
+  justify-content: center;
+  display: inline-flex;
+  transform: scale(1);
+  z-index: 6;
+  animation: youAreMafiaSlide 1s steps(200);
+}
+
+@keyframes youAreMafiaSlide {
+  from {
+    transform: scale(2.5);
+    top: 100px;
+  }
+  to {
+    transform: scale(1);
+    top: 190px;
+  }
+}
+
+.hideYouAreMafia {
+  position: absolute;
+  padding-top: 2px;
+  width: 130px;
+  height: 18px;
+  top: 211px;
+  left: 135px;
+  outline: 3px solid white;
+  background: #333;
+  font-family: silkscreen;
+  font-size: 14px;
+  color: rgb(201, 0, 0);
+  justify-content: center;
+  display: inline-flex;
+  transform: scale(1);
+  z-index: 6;
+  animation: youAreMafiaHide 0.5s steps(30);
+}
+
+@keyframes youAreMafiaHide {
+  from {
+    top: 190px;
+  }
+  to {
+    top: 211px;
+  }
+}

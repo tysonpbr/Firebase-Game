@@ -1533,8 +1533,22 @@ function getRandomHaloSpot() {
   }
 
   function startRound() {
+    if (players[playerId].mafia) {
+      const youAreMafia = document.createElement("div");
+      youAreMafia.classList.add("youAreMafiaBig");
+      youAreMafia.innerHTML = `YOU ARE MAFIA`;
+      document.querySelector(".gameInterface").appendChild(youAreMafia);
+
+      setTimeout(function() {
+        youAreMafia.classList.add("youAreMafia");
+        youAreMafia.classList.remove("youAreMafiaBig");
+      }, 800);
+    }
+
     startClock();
+
     inRound = true;
+
     if (players[playerId].flashlight){
       const shadowBig = document.createElement("div");
       shadowBig.classList.add("shadowBig");
@@ -1547,7 +1561,6 @@ function getRandomHaloSpot() {
       shadow.style.background = "url(images/maps/shadowUp.png)";
       document.querySelector(".gameInterface").appendChild(shadow);
     }
-
   }
 
   function endRound() {
@@ -1558,6 +1571,13 @@ function getRandomHaloSpot() {
     const {i,j} = meetingSpots[index];
     teleportTo(i, j);
     setTimeout(function() {
+      if (players[playerId].mafia) {
+        document.querySelector(".youAreMafia").classList.add("hideYouAreMafia")
+        document.querySelector(".youAreMafia").classList.remove("youAreMafia")
+        setTimeout(function() {
+          document.querySelector(".hideYouAreMafia").remove();
+        }, 500);
+      }
       if (players[playerId].flashlight){
         document.querySelector(".shadowBig").remove();
       }
@@ -1846,9 +1866,11 @@ function getRandomHaloSpot() {
       if (!angelExists) {
         if (players[playerId].magnifyingGlass) {
           startDetectiveVoting();
+          return;
         }
         else {
           startDetectiveWaiting();
+          return;
         }
       }
 
@@ -1963,9 +1985,11 @@ function getRandomHaloSpot() {
       if (!detectiveExists) {
         if (players[playerId].gun) {
           startShooterVoting();
+          return;
         }
         else {
           startShooterWaiting();
+          return;
         }
       }
 

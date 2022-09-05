@@ -5,11 +5,7 @@
 Personal project multiplayer game based loosely on the card/party game Mafia and run via Firebase online servers.
 
 Tasks
-- add angel voting functionality
-- add officer voting functionality
-- add shooter voting functionality
 - add towns people voting functionality
-- create UI for mafia team
 - create items UI
 - add multiple items and set unique locations [ongoing]
 - randomize end round spawn location order [afterTesting]
