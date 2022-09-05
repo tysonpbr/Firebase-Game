@@ -1796,6 +1796,12 @@ function getRandomHaloSpot() {
       firebase.database().ref(`votes`).update({
         mafiaVote: votedPlayer,
       });
+
+      Object.keys(players).forEach((key) => {
+        firebase.database().ref(`players/${key}`).update({
+          votes: 0,
+        });
+      });
     }
 
     const blocker = document.createElement("div");
@@ -1896,6 +1902,12 @@ function getRandomHaloSpot() {
       if (playerOrder[0] === playerId) {
         firebase.database().ref(`votes`).update({
           angelVote: votedPlayer,
+        });
+
+        Object.keys(players).forEach((key) => {
+          firebase.database().ref(`players/${key}`).update({
+            votes: 0,
+          });
         });
       }
   
