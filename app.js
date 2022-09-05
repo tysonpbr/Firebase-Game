@@ -2201,6 +2201,13 @@ function getRandomHaloSpot() {
         const top = 16 * (characterState.y - players[playerId].y + 7) - 1 + "px";
         el.style.transform = `translate3d(${left}, ${top}, 0)`;
 
+        if (inMafiaVoting && !players[key].mafia) {
+          const voteCounter = document.querySelector(".user-" + key);
+          if (voteCounter) {
+            voteCounter.innerHTML = `${players[key].votes}`;
+          }
+        }
+
         if (key == playerId) {
 
           if (inMafiaVoting) {
@@ -2238,12 +2245,6 @@ function getRandomHaloSpot() {
                 }
               }, 800);
             }
-          }
-        }
-        if (inMafiaVoting && !players[key].mafia) {
-          const voteCounter = document.querySelector(".user-" + key);
-          if (voteCounter) {
-            voteCounter.innerHTML = `${players[key].votes}`;
           }
         }
       });
