@@ -1436,6 +1436,7 @@ function getRandomHaloSpot() {
   let inMafiaVoting = false;
   let inAngelVoting = false;
   let inDetectiveVoting = false;
+  let inShooterVoting = false;
 
   const gameContainer = document.querySelector(".game-container");
   const playerSkinButton = document.querySelector("#b2");
@@ -1597,6 +1598,9 @@ function getRandomHaloSpot() {
     }
     if (inDetectiveVoting) {
       votingConfirmUI.innerHTML = `ARE YOU SURE YOU WANT TO INVESTIGATE THIS PERSON?`
+    }
+    if (inShooterVoting) {
+      votingConfirmUI.innerHTML = `ARE YOU SURE YOU WANT TO TAKE OUT THIS PERSON?`
     }
     roundInterface.appendChild(votingConfirmUI);
 
@@ -1957,7 +1961,12 @@ function getRandomHaloSpot() {
         }
       });
       if (!detectiveExists) {
-        return;
+        if (players[playerId].gun) {
+          startShooterVoting();
+        }
+        else {
+          startShooterWaiting();
+        }
       }
 
       const detectiveInterface = document.createElement("div");
@@ -2050,13 +2059,125 @@ function getRandomHaloSpot() {
         document.querySelector(".detectiveInterface").remove();
       }, 1600);
       setTimeout(function () {
-        // if (players[playerId].halo) {
-        //   startShooterVoting();
-        // }
-        // else {
-        //   startShooterWaiting();
-        // }
+        if (players[playerId].gun) {
+          startShooterVoting();
+        }
+        else {
+          startShooterWaiting();
+        }
       }, 2000);
+    }
+
+    // SHOOTER VOTING
+    
+    function startShooterWaiting() {
+      let shooterExists = false;
+      Object.keys(players).forEach((key) => {
+        if (players[key].gun) {
+          shooterExists = true;
+        }
+      });
+      if (!shooterExists) {
+        return;
+      }
+
+      const shooterInterface = document.createElement("div");
+      shooterInterface.classList.add("shooterInterface");
+      document.querySelector(".gameInterface").appendChild(shooterInterface);
+  
+      const votingUITop = document.createElement("div");
+      votingUITop.classList.add("votingUITop");
+      votingUITop.innerHTML = `THE SHOOTER IS CHOOSING SOMEONE TO TAKE OUT`
+      document.querySelector(".shooterInterface").appendChild(votingUITop);
+  
+      inShooterVoting = true;
+    }
+  
+    function startShooterVoting() {
+      const shooterInterface = document.createElement("div");
+      shooterInterface.classList.add("shooterInterface");
+      document.querySelector(".gameInterface").appendChild(shooterInterface);
+  
+      const votingUITop = document.createElement("div");
+      votingUITop.classList.add("votingUITop");
+      votingUITop.innerHTML = `WHO WOULD THE SHOOTER LIKE TO TAKE OUT?`
+      document.querySelector(".shooterInterface").appendChild(votingUITop);
+  
+      Object.keys(players).forEach((key) => {
+       if (!players[key].gun) {
+         const divLeft = (16 * (players[key].x - players[playerId].x)) + 193 + "px";
+         const button = document.createElement("div");
+         button.classList.add("b3");
+         const p = key
+         button.addEventListener("click", () => {
+           if (players[playerId].voteFor === "none") {
+             const potentialVote = document.createElement("div");
+             potentialVote.classList.add("potentialVote");
+             const divLeft = (16 * (players[p].x - players[playerId].x)) + 197 + "px";
+             potentialVote.style.left = divLeft;
+             document.querySelector(".shooterInterface").appendChild(potentialVote);
+  
+             confirmVote(p, shooterInterface);
+           }
+         });
+         button.style.left = divLeft;
+         document.querySelector(".shooterInterface").appendChild(button);
+  
+         const voteCounter = document.createElement("div");
+         voteCounter.classList.add("voteCounter");
+         voteCounter.classList.add("user-" + p);
+         voteCounter.style.left = divLeft;
+         voteCounter.innerHTML = `0`;
+         document.querySelector(".shooterInterface").appendChild(voteCounter);
+       }
+      });
+      inShooterVoting = true;
+    }
+    
+    function checkShooterVoting(){
+      Object.keys(players).forEach((key) => {
+        if (players[key].votes === 1 && inShooterVoting) {
+          inShooterVoting = false;
+          endShooterVoting(key);
+        }
+      });
+    }
+  
+    function endShooterVoting(votedPlayer) {
+      console.log("END SHOOTER VOTING");
+  
+      if (playerOrder[0] === playerId) {
+        firebase.database().ref(`votes`).update({
+          shooterVote: votedPlayer,
+        });
+
+        setTimeout(function () {
+          Object.keys(players).forEach((key) => {
+            firebase.database().ref(`players/${key}`).update({
+              votes: 0,
+              voteFor: "none",
+            });
+          });
+        }, 1800);
+      }
+  
+      const blocker = document.createElement("div");
+      blocker.classList.add("blocker");
+      document.querySelector(".shooterInterface").appendChild(blocker);
+  
+      document.querySelector(".votingUITop").classList.add("votingUITopClose");
+      document.querySelector(".votingUITop").classList.remove("votingUITop");
+      setTimeout(function () {
+        document.querySelector(".shooterInterface").remove();
+      }, 1600);
+      // setTimeout(function () {
+      //   if (players[playerId].halo) {
+      //     startTownVoting();
+      //   }
+      //   else {
+      //     startTownWaiting();
+      //   }
+      // }, 2000);
     }
 
   function updateDom() {
@@ -2084,6 +2205,10 @@ function getRandomHaloSpot() {
 
         if (inDetectiveVoting) {
           checkDetectiveVoting();
+        }
+
+        if (inShooterVoting) {
+          checkShooterVoting();
         }
 
         attemptGrabVotingCard(players[playerId].x, players[playerId].y);
@@ -2495,6 +2620,10 @@ function getRandomHaloSpot() {
 
           if (inDetectiveVoting) {
             checkDetectiveVoting();
+          }
+
+          if (inShooterVoting) {
+            checkShooterVoting();
           }
 
           //console.log(players[playerId].x + ", " + players[playerId].y);
