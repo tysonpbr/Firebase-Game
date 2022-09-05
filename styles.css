@@ -1105,6 +1105,17 @@ body {
   outline: none;
 }
 
+.detectiveInterface {
+  position: absolute;
+  width: 400px;
+  height: 208px;
+  background: none;
+  image-rendering: pixelated;
+  overflow: hidden;
+  z-index: 7;
+  outline: none;
+}
+
 .b3 {
   padding-top: 0px;
   position: absolute;

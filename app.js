@@ -1435,6 +1435,7 @@ function getRandomHaloSpot() {
   let inTitleScreen = true;
   let inMafiaVoting = false;
   let inAngelVoting = false;
+  let inDetectiveVoting = false;
 
   const gameContainer = document.querySelector(".game-container");
   const playerSkinButton = document.querySelector("#b2");
@@ -1593,6 +1594,9 @@ function getRandomHaloSpot() {
     votingConfirmUI.innerHTML = `ARE YOU SURE YOU WANT TO VOTE FOR THIS PERSON?`
     if (inAngelVoting) {
       votingConfirmUI.innerHTML = `ARE YOU SURE YOU WANT TO SAVE THIS PERSON?`
+    }
+    if (inDetectiveVoting) {
+      votingConfirmUI.innerHTML = `ARE YOU SURE YOU WANT TO INVESTIGATE THIS PERSON?`
     }
     roundInterface.appendChild(votingConfirmUI);
 
@@ -1801,9 +1805,10 @@ function getRandomHaloSpot() {
         Object.keys(players).forEach((key) => {
           firebase.database().ref(`players/${key}`).update({
             votes: 0,
+            voteFor: "none",
           });
         });
-      }, 2200);
+      }, 1800);
     }
 
     const blocker = document.createElement("div");
@@ -1814,6 +1819,8 @@ function getRandomHaloSpot() {
     document.querySelector(".votingUITop").classList.remove("votingUITop");
     setTimeout(function () {
       document.querySelector(".mafiaInterface").remove();
+    }, 1600);
+    setTimeout(function () {
       if (players[playerId].halo) {
         startAngelVoting();
       }
@@ -1833,7 +1840,12 @@ function getRandomHaloSpot() {
         }
       });
       if (!angelExists) {
-        return;
+        if (players[playerId].magnifyingGlass) {
+          startDetectiveVoting();
+        }
+        else {
+          startDetectiveWaiting();
+        }
       }
 
       const angelInterface = document.createElement("div");
@@ -1910,9 +1922,10 @@ function getRandomHaloSpot() {
           Object.keys(players).forEach((key) => {
             firebase.database().ref(`players/${key}`).update({
               votes: 0,
+              voteFor: "none",
             });
           });
-        }, 2200);
+        }, 1800);
       }
   
       const blocker = document.createElement("div");
@@ -1923,6 +1936,126 @@ function getRandomHaloSpot() {
       document.querySelector(".votingUITop").classList.remove("votingUITop");
       setTimeout(function () {
         document.querySelector(".angelInterface").remove();
+      }, 1600);
+      setTimeout(function () {
+        if (players[playerId].magnifyingGlass) {
+          startDetectiveVoting();
+        }
+        else {
+          startDetectiveWaiting();
+        }
+      }, 2000);
+    }
+
+    // DETECTIVE VOTING
+    
+    function startDetectiveWaiting() {
+      let detectiveExists = false;
+      Object.keys(players).forEach((key) => {
+        if (players[key].magnifyingGlass) {
+          detectiveExists = true;
+        }
+      });
+      if (!detectiveExists) {
+        return;
+      }
+
+      const detectiveInterface = document.createElement("div");
+      detectiveInterface.classList.add("detectiveInterface");
+      document.querySelector(".gameInterface").appendChild(detectiveInterface);
+  
+      const votingUITop = document.createElement("div");
+      votingUITop.classList.add("votingUITop");
+      votingUITop.innerHTML = `THE DETECTIVE IS INVESTIGATING SOMEONE`
+      document.querySelector(".detectiveInterface").appendChild(votingUITop);
+  
+      inDetectiveVoting = true;
+    }
+  
+    function startDetectiveVoting() {
+      const detectiveInterface = document.createElement("div");
+      detectiveInterface.classList.add("detectiveInterface");
+      document.querySelector(".gameInterface").appendChild(detectiveInterface);
+  
+      const votingUITop = document.createElement("div");
+      votingUITop.classList.add("votingUITop");
+      votingUITop.innerHTML = `WHO WOULD THE DETECTIVE LIKE TO INVESTIGATE?`
+      document.querySelector(".detectiveInterface").appendChild(votingUITop);
+  
+      Object.keys(players).forEach((key) => {
+       if (!players[key].magnifyingGlass) {
+         const divLeft = (16 * (players[key].x - players[playerId].x)) + 193 + "px";
+         const button = document.createElement("div");
+         button.classList.add("b3");
+         const p = key
+         button.addEventListener("click", () => {
+           if (players[playerId].voteFor === "none") {
+             const potentialVote = document.createElement("div");
+             potentialVote.classList.add("potentialVote");
+             const divLeft = (16 * (players[p].x - players[playerId].x)) + 197 + "px";
+             potentialVote.style.left = divLeft;
+             document.querySelector(".detectiveInterface").appendChild(potentialVote);
+  
+             confirmVote(p, detectiveInterface);
+           }
+         });
+         button.style.left = divLeft;
+         document.querySelector(".detectiveInterface").appendChild(button);
+  
+         const voteCounter = document.createElement("div");
+         voteCounter.classList.add("voteCounter");
+         voteCounter.classList.add("user-" + p);
+         voteCounter.style.left = divLeft;
+         voteCounter.innerHTML = `0`;
+         document.querySelector(".detectiveInterface").appendChild(voteCounter);
+       }
+      });
+      inDetectiveVoting = true;
+    }
+    
+    function checkDetectiveVoting(){
+      Object.keys(players).forEach((key) => {
+        if (players[key].votes === 1 && inDetectiveVoting) {
+          inDetectiveVoting = false;
+          endDetectiveVoting(key);
+        }
+      });
+    }
+  
+    function endDetectiveVoting(votedPlayer) {
+      console.log("END DETECTIVE VOTING");
+  
+      if (playerOrder[0] === playerId) {
+        firebase.database().ref(`votes`).update({
+          detectiveVote: votedPlayer,
+        });
+
+        setTimeout(function () {
+          Object.keys(players).forEach((key) => {
+            firebase.database().ref(`players/${key}`).update({
+              votes: 0,
+              voteFor: "none",
+            });
+          });
+        }, 1800);
+      }
+  
+      const blocker = document.createElement("div");
+      blocker.classList.add("blocker");
+      document.querySelector(".detectiveInterface").appendChild(blocker);
+  
+      document.querySelector(".votingUITop").classList.add("votingUITopClose");
+      document.querySelector(".votingUITop").classList.remove("votingUITop");
+      setTimeout(function () {
+        document.querySelector(".detectiveInterface").remove();
+      }, 1600);
+      setTimeout(function () {
+        // if (players[playerId].halo) {
+        //   startShooterVoting();
+        // }
+        // else {
+        //   startShooterWaiting();
+        // }
       }, 2000);
     }
 
@@ -1947,6 +2080,10 @@ function getRandomHaloSpot() {
 
         if (inAngelVoting) {
           checkAngelVoting();
+        }
+
+        if (inDetectiveVoting) {
+          checkDetectiveVoting();
         }
 
         attemptGrabVotingCard(players[playerId].x, players[playerId].y);
@@ -2354,6 +2491,10 @@ function getRandomHaloSpot() {
 
           if (inAngelVoting) {
             checkAngelVoting();
+          }
+
+          if (inDetectiveVoting) {
+            checkDetectiveVoting();
           }
 
           //console.log(players[playerId].x + ", " + players[playerId].y);
