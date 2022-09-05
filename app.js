@@ -1797,11 +1797,13 @@ function getRandomHaloSpot() {
         mafiaVote: votedPlayer,
       });
 
-      Object.keys(players).forEach((key) => {
-        firebase.database().ref(`players/${key}`).update({
-          votes: 0,
+      setTimeout(function () {
+        Object.keys(players).forEach((key) => {
+          firebase.database().ref(`players/${key}`).update({
+            votes: 0,
+          });
         });
-      });
+      }, 2000);
     }
 
     const blocker = document.createElement("div");
@@ -1904,11 +1906,13 @@ function getRandomHaloSpot() {
           angelVote: votedPlayer,
         });
 
-        Object.keys(players).forEach((key) => {
-          firebase.database().ref(`players/${key}`).update({
-            votes: 0,
+        setTimeout(function () {
+          Object.keys(players).forEach((key) => {
+            firebase.database().ref(`players/${key}`).update({
+              votes: 0,
+            });
           });
-        });
+        }, 2000);
       }
   
       const blocker = document.createElement("div");
