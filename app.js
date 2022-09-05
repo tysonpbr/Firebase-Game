@@ -1474,6 +1474,15 @@ function getRandomHaloSpot() {
     });
     if (playerOrder[0] === playerId) {
       console.log("I am the admin")
+
+      firebase.database().ref(`votes`).set({
+        mafiaVote: "none",
+        angelVote: "none",
+        detectiveVote: "none",
+        shooterVote: "none",
+        townVote: "none",
+      });
+
       let numMafia = 0;
       const numPlayer = playerOrder.length;
       if (numPlayer === 2) {
@@ -1544,14 +1553,6 @@ function getRandomHaloSpot() {
     clock.remove();
     const index = playerOrder.indexOf(playerId);
     const {i,j} = meetingSpots[index];
-    Object.keys(players).forEach((key) => {
-      players[key].direction = "down";
-      players[key].walking = "no";
-      firebase.database().ref(`players/${key}`).update({
-        walking: "no",
-        direction: "down",
-      });
-    });
     teleportTo(i, j);
     setTimeout(function() {
       if (players[playerId].flashlight){
@@ -1560,6 +1561,14 @@ function getRandomHaloSpot() {
       else {
         document.querySelector(".shadow").remove();
       }
+      Object.keys(players).forEach((key) => {
+        players[key].direction = "down";
+        players[key].walking = "no";
+        firebase.database().ref(`players/${key}`).update({
+          walking: "no",
+          direction: "down",
+        });
+      });
     }, 800);
     setTimeout(function() {
       if (players[playerId].mafia) {
@@ -1572,19 +1581,27 @@ function getRandomHaloSpot() {
   }
 
   function startMafiaWaiting() {
-    inMafiaVoting = true;
+    const mafiaInterface = document.createElement("div");
+    mafiaInterface.classList.add("mafiaInterface");
+    document.querySelector(".gameInterface").appendChild(mafiaInterface);
+
     const mafiaVotingUITop = document.createElement("div");
     mafiaVotingUITop.classList.add("mafiaVotingUITop");
     mafiaVotingUITop.innerHTML = `THE MAFIA ARE MEETING`
-    document.querySelector(".gameInterface").appendChild(mafiaVotingUITop);
+    document.querySelector(".mafiaInterface").appendChild(mafiaVotingUITop);
+
+    inMafiaVoting = true;
   }
 
   function startMafiaVoting() {
-    inMafiaVoting = true;
+    const mafiaInterface = document.createElement("div");
+    mafiaInterface.classList.add("mafiaInterface");
+    document.querySelector(".gameInterface").appendChild(mafiaInterface);
+
     const mafiaVotingUITop = document.createElement("div");
     mafiaVotingUITop.classList.add("mafiaVotingUITop");
     mafiaVotingUITop.innerHTML = `WHO WOULD THE MAFIA LIKE TO KILL?`
-    document.querySelector(".gameInterface").appendChild(mafiaVotingUITop);
+    document.querySelector(".mafiaInterface").appendChild(mafiaVotingUITop);
 
     Object.keys(players).forEach((key) => {
       if (!players[key].mafia) {
@@ -1598,7 +1615,7 @@ function getRandomHaloSpot() {
             potentialVote.classList.add("potentialVote");
             const divLeft = (16 * (players[p].x - players[playerId].x)) + 197 + "px";
             potentialVote.style.left = divLeft;
-            document.querySelector(".gameInterface").appendChild(potentialVote);
+            document.querySelector(".mafiaInterface").appendChild(potentialVote);
 
             confirmVote(p);
           }
@@ -1607,33 +1624,34 @@ function getRandomHaloSpot() {
             potentialVote.classList.add("potentialVote");
             const divLeft = (16 * (players[p].x - players[playerId].x)) + 197 + "px";
             potentialVote.style.left = divLeft;
-            document.querySelector(".gameInterface").appendChild(potentialVote);
+            document.querySelector(".mafiaInterface").appendChild(potentialVote);
 
             changeVote(p);
           }
         });
         button.style.left = divLeft;
-        document.querySelector(".gameInterface").appendChild(button);
+        document.querySelector(".mafiaInterface").appendChild(button);
 
         const voteCounter = document.createElement("div");
         voteCounter.classList.add("voteCounter");
-        voteCounter.classList.add(p);
+        voteCounter.classList.add("user-" + p);
         voteCounter.style.left = divLeft;
         voteCounter.innerHTML = `0`;
-        document.querySelector(".gameInterface").appendChild(voteCounter);
+        document.querySelector(".mafiaInterface").appendChild(voteCounter);
       }
     });
+    inMafiaVoting = true;
   }
 
   function confirmVote(ID) {
     const mafiaBlocker = document.createElement("div");
     mafiaBlocker.classList.add("mafiaBlocker");
-    document.querySelector(".gameInterface").appendChild(mafiaBlocker);
+    document.querySelector(".mafiaInterface").appendChild(mafiaBlocker);
 
     const votingConfirmUI = document.createElement("div");
     votingConfirmUI.classList.add("votingConfirmUI");
     votingConfirmUI.innerHTML = `ARE YOU SURE YOU WANT TO VOTE FOR THIS PERSON?`
-    document.querySelector(".gameInterface").appendChild(votingConfirmUI);
+    document.querySelector(".mafiaInterface").appendChild(votingConfirmUI);
 
     const buttonYes = document.createElement("div");
     buttonYes.classList.add("buttonYes");
@@ -1664,7 +1682,7 @@ function getRandomHaloSpot() {
     myVote.classList.add("myVote");
     const divLeft = (16 * (players[ID].x - players[playerId].x)) + 185 + "px";
     myVote.style.left = divLeft;
-    document.querySelector(".gameInterface").appendChild(myVote);
+    document.querySelector(".mafiaInterface").appendChild(myVote);
 
     document.querySelector(".votingConfirmUI").classList.add("votingConfirmUIClose");
     document.querySelector(".votingConfirmUI").classList.remove("votingConfirmUI");
@@ -1688,12 +1706,12 @@ function getRandomHaloSpot() {
   function changeVote(ID) {
     const mafiaBlocker = document.createElement("div");
     mafiaBlocker.classList.add("mafiaBlocker");
-    document.querySelector(".gameInterface").appendChild(mafiaBlocker);
+    document.querySelector(".mafiaInterface").appendChild(mafiaBlocker);
 
     const votingConfirmUI = document.createElement("div");
     votingConfirmUI.classList.add("votingConfirmUI");
     votingConfirmUI.innerHTML = `ARE YOU SURE YOU WANT TO CHANGE YOUR VOTE TO THIS PERSON?`
-    document.querySelector(".gameInterface").appendChild(votingConfirmUI);
+    document.querySelector(".mafiaInterface").appendChild(votingConfirmUI);
 
     const buttonYes = document.createElement("div");
     buttonYes.classList.add("buttonYes");
@@ -1757,19 +1775,29 @@ function getRandomHaloSpot() {
     Object.keys(players).forEach((key) => {
       if (players[key].votes === numMafia && inMafiaVoting) {
         inMafiaVoting = false;
-        endMafiaVoting();
+        endMafiaVoting(key);
       }
     });
   }
 
-  function endMafiaVoting() {
+  function endMafiaVoting(votedPlayer) {
     console.log("END MAFIA VOTING");
-    if (players[playerId.mafia]) {
-      document.querySelector(".mafiaVotingUITop").remove();
+
+    if (playerOrder[0] === playerId) {
+      firebase.database().ref(`votes`).update({
+        mafiaVote: votedPlayer,
+      });
     }
-    else {
-      document.querySelector(".mafiaVotingUITop").remove();
-    }
+
+    const mafiaBlocker = document.createElement("div");
+    mafiaBlocker.classList.add("mafiaBlocker");
+    document.querySelector(".mafiaInterface").appendChild(mafiaBlocker);
+
+    document.querySelector(".mafiaVotingUITop").classList.add("mafiaVotingUITopClose");
+    document.querySelector(".mafiaVotingUITop").classList.remove("mafiaVotingUITop");
+    setTimeout(function () {
+      document.querySelector(".mafiaInterface").remove();
+    }, 2000);
   }
 
   function updateDom() {
@@ -2212,8 +2240,8 @@ function getRandomHaloSpot() {
             }
           }
         }
-        if (!inRound && !inLobby && !players[key].mafia) {
-          const voteCounter = document.querySelector("." + key);
+        if (inMafiaVoting && !players[key].mafia) {
+          const voteCounter = document.querySelector(".user-" + key);
           if (voteCounter) {
             voteCounter.innerHTML = `${players[key].votes}`;
           }
