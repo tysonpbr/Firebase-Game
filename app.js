@@ -1686,9 +1686,9 @@ function getRandomHaloSpot() {
 
     document.querySelector(".votingConfirmUI").classList.add("votingConfirmUIClose");
     document.querySelector(".votingConfirmUI").classList.remove("votingConfirmUI");
+    document.querySelector(".mafiaBlocker").remove();
     setTimeout(function () {
       document.querySelector(".votingConfirmUIClose").remove();
-      document.querySelector(".mafiaBlocker").remove();
     }, 1200);
   }
 
@@ -1697,9 +1697,9 @@ function getRandomHaloSpot() {
 
     document.querySelector(".votingConfirmUI").classList.add("votingConfirmUIClose");
     document.querySelector(".votingConfirmUI").classList.remove("votingConfirmUI");
+    document.querySelector(".mafiaBlocker").remove();
     setTimeout(function () {
       document.querySelector(".votingConfirmUIClose").remove();
-      document.querySelector(".mafiaBlocker").remove();
     }, 1200);
   }
 
