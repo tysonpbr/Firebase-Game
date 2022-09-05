@@ -1671,7 +1671,7 @@ function getRandomHaloSpot() {
   }
 
   function confirmYes(ID) {
-    const voteUpdate = players[ID].votes++;
+    const voteUpdate = players[ID].votes + 1;
     firebase.database().ref(`players/${ID}/votes`).set(voteUpdate);
 
     firebase.database().ref(`players/${playerId}/voteFor`).set(ID);
@@ -1718,7 +1718,7 @@ function getRandomHaloSpot() {
     buttonYes.innerHTML = `YES`;
     buttonYes.addEventListener("click", () => {
       const oldVote = players[playerId].voteFor;
-      const voteUpdate = players[oldVote].votes--;
+      const voteUpdate = players[oldVote].votes - 1;
       firebase.database().ref(`players/${oldVote}/votes`).set(voteUpdate);
 
       document.querySelector(".myVote").remove();
