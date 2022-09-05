@@ -937,7 +937,7 @@ body {
   }
 }
 
-.mafiaVotingUITop {
+.votingUITop {
   top: 0px;
   left: 0px;
   position: absolute;
@@ -954,9 +954,9 @@ body {
   align-items: center;
   justify-content: center;
   display: inline-flex;
-  animation: mafiaVotingUITopSlideDown 0.8s steps(30);
+  animation: votingUITopSlideDown 0.8s steps(30);
 }
-@keyframes mafiaVotingUITopSlideDown {
+@keyframes votingUITopSlideDown {
   from {
     top: -64px;
   }
@@ -965,7 +965,7 @@ body {
   }
 }
 
-.mafiaVotingUITopClose {
+.votingUITopClose {
   top: -64px;
   left: 0px;
   position: absolute;
@@ -982,9 +982,9 @@ body {
   align-items: center;
   justify-content: center;
   display: inline-flex;
-  animation: mafiaVotingUITopSlideUp 0.8s steps(30);
+  animation: votingUITopSlideUp 0.8s steps(30);
 }
-@keyframes mafiaVotingUITopSlideUp {
+@keyframes votingUITopSlideUp {
   from {
     top: 0px;
   }
@@ -1132,7 +1132,7 @@ body {
   position: absolute;
   width: 32px;
   height: 32px;
-  background: url(images/votingUI/yourVoteRed.png);
+  background: url(images/votingUI/yourVote.png);
   outline: none;
   image-rendering: pixelated;
   overflow: hidden;
@@ -1146,7 +1146,7 @@ body {
   position: absolute;
   width: 7px;
   height: 5px;
-  background: url(images/votingUI/potentialVoteRed.png);
+  background: url(images/votingUI/potentialVote.png);
   outline: none;
   image-rendering: pixelated;
   overflow: hidden;
@@ -1165,7 +1165,7 @@ body {
   z-index: 5;
   font-family: silkscreen;
   font-size: 16px;
-  color: rgb(133, 13, 13);
+  color: white;
   justify-content: center;
   display: inline-flex;
 }

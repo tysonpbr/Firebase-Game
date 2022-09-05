@@ -16,9 +16,7 @@ Tasks
 - game name
 
 Tyson's Current Task
-- add mafia voting funstionality
-  - fix voting div organization for removal
-  - add voting completion trigger start of angel voting
+- 
 
 Trixie's Current Task
 - 
