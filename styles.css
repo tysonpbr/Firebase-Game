@@ -1069,7 +1069,7 @@ body {
   height: 24px;
   top: 106px;
   left: 193px;
-  outline: none;
+  outline: 2px solid red;;
   z-index: 30;
 }
 
@@ -1121,7 +1121,7 @@ body {
   width: 14px;
   height: 16px;
   background: none;
-  outline: none;
+  outline: 2px solid blue;
   overflow: hidden;
   z-index: 5;
   font-family: silkscreen;

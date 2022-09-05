@@ -1546,7 +1546,11 @@ function getRandomHaloSpot() {
     const {i,j} = meetingSpots[index];
     Object.keys(players).forEach((key) => {
       players[key].direction = "down";
-      firebase.database().ref(`players/${key}/direction`).set("down");
+      players[key].walking = "no";
+      firebase.database().ref(`players/${key}`).update({
+        walking: "no",
+        direction: "down",
+      });
     });
     teleportTo(i, j);
     setTimeout(function() {
@@ -1768,6 +1772,70 @@ function getRandomHaloSpot() {
     }
   }
 
+  function updateDom() {
+    Object.keys(players).forEach((key) => {
+      const characterState = players[key];
+      let el = playerElements[key];
+      
+      el.setAttribute("data-char", characterState.char);
+      el.setAttribute("data-direction", characterState.direction);
+      el.setAttribute("data-walking", characterState.walking);
+
+      const left = 16 * (characterState.x - players[playerId].x + 12) + "px";
+      const top = 16 * (characterState.y - players[playerId].y + 7) - 1 + "px";
+
+      el.style.transform = `translate3d(${left}, ${top}, 0)`;
+      
+      if (key == playerId) {
+        if (inMafiaVoting) {
+          checkMafiaVoting();
+        }
+
+        attemptGrabVotingCard(players[playerId].x, players[playerId].y);
+        attemptGrabGun(players[playerId].x, players[playerId].y);
+        attemptGrabFlashlight(players[playerId].x, players[playerId].y);
+        attemptGrabMagnifyingGlass(players[playerId].x, players[playerId].y);
+        attemptGrabHalo(players[playerId].x, players[playerId].y);
+
+        const ML = ((startingX - players[playerId].x) * 16) + 'px';
+        const MT = ((startingY - players[playerId].y) * 16) + 'px';
+
+        document.querySelector(".mapUpper").style.transform = `translate3d(${ML}, ${MT}, 0)`;
+        document.querySelector(".mapLower").style.transform = `translate3d(${ML}, ${MT}, 0)`;
+      }
+    });
+    Object.keys(votingCards).forEach((key) => {
+      let el = votingCardElements[key]
+      const left = 16 * (votingCards[key].x - players[playerId].x + 12) + "px";
+      const top = 16 * (votingCards[key].y - players[playerId].y + 7) + "px";
+      el.style.transform = `translate3d(${left}, ${top}, 0)`;
+    });
+    Object.keys(guns).forEach((key) => {
+      let el = gunElements[key]
+      const left = 16 * (guns[key].x - players[playerId].x + 12) + "px";
+      const top = 16 * (guns[key].y - players[playerId].y + 7) + "px";
+      el.style.transform = `translate3d(${left}, ${top}, 0)`;
+    });
+    Object.keys(flashlights).forEach((key) => {
+      let el = flashlightElements[key]
+      const left = 16 * (flashlights[key].x - players[playerId].x + 12) + "px";
+      const top = 16 * (flashlights[key].y - players[playerId].y + 7) + "px";
+      el.style.transform = `translate3d(${left}, ${top}, 0)`;
+    });
+    Object.keys(magnifyingGlasses).forEach((key) => {
+      let el = magnifyingGlassElements[key]
+      const left = 16 * (magnifyingGlasses[key].x - players[playerId].x + 12) + "px";
+      const top = 16 * (magnifyingGlasses[key].y - players[playerId].y + 7) + "px";
+      el.style.transform = `translate3d(${left}, ${top}, 0)`;
+    });
+    Object.keys(halos).forEach((key) => {
+      let el = haloElements[key]
+      const left = 16 * (halos[key].x - players[playerId].x + 12) + "px";
+      const top = 16 * (halos[key].y - players[playerId].y + 7) + "px";
+      el.style.transform = `translate3d(${left}, ${top}, 0)`;
+    });
+  }
+
   function teleportTo(teleport_x, teleport_y) {
     //console.log("Teleport to: " + teleport_x + ", " + teleport_y);
     setTimeout(function() {
@@ -1776,61 +1844,14 @@ function getRandomHaloSpot() {
         y: teleport_y,
       });
     }, 800);
-    const sceneTransition = new SceneTransition();
-    sceneTransition.init(document.querySelector(".game-container"), () => {})
+    //const sceneTransition = new SceneTransition();
+    //sceneTransition.init(document.querySelector(".game-container"), () => {})
     setTimeout(function() {   
-            
-      const ML = ((startingX - players[playerId].x) * 16) + 'px';
-      const MT = ((startingY - players[playerId].y) * 16) + 'px';
-
-      document.querySelector(".mapUpper").style.transform = `translate3d(${ML}, ${MT}, 0)`;
-      document.querySelector(".mapLower").style.transform = `translate3d(${ML}, ${MT}, 0)`;
-
-      Object.keys(players).forEach((key) => {
-        const characterState = players[key];
-        let el = playerElements[key];
-        // Now update the DOM
-        el.setAttribute("data-char", characterState.char);
-        el.setAttribute("data-direction", characterState.direction);
-        el.setAttribute("data-walking", characterState.walking);
-        const left = 16 * (characterState.x - players[playerId].x + 12) + "px";
-        const top = 16 * (characterState.y - players[playerId].y + 7) - 1 + "px";
-        el.style.transform = `translate3d(${left}, ${top}, 0)`;
-      });
-            
-      Object.keys(votingCards).forEach((key) => {
-        let el = votingCardElements[key]
-        const left = 16 * (votingCards[key].x - players[playerId].x + 12) + "px";
-        const top = 16 * (votingCards[key].y - players[playerId].y + 7) + "px";
-        el.style.transform = `translate3d(${left}, ${top}, 0)`;
-      });
-      Object.keys(guns).forEach((key) => {
-        let el = gunElements[key]
-        const left = 16 * (guns[key].x - players[playerId].x + 12) + "px";
-        const top = 16 * (guns[key].y - players[playerId].y + 7) + "px";
-        el.style.transform = `translate3d(${left}, ${top}, 0)`;
-      });
-      Object.keys(flashlights).forEach((key) => {
-        let el = flashlightElements[key]
-        const left = 16 * (flashlights[key].x - players[playerId].x + 12) + "px";
-        const top = 16 * (flashlights[key].y - players[playerId].y + 7) + "px";
-        el.style.transform = `translate3d(${left}, ${top}, 0)`;
-      });
-      Object.keys(magnifyingGlasses).forEach((key) => {
-        let el = magnifyingGlassElements[key]
-        const left = 16 * (magnifyingGlasses[key].x - players[playerId].x + 12) + "px";
-        const top = 16 * (magnifyingGlasses[key].y - players[playerId].y + 7) + "px";
-        el.style.transform = `translate3d(${left}, ${top}, 0)`;
-      });
-      Object.keys(halos).forEach((key) => {
-        let el = haloElements[key]
-        const left = 16 * (halos[key].x - players[playerId].x + 12) + "px";
-        const top = 16 * (halos[key].y - players[playerId].y + 7) + "px";
-        el.style.transform = `translate3d(${left}, ${top}, 0)`;
-      });
+      updateDom();
     }, 800);
     setTimeout(function() {
-      sceneTransition.fadeOut();
+      //sceneTransition.fadeOut();
+      updateDom();
     }, 1200);
   }
 
