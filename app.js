@@ -1413,6 +1413,7 @@ function getRandomHaloSpot() {
   let playerRef;
   let players = {};
   let playerElements = {};
+  let votesRef = {};
   let votingCards = {};
   let votingCardElements = {};
   let guns = {};
@@ -2245,7 +2246,7 @@ function getRandomHaloSpot() {
     mafiaNotification.classList.add("notification");
     document.querySelector(".gameInterface").appendChild(mafiaNotification);
 
-    const mafiaKill = "name";
+    const mafiaKill = players[votesRef.mafiaVote].name;
 
     mafiaNotification.innerHTML = `THE MAFIA KILLED ${mafiaKill}`;
 
@@ -2265,7 +2266,7 @@ function getRandomHaloSpot() {
     shooterNotification.classList.add("notification");
     document.querySelector(".gameInterface").appendChild(shooterNotification);
 
-    const shooterKill = "name";
+    const shooterKill = players[votesRef.shooterVote].name;
 
     shooterNotification.innerHTML = `THE SHOOTER TOOK OUT ${shooterKill}`;
 
@@ -2285,7 +2286,7 @@ function getRandomHaloSpot() {
     angelNotification.classList.add("notification");
     document.querySelector(".gameInterface").appendChild(angelNotification);
 
-    const angelSave = "name";
+    const angelSave = players[votesRef.angelVote].name;
 
     angelNotification.innerHTML = `THE ANGEL SAVED ${angelSave}`;
 
@@ -2854,6 +2855,11 @@ function getRandomHaloSpot() {
     const allFlashlightRef = firebase.database().ref(`flashlight`);
     const allMagnifyingGlassRef = firebase.database().ref(`magnifyingGlass`);
     const allHaloRef = firebase.database().ref(`halo`);
+    const allVotesRef = firebase.database().ref(`votes`);
+
+    allVotesRef.on("value", (snapshot) => {
+      votesRef = snapshot.val() || {};
+    });
 
     allPlayersRef.on("value", (snapshot) => {
       //Fires whenever a change occurs
@@ -3208,6 +3214,7 @@ function getRandomHaloSpot() {
       playerRef = firebase.database().ref(`players/${playerId}`);
 
       playerRef.set({
+        name: "Tyson",
         id: playerId,
         direction: "down",
         char: "zero",
