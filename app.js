@@ -2346,6 +2346,8 @@ function getRandomHaloSpot() {
     executeMafiaKillNotification.classList.add("notification");
     document.querySelector(".gameInterface").appendChild(executeMafiaKillNotification);
 
+    let successfulKill = false;
+
     let goToShooter = true;
 
     if (votesRef.shooterVote === "none") {
@@ -2362,21 +2364,46 @@ function getRandomHaloSpot() {
       executeMafiaKillNotification.innerHTML = `THE ANGEL SAVED ${mafiaKill} FROM THE MAFIA`;
     }
     else {
+      successfulKill = true;
       executeMafiaKillNotification.innerHTML = `THE MAFIA SUCCESSFULLY KILLED ${mafiaKill}`;
+      setTimeout(function () {
+        firebase.database().ref(`players/${votesRef.mafiaVote}`).update({
+          char: "ghost",
+          alive: false,
+        });
+      }, 5000);
     }
 
     setTimeout(function () {
       executeMafiaKillNotification.classList.add("notificationClose");
       executeMafiaKillNotification.classList.remove("notification");
     }, 4000);
-
+    
     setTimeout(function () {
       document.querySelector(".notificationClose").remove();
-      if (goToShooter) {
-        exectuteShooterKill();
+      if (successfulKill) {
+
+        firebase.database().ref(`players/${votesRef.mafiaVote}`).update({
+          char: "ghost",
+          alive: false,
+        });
+
+        setTimeout(function () {
+          if (goToShooter) {
+            exectuteShooterKill();
+          }
+          else {
+            exectuteInvestigation();
+          }
+        }, 2000);
       }
       else {
-        exectuteInvestigation();
+        if (goToShooter) {
+          exectuteShooterKill();
+        }
+        else {
+          exectuteInvestigation();
+        }
       }
     }, 5000);
   }
@@ -2386,12 +2413,15 @@ function getRandomHaloSpot() {
     executeShooterKillNotification.classList.add("notification");
     document.querySelector(".gameInterface").appendChild(executeShooterKillNotification);
 
+    let successfulKill = false;
+
     const shooterKill = players[votesRef.shooterVote].name;
 
     if (votesRef.angelVote === votesRef.shooterVote) {
       executeShooterKillNotification.innerHTML = `THE ANGEL SAVED ${shooterKill} FROM THE SHOOTER`;
     }
     else {
+      successfulKill = true;
       executeShooterKillNotification.innerHTML = `THE SHOOTER SUCCESSFULLY KILLED ${shooterKill}`;
     }
 
@@ -2402,7 +2432,20 @@ function getRandomHaloSpot() {
 
     setTimeout(function () {
       document.querySelector(".notificationClose").remove();
-      exectuteInvestigation();
+      if (successfulKill) {
+
+        firebase.database().ref(`players/${votesRef.shooterVote}`).update({
+          char: "ghost",
+          alive: false,
+        });
+
+        setTimeout(function () {
+          exectuteInvestigation();
+        }, 2000);
+      }
+      else {
+        exectuteInvestigation();
+      }
     }, 5000);
   }
 
@@ -2442,7 +2485,7 @@ function getRandomHaloSpot() {
   }
 
   function deathAnimation(deathUser) {
-    
+
   }
 
   // TOWN VOTING
