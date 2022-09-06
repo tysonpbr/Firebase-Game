@@ -1679,7 +1679,7 @@ function getRandomHaloSpot() {
   function confirmYes(ID, roundInterface) {
     if (inDetectiveVoting) {
       const detectiveNotification = document.createElement("div");
-      detectiveNotification.classList.add("detectiveNotification");
+      detectiveNotification.classList.add("notification");
       document.querySelector(".gameInterface").appendChild(detectiveNotification);
 
       if (players[ID].mafia) {
@@ -1690,11 +1690,11 @@ function getRandomHaloSpot() {
       }
 
       setTimeout(function () {
-        detectiveNotification.classList.add("detectiveNotificationClose");
-        detectiveNotification.classList.remove("detectiveNotification");
+        detectiveNotification.classList.add("notificationClose");
+        detectiveNotification.classList.remove("notification");
       }, 2000);
       setTimeout(function () {
-        document.querySelector(".detectiveNotificationClose").remove();
+        document.querySelector(".notificationClose").remove();
       }, 2500);
     }
 
@@ -1909,49 +1909,159 @@ function getRandomHaloSpot() {
     }, 2000);
   }
 
-    // ANGEL VOTING
+  // ANGEL VOTING
+  function startAngelWaiting() {
+    let angelExists = false;
+    Object.keys(players).forEach((key) => {
+      if (players[key].halo) {
+        angelExists = true;
+      }
+    });
+    if (!angelExists) {
+      if (players[playerId].magnifyingGlass) {
+        startDetectiveVoting();
+        return;
+      }
+      else {
+        startDetectiveWaiting();
+        return;
+      }
+    }
+    const angelInterface = document.createElement("div");
+    angelInterface.classList.add("angelInterface");
+    document.querySelector(".gameInterface").appendChild(angelInterface);
 
-    function startAngelWaiting() {
-      let angelExists = false;
-      Object.keys(players).forEach((key) => {
-        if (players[key].halo) {
-          angelExists = true;
+    const votingUITop = document.createElement("div");
+    votingUITop.classList.add("votingUITop");
+    votingUITop.innerHTML = `THE ANGEL IS SAVING SOMEONE`
+    document.querySelector(".angelInterface").appendChild(votingUITop);
+
+    inAngelVoting = true;
+  }
+
+  function startAngelVoting() {
+    const angelInterface = document.createElement("div");
+    angelInterface.classList.add("angelInterface");
+    document.querySelector(".gameInterface").appendChild(angelInterface);
+
+    const votingUITop = document.createElement("div");
+    votingUITop.classList.add("votingUITop");
+    votingUITop.innerHTML = `WHO WOULD THE ANGEL LIKE TO SAVE?`
+    document.querySelector(".angelInterface").appendChild(votingUITop);
+
+    Object.keys(players).forEach((key) => {
+      const divLeft = (16 * (players[key].x - players[playerId].x)) + 193 + "px";
+      const button = document.createElement("div");
+      button.classList.add("b3");
+      const p = key
+      button.addEventListener("click", () => {
+        if (players[playerId].voteFor === "none") {
+          const potentialVote = document.createElement("div");
+          potentialVote.classList.add("potentialVote");
+          const divLeft = (16 * (players[p].x - players[playerId].x)) + 197 + "px";
+          potentialVote.style.left = divLeft;
+          document.querySelector(".angelInterface").appendChild(potentialVote);
+          confirmVote(p, angelInterface);
         }
       });
-      if (!angelExists) {
-        if (players[playerId].magnifyingGlass) {
-          startDetectiveVoting();
-          return;
-        }
-        else {
-          startDetectiveWaiting();
-          return;
-        }
+      button.style.left = divLeft;
+      document.querySelector(".angelInterface").appendChild(button);
+      const voteCounter = document.createElement("div");
+      voteCounter.classList.add("voteCounter");
+      voteCounter.classList.add("user-" + p);
+      voteCounter.style.left = divLeft;
+      voteCounter.innerHTML = `0`;
+      document.querySelector(".angelInterface").appendChild(voteCounter);
+    });
+    inAngelVoting = true;
+  }
+  
+  function checkAngelVoting(){
+    Object.keys(players).forEach((key) => {
+      if (players[key].votes === 1 && inAngelVoting) {
+        inAngelVoting = false;
+        endAngelVoting(key);
       }
+    });
+  }
 
-      const angelInterface = document.createElement("div");
-      angelInterface.classList.add("angelInterface");
-      document.querySelector(".gameInterface").appendChild(angelInterface);
-  
-      const votingUITop = document.createElement("div");
-      votingUITop.classList.add("votingUITop");
-      votingUITop.innerHTML = `THE ANGEL IS SAVING SOMEONE`
-      document.querySelector(".angelInterface").appendChild(votingUITop);
-  
-      inAngelVoting = true;
+  function endAngelVoting(votedPlayer) {
+
+    if (playerOrder[0] === playerId) {
+      firebase.database().ref(`votes`).update({
+        angelVote: votedPlayer,
+      });
+      setTimeout(function () {
+        Object.keys(players).forEach((key) => {
+          firebase.database().ref(`players/${key}`).update({
+            votes: 0,
+            voteFor: "none",
+          });
+        });
+      }, 1800);
     }
+
+    const blocker = document.createElement("div");
+    blocker.classList.add("blocker");
+    document.querySelector(".angelInterface").appendChild(blocker);
+
+    document.querySelector(".votingUITop").classList.add("votingUITopClose");
+    document.querySelector(".votingUITop").classList.remove("votingUITop");
+    setTimeout(function () {
+      document.querySelector(".angelInterface").remove();
+    }, 1600);
+    setTimeout(function () {
+      if (players[playerId].magnifyingGlass) {
+        startDetectiveVoting();
+      }
+      else {
+        startDetectiveWaiting();
+      }
+    }, 2000);
+  }
+  // DETECTIVE VOTING
   
-    function startAngelVoting() {
-      const angelInterface = document.createElement("div");
-      angelInterface.classList.add("angelInterface");
-      document.querySelector(".gameInterface").appendChild(angelInterface);
-  
-      const votingUITop = document.createElement("div");
-      votingUITop.classList.add("votingUITop");
-      votingUITop.innerHTML = `WHO WOULD THE ANGEL LIKE TO SAVE?`
-      document.querySelector(".angelInterface").appendChild(votingUITop);
-  
-      Object.keys(players).forEach((key) => {
+  function startDetectiveWaiting() {
+    let detectiveExists = false;
+    Object.keys(players).forEach((key) => {
+      if (players[key].magnifyingGlass) {
+        detectiveExists = true;
+      }
+    });
+    if (!detectiveExists) {
+      if (players[playerId].gun) {
+        startShooterVoting();
+        return;
+      }
+      else {
+        startShooterWaiting();
+        return;
+      }
+    }
+    const detectiveInterface = document.createElement("div");
+    detectiveInterface.classList.add("detectiveInterface");
+    document.querySelector(".gameInterface").appendChild(detectiveInterface);
+
+    const votingUITop = document.createElement("div");
+    votingUITop.classList.add("votingUITop");
+    votingUITop.innerHTML = `THE DETECTIVE IS INVESTIGATING SOMEONE`
+    document.querySelector(".detectiveInterface").appendChild(votingUITop);
+
+    inDetectiveVoting = true;
+  }
+
+  function startDetectiveVoting() {
+    const detectiveInterface = document.createElement("div");
+    detectiveInterface.classList.add("detectiveInterface");
+    document.querySelector(".gameInterface").appendChild(detectiveInterface);
+
+    const votingUITop = document.createElement("div");
+    votingUITop.classList.add("votingUITop");
+    votingUITop.innerHTML = `WHO WOULD THE DETECTIVE LIKE TO INVESTIGATE?`
+    document.querySelector(".detectiveInterface").appendChild(votingUITop);
+
+    Object.keys(players).forEach((key) => {
+      if (!players[key].magnifyingGlass) {
         const divLeft = (16 * (players[key].x - players[playerId].x)) + 193 + "px";
         const button = document.createElement("div");
         button.classList.add("b3");
@@ -1962,302 +2072,238 @@ function getRandomHaloSpot() {
             potentialVote.classList.add("potentialVote");
             const divLeft = (16 * (players[p].x - players[playerId].x)) + 197 + "px";
             potentialVote.style.left = divLeft;
-            document.querySelector(".angelInterface").appendChild(potentialVote);
-
-            confirmVote(p, angelInterface);
+            document.querySelector(".detectiveInterface").appendChild(potentialVote);
+          
+            confirmVote(p, detectiveInterface);
           }
         });
         button.style.left = divLeft;
-        document.querySelector(".angelInterface").appendChild(button);
-
+        document.querySelector(".detectiveInterface").appendChild(button);
+       
         const voteCounter = document.createElement("div");
         voteCounter.classList.add("voteCounter");
         voteCounter.classList.add("user-" + p);
         voteCounter.style.left = divLeft;
         voteCounter.innerHTML = `0`;
-        document.querySelector(".angelInterface").appendChild(voteCounter);
-      });
-      inAngelVoting = true;
-    }
-    
-    function checkAngelVoting(){
-      Object.keys(players).forEach((key) => {
-        if (players[key].votes === 1 && inAngelVoting) {
-          inAngelVoting = false;
-          endAngelVoting(key);
-        }
-      });
-    }
+        document.querySelector(".detectiveInterface").appendChild(voteCounter);
+      }
+    });
+    inDetectiveVoting = true;
+  }
   
-    function endAngelVoting(votedPlayer) {
-  
-      if (playerOrder[0] === playerId) {
-        firebase.database().ref(`votes`).update({
-          angelVote: votedPlayer,
+  function checkDetectiveVoting(){
+    Object.keys(players).forEach((key) => {
+      if (players[key].votes === 1 && inDetectiveVoting) {
+        inDetectiveVoting = false;
+        endDetectiveVoting(key);
+      }
+    });
+  }
+
+  function endDetectiveVoting(votedPlayer) {
+
+    if (playerOrder[0] === playerId) {
+      firebase.database().ref(`votes`).update({
+        detectiveVote: votedPlayer,
+      });
+      setTimeout(function () {
+        Object.keys(players).forEach((key) => {
+          firebase.database().ref(`players/${key}`).update({
+            votes: 0,
+            voteFor: "none",
+          });
         });
+      }, 1800);
+    }
 
-        setTimeout(function () {
-          Object.keys(players).forEach((key) => {
-            firebase.database().ref(`players/${key}`).update({
-              votes: 0,
-              voteFor: "none",
-            });
-          });
-        }, 1800);
+    const blocker = document.createElement("div");
+    blocker.classList.add("blocker");
+    document.querySelector(".detectiveInterface").appendChild(blocker);
+
+    document.querySelector(".votingUITop").classList.add("votingUITopClose");
+    document.querySelector(".votingUITop").classList.remove("votingUITop");
+    setTimeout(function () {
+      document.querySelector(".detectiveInterface").remove();
+    }, 1600);
+    setTimeout(function () {
+      if (players[playerId].gun) {
+        startShooterVoting();
       }
-  
-      const blocker = document.createElement("div");
-      blocker.classList.add("blocker");
-      document.querySelector(".angelInterface").appendChild(blocker);
-  
-      document.querySelector(".votingUITop").classList.add("votingUITopClose");
-      document.querySelector(".votingUITop").classList.remove("votingUITop");
-      setTimeout(function () {
-        document.querySelector(".angelInterface").remove();
-      }, 1600);
-      setTimeout(function () {
-        if (players[playerId].magnifyingGlass) {
-          startDetectiveVoting();
-        }
-        else {
-          startDetectiveWaiting();
-        }
-      }, 2000);
-    }
-
-    // DETECTIVE VOTING
-    
-    function startDetectiveWaiting() {
-      let detectiveExists = false;
-      Object.keys(players).forEach((key) => {
-        if (players[key].magnifyingGlass) {
-          detectiveExists = true;
-        }
-      });
-      if (!detectiveExists) {
-        if (players[playerId].gun) {
-          startShooterVoting();
-          return;
-        }
-        else {
-          startShooterWaiting();
-          return;
-        }
+      else {
+        startShooterWaiting();
       }
+    }, 2000);
+  }
+  // SHOOTER VOTING
+  
+  function startShooterWaiting() {
+    let shooterExists = false;
+    Object.keys(players).forEach((key) => {
+      if (players[key].gun) {
+        shooterExists = true;
+      }
+    });
+    if (!shooterExists) {
+      announceMafiaKill();
+    }
+    const shooterInterface = document.createElement("div");
+    shooterInterface.classList.add("shooterInterface");
+    document.querySelector(".gameInterface").appendChild(shooterInterface);
 
-      const detectiveInterface = document.createElement("div");
-      detectiveInterface.classList.add("detectiveInterface");
-      document.querySelector(".gameInterface").appendChild(detectiveInterface);
-  
-      const votingUITop = document.createElement("div");
-      votingUITop.classList.add("votingUITop");
-      votingUITop.innerHTML = `THE DETECTIVE IS INVESTIGATING SOMEONE`
-      document.querySelector(".detectiveInterface").appendChild(votingUITop);
-  
-      inDetectiveVoting = true;
-    }
-  
-    function startDetectiveVoting() {
-      const detectiveInterface = document.createElement("div");
-      detectiveInterface.classList.add("detectiveInterface");
-      document.querySelector(".gameInterface").appendChild(detectiveInterface);
-  
-      const votingUITop = document.createElement("div");
-      votingUITop.classList.add("votingUITop");
-      votingUITop.innerHTML = `WHO WOULD THE DETECTIVE LIKE TO INVESTIGATE?`
-      document.querySelector(".detectiveInterface").appendChild(votingUITop);
-  
-      Object.keys(players).forEach((key) => {
-        if (!players[key].magnifyingGlass) {
-          const divLeft = (16 * (players[key].x - players[playerId].x)) + 193 + "px";
-          const button = document.createElement("div");
-          button.classList.add("b3");
-          const p = key
-          button.addEventListener("click", () => {
-            if (players[playerId].voteFor === "none") {
-              const potentialVote = document.createElement("div");
-              potentialVote.classList.add("potentialVote");
-              const divLeft = (16 * (players[p].x - players[playerId].x)) + 197 + "px";
-              potentialVote.style.left = divLeft;
-              document.querySelector(".detectiveInterface").appendChild(potentialVote);
-            
-              confirmVote(p, detectiveInterface);
-            }
-          });
-          button.style.left = divLeft;
-          document.querySelector(".detectiveInterface").appendChild(button);
-         
-          const voteCounter = document.createElement("div");
-          voteCounter.classList.add("voteCounter");
-          voteCounter.classList.add("user-" + p);
-          voteCounter.style.left = divLeft;
-          voteCounter.innerHTML = `0`;
-          document.querySelector(".detectiveInterface").appendChild(voteCounter);
-        }
-      });
-      inDetectiveVoting = true;
-    }
-    
-    function checkDetectiveVoting(){
-      Object.keys(players).forEach((key) => {
-        if (players[key].votes === 1 && inDetectiveVoting) {
-          inDetectiveVoting = false;
-          endDetectiveVoting(key);
-        }
-      });
-    }
-  
-    function endDetectiveVoting(votedPlayer) {
-  
-      if (playerOrder[0] === playerId) {
-        firebase.database().ref(`votes`).update({
-          detectiveVote: votedPlayer,
+    const votingUITop = document.createElement("div");
+    votingUITop.classList.add("votingUITop");
+    votingUITop.innerHTML = `THE SHOOTER IS CHOOSING SOMEONE TO TAKE OUT`
+    document.querySelector(".shooterInterface").appendChild(votingUITop);
+
+    inShooterVoting = true;
+  }
+
+  function startShooterVoting() {
+    const shooterInterface = document.createElement("div");
+    shooterInterface.classList.add("shooterInterface");
+    document.querySelector(".gameInterface").appendChild(shooterInterface);
+
+    const votingUITop = document.createElement("div");
+    votingUITop.classList.add("votingUITop");
+    votingUITop.innerHTML = `WHO WOULD THE SHOOTER LIKE TO TAKE OUT?`
+    document.querySelector(".shooterInterface").appendChild(votingUITop);
+
+    Object.keys(players).forEach((key) => {
+      if (!players[key].gun) {
+        const divLeft = (16 * (players[key].x - players[playerId].x)) + 193 + "px";
+        const button = document.createElement("div");
+        button.classList.add("b3");
+        const p = key
+        button.addEventListener("click", () => {
+          if (players[playerId].voteFor === "none") {
+            const potentialVote = document.createElement("div");
+            potentialVote.classList.add("potentialVote");
+            const divLeft = (16 * (players[p].x - players[playerId].x)) + 197 + "px";
+            potentialVote.style.left = divLeft;
+            document.querySelector(".shooterInterface").appendChild(potentialVote);
+          
+            confirmVote(p, shooterInterface);
+          }
         });
-
-        setTimeout(function () {
-          Object.keys(players).forEach((key) => {
-            firebase.database().ref(`players/${key}`).update({
-              votes: 0,
-              voteFor: "none",
-            });
-          });
-        }, 1800);
+        button.style.left = divLeft;
+        document.querySelector(".shooterInterface").appendChild(button);
+       
+        const voteCounter = document.createElement("div");
+        voteCounter.classList.add("voteCounter");
+        voteCounter.classList.add("user-" + p);
+        voteCounter.style.left = divLeft;
+        voteCounter.innerHTML = `0`;
+        document.querySelector(".shooterInterface").appendChild(voteCounter);
       }
+    });
+    inShooterVoting = true;
+  }
   
-      const blocker = document.createElement("div");
-      blocker.classList.add("blocker");
-      document.querySelector(".detectiveInterface").appendChild(blocker);
-  
-      document.querySelector(".votingUITop").classList.add("votingUITopClose");
-      document.querySelector(".votingUITop").classList.remove("votingUITop");
-      setTimeout(function () {
-        document.querySelector(".detectiveInterface").remove();
-      }, 1600);
-      setTimeout(function () {
-        if (players[playerId].gun) {
-          startShooterVoting();
-        }
-        else {
-          startShooterWaiting();
-        }
-      }, 2000);
-    }
-
-    // SHOOTER VOTING
-    
-    function startShooterWaiting() {
-      let shooterExists = false;
-      Object.keys(players).forEach((key) => {
-        if (players[key].gun) {
-          shooterExists = true;
-        }
-      });
-      if (!shooterExists) {
-        if (players[playerId].votingCard) {
-          startTownVoting();
-        }
-        else {
-          startTownWaiting();
-        }
+  function checkShooterVoting(){
+    Object.keys(players).forEach((key) => {
+      if (players[key].votes === 1 && inShooterVoting) {
+        inShooterVoting = false;
+        endShooterVoting(key);
       }
+    });
+  }
 
-      const shooterInterface = document.createElement("div");
-      shooterInterface.classList.add("shooterInterface");
-      document.querySelector(".gameInterface").appendChild(shooterInterface);
-  
-      const votingUITop = document.createElement("div");
-      votingUITop.classList.add("votingUITop");
-      votingUITop.innerHTML = `THE SHOOTER IS CHOOSING SOMEONE TO TAKE OUT`
-      document.querySelector(".shooterInterface").appendChild(votingUITop);
-  
-      inShooterVoting = true;
-    }
-  
-    function startShooterVoting() {
-      const shooterInterface = document.createElement("div");
-      shooterInterface.classList.add("shooterInterface");
-      document.querySelector(".gameInterface").appendChild(shooterInterface);
-  
-      const votingUITop = document.createElement("div");
-      votingUITop.classList.add("votingUITop");
-      votingUITop.innerHTML = `WHO WOULD THE SHOOTER LIKE TO TAKE OUT?`
-      document.querySelector(".shooterInterface").appendChild(votingUITop);
-  
-      Object.keys(players).forEach((key) => {
-        if (!players[key].gun) {
-          const divLeft = (16 * (players[key].x - players[playerId].x)) + 193 + "px";
-          const button = document.createElement("div");
-          button.classList.add("b3");
-          const p = key
-          button.addEventListener("click", () => {
-            if (players[playerId].voteFor === "none") {
-              const potentialVote = document.createElement("div");
-              potentialVote.classList.add("potentialVote");
-              const divLeft = (16 * (players[p].x - players[playerId].x)) + 197 + "px";
-              potentialVote.style.left = divLeft;
-              document.querySelector(".shooterInterface").appendChild(potentialVote);
-            
-              confirmVote(p, shooterInterface);
-            }
+  function endShooterVoting(votedPlayer) {
+
+    if (playerOrder[0] === playerId) {
+      firebase.database().ref(`votes`).update({
+        shooterVote: votedPlayer,
+      });
+      setTimeout(function () {
+        Object.keys(players).forEach((key) => {
+          firebase.database().ref(`players/${key}`).update({
+            votes: 0,
+            voteFor: "none",
           });
-          button.style.left = divLeft;
-          document.querySelector(".shooterInterface").appendChild(button);
-         
-          const voteCounter = document.createElement("div");
-          voteCounter.classList.add("voteCounter");
-          voteCounter.classList.add("user-" + p);
-          voteCounter.style.left = divLeft;
-          voteCounter.innerHTML = `0`;
-          document.querySelector(".shooterInterface").appendChild(voteCounter);
-        }
-      });
-      inShooterVoting = true;
-    }
-    
-    function checkShooterVoting(){
-      Object.keys(players).forEach((key) => {
-        if (players[key].votes === 1 && inShooterVoting) {
-          inShooterVoting = false;
-          endShooterVoting(key);
-        }
-      });
-    }
-  
-    function endShooterVoting(votedPlayer) {
-  
-      if (playerOrder[0] === playerId) {
-        firebase.database().ref(`votes`).update({
-          shooterVote: votedPlayer,
         });
-
-        setTimeout(function () {
-          Object.keys(players).forEach((key) => {
-            firebase.database().ref(`players/${key}`).update({
-              votes: 0,
-              voteFor: "none",
-            });
-          });
-        }, 1800);
-      }
-  
-      const blocker = document.createElement("div");
-      blocker.classList.add("blocker");
-      document.querySelector(".shooterInterface").appendChild(blocker);
-  
-      document.querySelector(".votingUITop").classList.add("votingUITopClose");
-      document.querySelector(".votingUITop").classList.remove("votingUITop");
-      setTimeout(function () {
-        document.querySelector(".shooterInterface").remove();
-      }, 1600);
-       setTimeout(function () {
-        if (players[playerId].votingCard) {
-          startTownVoting();
-        }
-        else {
-          startTownWaiting();
-        }
-       }, 2000);
+      }, 1800);
     }
+
+    const blocker = document.createElement("div");
+    blocker.classList.add("blocker");
+    document.querySelector(".shooterInterface").appendChild(blocker);
+
+    document.querySelector(".votingUITop").classList.add("votingUITopClose");
+    document.querySelector(".votingUITop").classList.remove("votingUITop");
+    setTimeout(function () {
+      document.querySelector(".shooterInterface").remove();
+    }, 1600);
+    setTimeout(function () {
+      announceMafiaKill();
+    }, 2000);
+  }
+
+  // KILL AND SAVE
+
+  function announceMafiaKill() {
+    const mafiaNotification = document.createElement("div");
+    mafiaNotification.classList.add("notification");
+    document.querySelector(".gameInterface").appendChild(mafiaNotification);
+
+    const mafiaKill = "name";
+
+    mafiaNotification.innerHTML = `THE MAFIA KILLED ${mafiaKill}`;
+
+    setTimeout(function () {
+      mafiaNotification.classList.add("notificationClose");
+      mafiaNotification.classList.remove("notification");
+    }, 4000);
+
+    setTimeout(function () {
+      document.querySelector(".notificationClose").remove();
+      announceShooterKill();
+    }, 5000);
+  }
+
+  function announceShooterKill() {
+    const shooterNotification = document.createElement("div");
+    shooterNotification.classList.add("notification");
+    document.querySelector(".gameInterface").appendChild(shooterNotification);
+
+    const shooterKill = "name";
+
+    shooterNotification.innerHTML = `THE SHOOTER TOOK OUT ${shooterKill}`;
+
+    setTimeout(function () {
+      shooterNotification.classList.add("notificationClose");
+      shooterNotification.classList.remove("notification");
+    }, 4000);
+
+    setTimeout(function () {
+      document.querySelector(".notificationClose").remove();
+      announceAngelSave();
+    }, 5000);
+  }
+
+  function announceAngelSave() {
+    const angelNotification = document.createElement("div");
+    angelNotification.classList.add("notification");
+    document.querySelector(".gameInterface").appendChild(angelNotification);
+
+    const angelSave = "name";
+
+    angelNotification.innerHTML = `THE ANGEL SAVED ${angelSave}`;
+
+    setTimeout(function () {
+      angelNotification.classList.add("notificationClose");
+      angelNotification.classList.remove("notification");
+    }, 4000);
+
+    setTimeout(function () {
+      document.querySelector(".notificationClose").remove();
+      if (players[playerId].votingCard) {
+        startTownVoting();
+      }
+      else {
+        startTownWaiting();
+      }
+    }, 5000);
+  }
 
   // TOWN VOTING
 

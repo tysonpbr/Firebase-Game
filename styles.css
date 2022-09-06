@@ -1376,7 +1376,7 @@ body {
   transform: scale(1);
 }
 
-.detectiveNotification {
+.notification {
   position: absolute;
   padding-top: 13px;
   width: 300px;
@@ -1392,10 +1392,10 @@ body {
   display: inline-flex;
   transform: scale(1);
   z-index: 8;
-  animation: detectiveNotificationAppear 0.5s steps(30);
+  animation: notificationAppear 0.5s steps(30);
 }
 
-@keyframes detectiveNotificationAppear {
+@keyframes notificationAppear {
   from {
     transform: scale(0);
   }
@@ -1404,7 +1404,7 @@ body {
   }
 }
 
-.detectiveNotificationClose {
+.notificationClose {
   position: absolute;
   padding-top: 13px;
   width: 300px;
@@ -1420,10 +1420,10 @@ body {
   display: inline-flex;
   transform: scale(0);
   z-index: 8;
-  animation: detectiveNotificationDisappear 0.5s steps(30);
+  animation: notificationDisappear 0.5s steps(30);
 }
 
-@keyframes detectiveNotificationDisappear {
+@keyframes notificationDisappear {
   from {
     transform: scale(1);
   }
