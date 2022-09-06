@@ -1378,15 +1378,15 @@ body {
 
 .notification {
   position: absolute;
-  padding-top: 13px;
-  width: 300px;
-  height: 40px;
-  top: 84px;
-  left: 50px;
+  padding-top: 11px;
+  width: 350px;
+  height: 30px;
+  top: 89px;
+  left: 25px;
   outline: 3px solid white;
   background: #777;
   font-family: silkscreen;
-  font-size: 14px;
+  font-size: 8px;
   color: white;
   justify-content: center;
   display: inline-flex;
@@ -1406,15 +1406,15 @@ body {
 
 .notificationClose {
   position: absolute;
-  padding-top: 13px;
-  width: 300px;
-  height: 40px;
-  top: 84px;
-  left: 50px;
+  padding-top: 11px;
+  width: 350px;
+  height: 30px;
+  top: 89px;
+  left: 25px;
   outline: 3px solid white;
   background: #777;
   font-family: silkscreen;
-  font-size: 14px;
+  font-size: 8px;
   color: white;
   justify-content: center;
   display: inline-flex;

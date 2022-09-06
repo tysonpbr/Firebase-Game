@@ -5,7 +5,6 @@
 Personal project multiplayer game based loosely on the card/party game Mafia and run via Firebase online servers.
 
 Tasks
-- add announcement for when there is none of a role
 - add skip option for shooter
 - remove items at round end
 - fix "No items picked up"

@@ -1678,27 +1678,6 @@ function getRandomHaloSpot() {
   }
 
   function confirmYes(ID, roundInterface) {
-    if (inDetectiveVoting) {
-      const detectiveNotification = document.createElement("div");
-      detectiveNotification.classList.add("notification");
-      document.querySelector(".gameInterface").appendChild(detectiveNotification);
-
-      if (players[ID].mafia) {
-        detectiveNotification.innerHTML = `THIS PLAYER IS IN THE MAFIA`;
-      }
-      else {
-        detectiveNotification.innerHTML = `THIS PLAYER IS A NORMIE`;
-      }
-
-      setTimeout(function () {
-        detectiveNotification.classList.add("notificationClose");
-        detectiveNotification.classList.remove("notification");
-      }, 2000);
-      setTimeout(function () {
-        document.querySelector(".notificationClose").remove();
-      }, 2500);
-    }
-
     const voteUpdate = players[ID].votes + 1;
     firebase.database().ref(`players/${ID}/votes`).set(voteUpdate);
 
@@ -2146,6 +2125,7 @@ function getRandomHaloSpot() {
     });
     if (!shooterExists) {
       announceMafiaKill();
+      return;
     }
     const shooterInterface = document.createElement("div");
     shooterInterface.classList.add("shooterInterface");
@@ -2239,7 +2219,7 @@ function getRandomHaloSpot() {
     }, 2000);
   }
 
-  // KILL AND SAVE
+  // ANNOUNCEMENTS
 
   function announceMafiaKill() {
     const mafiaNotification = document.createElement("div");
@@ -2248,7 +2228,7 @@ function getRandomHaloSpot() {
 
     const mafiaKill = players[votesRef.mafiaVote].name;
 
-    mafiaNotification.innerHTML = `THE MAFIA KILLED ${mafiaKill}`;
+    mafiaNotification.innerHTML = `THE MAFIA WENT AFTER ${mafiaKill}`;
 
     setTimeout(function () {
       mafiaNotification.classList.add("notificationClose");
@@ -2268,7 +2248,12 @@ function getRandomHaloSpot() {
 
     const shooterKill = players[votesRef.shooterVote].name;
 
-    shooterNotification.innerHTML = `THE SHOOTER TOOK OUT ${shooterKill}`;
+    if (shooterKill === "none") {
+      shooterNotification.innerHTML = `THE SHOOTER DID NOT GO AFTER ANYONE`;
+    }
+    else {
+      shooterNotification.innerHTML = `THE SHOOTER WENT AFTER ${shooterKill}`;
+    }
 
     setTimeout(function () {
       shooterNotification.classList.add("notificationClose");
@@ -2277,22 +2262,99 @@ function getRandomHaloSpot() {
 
     setTimeout(function () {
       document.querySelector(".notificationClose").remove();
-      announceAngelSave();
+      exectuteMafiaKill();
     }, 5000);
   }
 
-  function announceAngelSave() {
-    const angelNotification = document.createElement("div");
-    angelNotification.classList.add("notification");
-    document.querySelector(".gameInterface").appendChild(angelNotification);
+  // EXECUTE: KILL - SAVE - INVESTIGATE
 
-    const angelSave = players[votesRef.angelVote].name;
+  function exectuteMafiaKill() {
+    const executeMafiaKillNotification = document.createElement("div");
+    executeMafiaKillNotification.classList.add("notification");
+    document.querySelector(".gameInterface").appendChild(executeMafiaKillNotification);
 
-    angelNotification.innerHTML = `THE ANGEL SAVED ${angelSave}`;
+    let goToShooter = true;
+
+    if (votesRef.shooterVote === "none") {
+      goToShooter = false;
+    }
+
+    const mafiaKill = players[votesRef.mafiaVote].name;
+
+    if (votesRef.angelVote === votesRef.mafiaVote && votesRef.mafiaVote === votesRef.shooterVote) {
+      executeMafiaKillNotification.innerHTML = `THE ANGEL SAVED ${mafiaKill} FROM THE MAFIA AND THE SHOOTER`;
+      goToShooter = false;
+    }
+    else if (votesRef.angelVote === votesRef.mafiaVote){
+      executeMafiaKillNotification.innerHTML = `THE ANGEL SAVED ${mafiaKill} FROM THE MAFIA`;
+    }
+    else {
+      executeMafiaKillNotification.innerHTML = `THE MAFIA SUCCESSFULLY KILLED ${mafiaKill}`;
+    }
 
     setTimeout(function () {
-      angelNotification.classList.add("notificationClose");
-      angelNotification.classList.remove("notification");
+      executeMafiaKillNotification.classList.add("notificationClose");
+      executeMafiaKillNotification.classList.remove("notification");
+    }, 4000);
+
+    setTimeout(function () {
+      document.querySelector(".notificationClose").remove();
+      if (goToShooter) {
+        exectuteShooterKill();
+      }
+      else {
+        exectuteInvestigation();
+      }
+    }, 5000);
+  }
+
+  function exectuteShooterKill() {
+    const executeShooterKillNotification = document.createElement("div");
+    executeShooterKillNotification.classList.add("notification");
+    document.querySelector(".gameInterface").appendChild(executeShooterKillNotification);
+
+    const shooterKill = players[votesRef.shooterVote].name;
+
+    if (votesRef.angelVote === votesRef.shooterVote) {
+      executeShooterKillNotification.innerHTML = `THE ANGEL SAVED ${shooterKill} FROM THE SHOOTER`;
+    }
+    else {
+      executeShooterKillNotification.innerHTML = `THE SHOOTER SUCCESSFULLY KILLED ${shooterKill}`;
+    }
+
+    setTimeout(function () {
+      executeShooterKillNotification.classList.add("notificationClose");
+      executeShooterKillNotification.classList.remove("notification");
+    }, 4000);
+
+    setTimeout(function () {
+      document.querySelector(".notificationClose").remove();
+      exectuteInvestigation();
+    }, 5000);
+  }
+
+  function exectuteInvestigation() {
+    const executeInvestigationNotification = document.createElement("div");
+    executeInvestigationNotification.classList.add("notification");
+    document.querySelector(".gameInterface").appendChild(executeInvestigationNotification);
+
+    const suspect = votesRef.detectiveVote;
+
+    if (players[playerId].magnifyingGlass) {
+      if (players[suspect].mafia) {
+        executeInvestigationNotification.innerHTML = `${players[suspect].name} IS IN THE MAFIA`;
+      }
+      else {
+        executeInvestigationNotification.innerHTML = `${players[suspect].name} IS A NORMIE`;
+      }
+    }
+    else {
+      executeInvestigationNotification.innerHTML = `THE DETECTIVE HAS CONCLUDED THEIR INVESTIGATION`;
+    }
+
+    setTimeout(function () {
+      executeInvestigationNotification.classList.add("notificationClose");
+      executeInvestigationNotification.classList.remove("notification");
     }, 4000);
 
     setTimeout(function () {
@@ -2303,6 +2365,7 @@ function getRandomHaloSpot() {
       else {
         startTownWaiting();
       }
+
     }, 5000);
   }
 
