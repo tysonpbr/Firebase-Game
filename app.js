@@ -1550,6 +1550,30 @@ function getRandomHaloSpot() {
 
     inRound = true;
 
+    const backpack = document.createElement("div");
+    backpack.classList.add("backpack");
+    document.querySelector(".gameInterface").appendChild(backpack);
+    
+    const flashlightIcon = document.createElement("div");
+    flashlightIcon.classList.add("flashlightIcon");
+    backpack.classList.add("flashlightIcon");
+    
+    const gunIcon = document.createElement("div");
+    gunIcon.classList.add("gunIcon");
+    backpack.classList.add("gunIcon");
+
+    const haloIcon = document.createElement("div");
+    haloIcon.classList.add("haloIcon");
+    backpack.classList.add("haloIcon");
+
+    const magnifyingGlassIcon = document.createElement("div");
+    magnifyingGlassIcon.classList.add("magnifyingGlassIcon");
+    backpack.classList.add("magnifyingGlassIcon");
+
+    const votingCardIcon = document.createElement("div");
+    votingCardIcon.classList.add("votingCardIcon");
+    backpack.classList.add("votingCardIcon");
+
     if (players[playerId].flashlight){
       const shadowBig = document.createElement("div");
       shadowBig.classList.add("shadowBig");
