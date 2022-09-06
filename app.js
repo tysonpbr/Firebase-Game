@@ -1639,6 +1639,24 @@ function getRandomHaloSpot() {
     }, 2000);
   }
 
+  function nextRound() {
+    firebase.database().ref(`votes`).update({
+      mafiaVote: "none",
+      angelVote: "none",
+      detectiveVote: "none",
+      shooterVote: "none",
+      townVote: "none",
+    });
+    Object.keys(players).forEach((key) => {
+      firebase.database().ref(`players/${key}`).update({
+        gun: false,
+        halo: false,
+        magnifyingGlass: false,
+        votingCard: false,
+      });
+    });
+  }
+
   // GENERAL VOTING 
 
   function confirmVote(ID, roundInterface) {
@@ -2437,7 +2455,7 @@ function getRandomHaloSpot() {
         teleportTo(85,60);
         setTimeout(function() {
           if (!inRound) {
-            startRound();
+            nextRound();
           }
         }, 800);
       }
@@ -2551,7 +2569,7 @@ function getRandomHaloSpot() {
       teleportTo(85,60);
       setTimeout(function() {
         if (!inRound) {
-          startRound();
+          nextRound();
         }
       }, 800);
     }, 2000);
