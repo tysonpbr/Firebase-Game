@@ -1437,6 +1437,7 @@ function getRandomHaloSpot() {
   let inAngelVoting = false;
   let inDetectiveVoting = false;
   let inShooterVoting = false;
+  let inTownVoting = false;
 
   const gameContainer = document.querySelector(".game-container");
   const playerSkinButton = document.querySelector("#b2");
@@ -1572,8 +1573,8 @@ function getRandomHaloSpot() {
     teleportTo(i, j);
     setTimeout(function() {
       if (players[playerId].mafia) {
-        document.querySelector(".youAreMafia").classList.add("hideYouAreMafia")
-        document.querySelector(".youAreMafia").classList.remove("youAreMafia")
+        document.querySelector(".youAreMafia").classList.add("hideYouAreMafia");
+        document.querySelector(".youAreMafia").classList.remove("youAreMafia");
         setTimeout(function() {
           document.querySelector(".hideYouAreMafia").remove();
         }, 500);
@@ -2102,7 +2103,12 @@ function getRandomHaloSpot() {
         }
       });
       if (!shooterExists) {
-        return;
+        if (players[playerId].votingCard) {
+          startTownVoting();
+        }
+        else {
+          startTownWaiting();
+        }
       }
 
       const shooterInterface = document.createElement("div");
@@ -2194,15 +2200,148 @@ function getRandomHaloSpot() {
       setTimeout(function () {
         document.querySelector(".shooterInterface").remove();
       }, 1600);
-      // setTimeout(function () {
-      //   if (players[playerId].halo) {
-      //     startTownVoting();
-      //   }
-      //   else {
-      //     startTownWaiting();
-      //   }
-      // }, 2000);
+       setTimeout(function () {
+        if (players[playerId].votingCard) {
+          startTownVoting();
+        }
+        else {
+          startTownWaiting();
+        }
+       }, 2000);
     }
+
+  // TOWN VOTING
+
+  function startTownWaiting() {
+    let votersExists = false;
+      Object.keys(players).forEach((key) => {
+        if (players[key].votingCard) {
+          votersExists = true;
+        }
+      });
+      if (!votersExists) {
+        console.log("START NEW ROUND");
+        teleportTo(85,60);
+        setTimeout(function() {
+          if (!inRound) {
+            startRound();
+          }
+        }, 800);
+      }
+
+    const townInterface = document.createElement("div");
+    townInterface.classList.add("townInterface");
+    document.querySelector(".gameInterface").appendChild(townInterface);
+
+    const votingUITop = document.createElement("div");
+    votingUITop.classList.add("votingUITop");
+    votingUITop.innerHTML = `THE TOWNS PEOPLE ARE MEETING`
+    document.querySelector(".townInterface").appendChild(votingUITop);
+
+    inTownVoting = true;
+  }
+
+  function startTownVoting() {
+    const townInterface = document.createElement("div");
+    townInterface.classList.add("townInterface");
+    document.querySelector(".gameInterface").appendChild(townInterface);
+
+    const votingUITop = document.createElement("div");
+    votingUITop.classList.add("votingUITop");
+    votingUITop.innerHTML = `WHO DO THE TOWNS PEOPLE THINK THE MAFIA IS?`
+    document.querySelector(".townInterface").appendChild(votingUITop);
+
+    Object.keys(players).forEach((key) => {
+      const divLeft = (16 * (players[key].x - players[playerId].x)) + 193 + "px";
+      if (key !== playerId) {
+        const button = document.createElement("div");
+        button.classList.add("b3");
+        const p = key
+        button.addEventListener("click", () => {
+          if (players[playerId].voteFor === "none") {
+            const potentialVote = document.createElement("div");
+            potentialVote.classList.add("potentialVote");
+            const divLeft = (16 * (players[p].x - players[playerId].x)) + 197 + "px";
+            potentialVote.style.left = divLeft;
+            document.querySelector(".townInterface").appendChild(potentialVote);
+
+            confirmVote(p, townInterface);
+          }
+          else if (players[playerId].voteFor !== p) {
+            const potentialVote = document.createElement("div");
+            potentialVote.classList.add("potentialVote");
+            const divLeft = (16 * (players[p].x - players[playerId].x)) + 197 + "px";
+            potentialVote.style.left = divLeft;
+            document.querySelector(".townInterface").appendChild(potentialVote);
+
+            changeVote(p, townInterface);
+          }
+        });
+        button.style.left = divLeft;
+        document.querySelector(".townInterface").appendChild(button);
+      }
+      const voteCounter = document.createElement("div");
+      voteCounter.classList.add("voteCounter");
+      voteCounter.classList.add("user-" + p);
+      voteCounter.style.left = divLeft;
+      voteCounter.innerHTML = `0`;
+      document.querySelector(".townInterface").appendChild(voteCounter);
+    });
+    inTownVoting = true;
+  }
+  
+  function checkTownVoting(){
+    let numVotes = 0;
+    Object.keys(players).forEach((key) => {
+      if (players[key].votingCard) {
+        numVotes++;
+      }
+    });
+    Object.keys(players).forEach((key) => {
+      if (players[key].votes >= Math.ceil(numVotes/2) && inTownVoting) {
+        inTownVoting = false;
+        endTownVoting(key);
+      }
+    });
+  }
+
+  function endTownVoting(votedPlayer) {
+    console.log("END TOWN VOTING");
+
+    if (playerOrder[0] === playerId) {
+      firebase.database().ref(`votes`).update({
+        townVote: votedPlayer,
+      });
+
+      setTimeout(function () {
+        Object.keys(players).forEach((key) => {
+          firebase.database().ref(`players/${key}`).update({
+            votes: 0,
+            voteFor: "none",
+          });
+        });
+      }, 1800);
+    }
+
+    const blocker = document.createElement("div");
+    blocker.classList.add("blocker");
+    document.querySelector(".townInterface").appendChild(blocker);
+
+    document.querySelector(".votingUITop").classList.add("votingUITopClose");
+    document.querySelector(".votingUITop").classList.remove("votingUITop");
+    setTimeout(function () {
+      document.querySelector(".townInterface").remove();
+    }, 1600);
+    setTimeout(function () {
+      console.log("START NEW ROUND");
+      teleportTo(85,60);
+      setTimeout(function() {
+        if (!inRound) {
+          startRound();
+        }
+      }, 800);
+    }, 2000);
+  }
 
   function updateDom() {
     Object.keys(players).forEach((key) => {
@@ -2233,6 +2372,10 @@ function getRandomHaloSpot() {
 
         if (inShooterVoting) {
           checkShooterVoting();
+        }
+
+        if (inTownVoting) {
+          checkTownVoting();
         }
 
         attemptGrabVotingCard(players[playerId].x, players[playerId].y);
