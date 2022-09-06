@@ -1505,3 +1505,58 @@ body {
   transform: scale(1);
   z-index: 8;
 }
+
+.bomb {
+  position: absolute;
+  width: 32px;
+  height: 32px;
+  top: -32px;
+  left: 193px;
+  background: url(images/items/bomb.png);
+  transform: scale(0.5);
+  z-index: 10;
+  animation: bombDrop 1s steps(60);
+}
+
+@keyframes bombDrop {
+  from {
+    top: -32px;
+  }
+  to {
+    top: 100px;
+  }
+}
+
+.explosionSpace {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  top: 100px;
+  left: 193px;
+  background: none;
+  overflow: hidden;
+  outline: 1px solid red;
+  transform: scale(1);
+  z-index: 10;
+}
+
+.explosion {
+  position: absolute;
+  width: 384px;
+  height: 32px;
+  top: 0px;
+  left: 0px;
+  background: url(images/items/explosion.png);
+  transform: scale(0.5);
+  z-index: 10;
+  animation: explode 4s steps(11);
+}
+
+@keyframes explode {
+  from {
+    left: 0px;
+  }
+  to {
+    left: -352px;
+  }
+}

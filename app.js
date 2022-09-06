@@ -2383,6 +2383,8 @@ function getRandomHaloSpot() {
       document.querySelector(".notificationClose").remove();
       if (successfulKill) {
 
+        deathAnimation(votesRef.mafiaVote);
+
         firebase.database().ref(`players/${votesRef.mafiaVote}`).update({
           char: "ghost",
           alive: false,
@@ -2433,6 +2435,8 @@ function getRandomHaloSpot() {
     setTimeout(function () {
       document.querySelector(".notificationClose").remove();
       if (successfulKill) {
+
+        deathAnimation(votesRef.shooterVote);
 
         firebase.database().ref(`players/${votesRef.shooterVote}`).update({
           char: "ghost",
@@ -2485,7 +2489,25 @@ function getRandomHaloSpot() {
   }
 
   function deathAnimation(deathUser) {
+    const bomb = document.createElement("div");
+    bomb.classList.add("bomb");
+    document.querySelector(".gameInterface").appendChild(bomb);
 
+    const explosionSpace = document.createElement("div");
+    explosionSpace.classList.add("explosionSpace");
+    document.querySelector(".gameInterface").appendChild(explosionSpace);
+
+    setTimeout(function () {
+      const explosion = document.createElement("div");
+      explosion.classList.add("explosion");
+      document.querySelector(".explosionSpace").appendChild(explosion);
+
+      document.querySelector(".bomb").remove();
+
+      setTimeout(function () {
+        document.querySelector(".explosionSpace").remove();
+      }, 4000);
+    }, 1000);
   }
 
   // TOWN VOTING
