@@ -1636,7 +1636,7 @@ function getRandomHaloSpot() {
       else {
         startMafiaWaiting();
       }
-    }, 2000);
+    }, 2300);
   }
 
   function nextRound() {
@@ -1904,7 +1904,7 @@ function getRandomHaloSpot() {
       else {
         startAngelWaiting();
       }
-    }, 2000);
+    }, 2300);
   }
 
   // ANGEL VOTING
@@ -2015,7 +2015,7 @@ function getRandomHaloSpot() {
       else {
         startDetectiveWaiting();
       }
-    }, 2000);
+    }, 2300);
   }
   // DETECTIVE VOTING
   
@@ -2130,7 +2130,7 @@ function getRandomHaloSpot() {
       else {
         startShooterWaiting();
       }
-    }, 2000);
+    }, 2300);
   }
   // SHOOTER VOTING
   
@@ -2289,7 +2289,7 @@ function getRandomHaloSpot() {
     }, 1600);
     setTimeout(function () {
       announceMafiaKill();
-    }, 2000);
+    }, 2300);
   }
 
   // ANNOUNCEMENTS
@@ -2441,6 +2441,10 @@ function getRandomHaloSpot() {
     }, 5000);
   }
 
+  function deathAnimation(deathUser) {
+    
+  }
+
   // TOWN VOTING
 
   function startTownWaiting() {
@@ -2572,7 +2576,7 @@ function getRandomHaloSpot() {
           nextRound();
         }
       }, 800);
-    }, 2000);
+    }, 2300);
   }
 
   function updateDom() {
