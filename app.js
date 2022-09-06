@@ -2177,7 +2177,56 @@ function getRandomHaloSpot() {
         document.querySelector(".shooterInterface").appendChild(voteCounter);
       }
     });
+
+    const shooterSkipButton = document.createElement("div");
+    shooterSkipButton.classList.add("shooterSkipButton");
+    shooterSkipButton.innerHTML = `SKIP`
+    shooterSkipButton.addEventListener("click", () => {
+      confirmSkip();
+    })
+    document.querySelector(".shooterInterface").appendChild(shooterSkipButton);
+
     inShooterVoting = true;
+  }
+
+  function confirmSkip() {
+    const blocker = document.createElement("div");
+    blocker.classList.add("blocker");
+    document.querySelector(".shooterInterface").appendChild(blocker);
+
+    const skipConfirmUI = document.createElement("div");
+    skipConfirmUI.classList.add("votingConfirmUI");
+    skipConfirmUI.innerHTML = `ARE YOU SURE YOU WANT TO SKIP?`
+    document.querySelector(".shooterInterface").appendChild(skipConfirmUI);
+
+    const buttonYes = document.createElement("div");
+    buttonYes.classList.add("buttonYes");
+    buttonYes.innerHTML = `YES`;
+    buttonYes.addEventListener("click", () => {
+      document.querySelector(".votingConfirmUI").classList.add("votingConfirmUIClose");
+      document.querySelector(".votingConfirmUI").classList.remove("votingConfirmUI");
+      document.querySelector(".blocker").remove();
+      setTimeout(function () {
+        document.querySelector(".votingConfirmUIClose").remove();
+        firebase.database().ref(`players/${playerId}`).update({
+          votes: 1,
+        });
+      }, 1200);
+    });
+    document.querySelector(".votingConfirmUI").appendChild(buttonYes);
+
+    const buttonNo = document.createElement("div");
+    buttonNo.classList.add("buttonNo");
+    buttonNo.innerHTML = `NO`;
+    buttonNo.addEventListener("click", () => {
+      document.querySelector(".votingConfirmUI").classList.add("votingConfirmUIClose");
+      document.querySelector(".votingConfirmUI").classList.remove("votingConfirmUI");
+      document.querySelector(".blocker").remove();
+      setTimeout(function () {
+        document.querySelector(".votingConfirmUIClose").remove();
+      }, 1200);
+    });
+    document.querySelector(".votingConfirmUI").appendChild(buttonNo);
   }
   
   function checkShooterVoting(){
@@ -2190,11 +2239,17 @@ function getRandomHaloSpot() {
   }
 
   function endShooterVoting(votedPlayer) {
-
     if (playerOrder[0] === playerId) {
-      firebase.database().ref(`votes`).update({
-        shooterVote: votedPlayer,
-      });
+      if (players[votedPlayer].gun) {
+        firebase.database().ref(`votes`).update({
+          shooterVote: "none",
+        });
+      }
+      else {
+        firebase.database().ref(`votes`).update({
+          shooterVote: votedPlayer,
+        });
+      }
       setTimeout(function () {
         Object.keys(players).forEach((key) => {
           firebase.database().ref(`players/${key}`).update({
@@ -2246,13 +2301,13 @@ function getRandomHaloSpot() {
     shooterNotification.classList.add("notification");
     document.querySelector(".gameInterface").appendChild(shooterNotification);
 
-    const shooterKill = players[votesRef.shooterVote].name;
+    const shooterKill = votesRef.shooterVote;
 
     if (shooterKill === "none") {
       shooterNotification.innerHTML = `THE SHOOTER DID NOT GO AFTER ANYONE`;
     }
     else {
-      shooterNotification.innerHTML = `THE SHOOTER WENT AFTER ${shooterKill}`;
+      shooterNotification.innerHTML = `THE SHOOTER WENT AFTER ${players[shooterKill].name}`;
     }
 
     setTimeout(function () {
@@ -2365,7 +2420,6 @@ function getRandomHaloSpot() {
       else {
         startTownWaiting();
       }
-
     }, 5000);
   }
 
@@ -2407,7 +2461,7 @@ function getRandomHaloSpot() {
 
     const votingUITop = document.createElement("div");
     votingUITop.classList.add("votingUITop");
-    votingUITop.innerHTML = `WHO DO THE TOWNS PEOPLE THINK THE MAFIA IS?`
+    votingUITop.innerHTML = `WHO DO THE TOWNS PEOPLE THINK IS IN THE MAFIA?`
     document.querySelector(".townInterface").appendChild(votingUITop);
 
     Object.keys(players).forEach((key) => {
