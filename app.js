@@ -1556,23 +1556,26 @@ function getRandomHaloSpot() {
     
     const flashlightIcon = document.createElement("div");
     flashlightIcon.classList.add("flashlightIcon");
-    backpack.classList.add("flashlightIcon");
+    if (players[playerId].flashlight) {
+      flashlightIcon.style.background = "url(images/items/flashlightIcon.png)";
+    }
+    backpack.appendChild(flashlightIcon);
     
     const gunIcon = document.createElement("div");
     gunIcon.classList.add("gunIcon");
-    backpack.classList.add("gunIcon");
+    backpack.appendChild(gunIcon);
 
     const haloIcon = document.createElement("div");
     haloIcon.classList.add("haloIcon");
-    backpack.classList.add("haloIcon");
+    backpack.appendChild(haloIcon);
 
     const magnifyingGlassIcon = document.createElement("div");
     magnifyingGlassIcon.classList.add("magnifyingGlassIcon");
-    backpack.classList.add("magnifyingGlassIcon");
+    backpack.appendChild(magnifyingGlassIcon);
 
     const votingCardIcon = document.createElement("div");
     votingCardIcon.classList.add("votingCardIcon");
-    backpack.classList.add("votingCardIcon");
+    backpack.appendChild(votingCardIcon);
 
     if (players[playerId].flashlight){
       const shadowBig = document.createElement("div");
@@ -1603,6 +1606,13 @@ function getRandomHaloSpot() {
           document.querySelector(".hideYouAreMafia").remove();
         }, 500);
       }
+
+      document.querySelector(".backpack").classList.add("backpackClose");
+      document.querySelector(".backpack").classList.remove("backpack");
+      setTimeout(function() {
+        document.querySelector(".backpackClose").remove();
+      }, 500);
+
       if (players[playerId].flashlight){
         document.querySelector(".shadowBig").remove();
       }
@@ -1667,6 +1677,27 @@ function getRandomHaloSpot() {
   }
 
   function confirmYes(ID, roundInterface) {
+    if (inDetectiveVoting) {
+      const detectiveNotification = document.createElement("div");
+      detectiveNotification.classList.add("detectiveNotification");
+      document.querySelector(".gameInterface").appendChild(detectiveNotification);
+
+      if (players[ID].mafia) {
+        detectiveNotification.innerHTML = `THIS PLAYER IS IN THE MAFIA`;
+      }
+      else {
+        detectiveNotification.innerHTML = `THIS PLAYER IS A NORMIE`;
+      }
+
+      setTimeout(function () {
+        detectiveNotification.classList.add("detectiveNotificationClose");
+        detectiveNotification.classList.remove("detectiveNotification");
+      }, 2000);
+      setTimeout(function () {
+        document.querySelector(".detectiveNotificationClose").remove();
+      }, 2500);
+    }
+
     const voteUpdate = players[ID].votes + 1;
     firebase.database().ref(`players/${ID}/votes`).set(voteUpdate);
 
@@ -1843,7 +1874,6 @@ function getRandomHaloSpot() {
   }
 
   function endMafiaVoting(votedPlayer) {
-    console.log("END MAFIA VOTING");
 
     if (playerOrder[0] === playerId) {
       firebase.database().ref(`votes`).update({
@@ -1922,32 +1952,30 @@ function getRandomHaloSpot() {
       document.querySelector(".angelInterface").appendChild(votingUITop);
   
       Object.keys(players).forEach((key) => {
-       if (!players[key].halo) {
-         const divLeft = (16 * (players[key].x - players[playerId].x)) + 193 + "px";
-         const button = document.createElement("div");
-         button.classList.add("b3");
-         const p = key
-         button.addEventListener("click", () => {
-           if (players[playerId].voteFor === "none") {
-             const potentialVote = document.createElement("div");
-             potentialVote.classList.add("potentialVote");
-             const divLeft = (16 * (players[p].x - players[playerId].x)) + 197 + "px";
-             potentialVote.style.left = divLeft;
-             document.querySelector(".angelInterface").appendChild(potentialVote);
-  
-             confirmVote(p, angelInterface);
-           }
-         });
-         button.style.left = divLeft;
-         document.querySelector(".angelInterface").appendChild(button);
-  
-         const voteCounter = document.createElement("div");
-         voteCounter.classList.add("voteCounter");
-         voteCounter.classList.add("user-" + p);
-         voteCounter.style.left = divLeft;
-         voteCounter.innerHTML = `0`;
-         document.querySelector(".angelInterface").appendChild(voteCounter);
-       }
+        const divLeft = (16 * (players[key].x - players[playerId].x)) + 193 + "px";
+        const button = document.createElement("div");
+        button.classList.add("b3");
+        const p = key
+        button.addEventListener("click", () => {
+          if (players[playerId].voteFor === "none") {
+            const potentialVote = document.createElement("div");
+            potentialVote.classList.add("potentialVote");
+            const divLeft = (16 * (players[p].x - players[playerId].x)) + 197 + "px";
+            potentialVote.style.left = divLeft;
+            document.querySelector(".angelInterface").appendChild(potentialVote);
+
+            confirmVote(p, angelInterface);
+          }
+        });
+        button.style.left = divLeft;
+        document.querySelector(".angelInterface").appendChild(button);
+
+        const voteCounter = document.createElement("div");
+        voteCounter.classList.add("voteCounter");
+        voteCounter.classList.add("user-" + p);
+        voteCounter.style.left = divLeft;
+        voteCounter.innerHTML = `0`;
+        document.querySelector(".angelInterface").appendChild(voteCounter);
       });
       inAngelVoting = true;
     }
@@ -1962,7 +1990,6 @@ function getRandomHaloSpot() {
     }
   
     function endAngelVoting(votedPlayer) {
-      console.log("END ANGEL VOTING");
   
       if (playerOrder[0] === playerId) {
         firebase.database().ref(`votes`).update({
@@ -2041,32 +2068,32 @@ function getRandomHaloSpot() {
       document.querySelector(".detectiveInterface").appendChild(votingUITop);
   
       Object.keys(players).forEach((key) => {
-       if (!players[key].magnifyingGlass) {
-         const divLeft = (16 * (players[key].x - players[playerId].x)) + 193 + "px";
-         const button = document.createElement("div");
-         button.classList.add("b3");
-         const p = key
-         button.addEventListener("click", () => {
-           if (players[playerId].voteFor === "none") {
-             const potentialVote = document.createElement("div");
-             potentialVote.classList.add("potentialVote");
-             const divLeft = (16 * (players[p].x - players[playerId].x)) + 197 + "px";
-             potentialVote.style.left = divLeft;
-             document.querySelector(".detectiveInterface").appendChild(potentialVote);
-  
-             confirmVote(p, detectiveInterface);
-           }
-         });
-         button.style.left = divLeft;
-         document.querySelector(".detectiveInterface").appendChild(button);
-  
-         const voteCounter = document.createElement("div");
-         voteCounter.classList.add("voteCounter");
-         voteCounter.classList.add("user-" + p);
-         voteCounter.style.left = divLeft;
-         voteCounter.innerHTML = `0`;
-         document.querySelector(".detectiveInterface").appendChild(voteCounter);
-       }
+        if (!players[key].magnifyingGlass) {
+          const divLeft = (16 * (players[key].x - players[playerId].x)) + 193 + "px";
+          const button = document.createElement("div");
+          button.classList.add("b3");
+          const p = key
+          button.addEventListener("click", () => {
+            if (players[playerId].voteFor === "none") {
+              const potentialVote = document.createElement("div");
+              potentialVote.classList.add("potentialVote");
+              const divLeft = (16 * (players[p].x - players[playerId].x)) + 197 + "px";
+              potentialVote.style.left = divLeft;
+              document.querySelector(".detectiveInterface").appendChild(potentialVote);
+            
+              confirmVote(p, detectiveInterface);
+            }
+          });
+          button.style.left = divLeft;
+          document.querySelector(".detectiveInterface").appendChild(button);
+         
+          const voteCounter = document.createElement("div");
+          voteCounter.classList.add("voteCounter");
+          voteCounter.classList.add("user-" + p);
+          voteCounter.style.left = divLeft;
+          voteCounter.innerHTML = `0`;
+          document.querySelector(".detectiveInterface").appendChild(voteCounter);
+        }
       });
       inDetectiveVoting = true;
     }
@@ -2081,7 +2108,6 @@ function getRandomHaloSpot() {
     }
   
     function endDetectiveVoting(votedPlayer) {
-      console.log("END DETECTIVE VOTING");
   
       if (playerOrder[0] === playerId) {
         firebase.database().ref(`votes`).update({
@@ -2158,32 +2184,32 @@ function getRandomHaloSpot() {
       document.querySelector(".shooterInterface").appendChild(votingUITop);
   
       Object.keys(players).forEach((key) => {
-       if (!players[key].gun) {
-         const divLeft = (16 * (players[key].x - players[playerId].x)) + 193 + "px";
-         const button = document.createElement("div");
-         button.classList.add("b3");
-         const p = key
-         button.addEventListener("click", () => {
-           if (players[playerId].voteFor === "none") {
-             const potentialVote = document.createElement("div");
-             potentialVote.classList.add("potentialVote");
-             const divLeft = (16 * (players[p].x - players[playerId].x)) + 197 + "px";
-             potentialVote.style.left = divLeft;
-             document.querySelector(".shooterInterface").appendChild(potentialVote);
-  
-             confirmVote(p, shooterInterface);
-           }
-         });
-         button.style.left = divLeft;
-         document.querySelector(".shooterInterface").appendChild(button);
-  
-         const voteCounter = document.createElement("div");
-         voteCounter.classList.add("voteCounter");
-         voteCounter.classList.add("user-" + p);
-         voteCounter.style.left = divLeft;
-         voteCounter.innerHTML = `0`;
-         document.querySelector(".shooterInterface").appendChild(voteCounter);
-       }
+        if (!players[key].gun) {
+          const divLeft = (16 * (players[key].x - players[playerId].x)) + 193 + "px";
+          const button = document.createElement("div");
+          button.classList.add("b3");
+          const p = key
+          button.addEventListener("click", () => {
+            if (players[playerId].voteFor === "none") {
+              const potentialVote = document.createElement("div");
+              potentialVote.classList.add("potentialVote");
+              const divLeft = (16 * (players[p].x - players[playerId].x)) + 197 + "px";
+              potentialVote.style.left = divLeft;
+              document.querySelector(".shooterInterface").appendChild(potentialVote);
+            
+              confirmVote(p, shooterInterface);
+            }
+          });
+          button.style.left = divLeft;
+          document.querySelector(".shooterInterface").appendChild(button);
+         
+          const voteCounter = document.createElement("div");
+          voteCounter.classList.add("voteCounter");
+          voteCounter.classList.add("user-" + p);
+          voteCounter.style.left = divLeft;
+          voteCounter.innerHTML = `0`;
+          document.querySelector(".shooterInterface").appendChild(voteCounter);
+        }
       });
       inShooterVoting = true;
     }
@@ -2198,7 +2224,6 @@ function getRandomHaloSpot() {
     }
   
     function endShooterVoting(votedPlayer) {
-      console.log("END SHOOTER VOTING");
   
       if (playerOrder[0] === playerId) {
         firebase.database().ref(`votes`).update({
@@ -2277,10 +2302,10 @@ function getRandomHaloSpot() {
 
     Object.keys(players).forEach((key) => {
       const divLeft = (16 * (players[key].x - players[playerId].x)) + 193 + "px";
+      const p = key
       if (key !== playerId) {
         const button = document.createElement("div");
         button.classList.add("b3");
-        const p = key
         button.addEventListener("click", () => {
           if (players[playerId].voteFor === "none") {
             const potentialVote = document.createElement("div");
@@ -2321,6 +2346,7 @@ function getRandomHaloSpot() {
         numVotes++;
       }
     });
+    console.log("numVotes");
     Object.keys(players).forEach((key) => {
       if (players[key].votes >= Math.ceil(numVotes/2) && inTownVoting) {
         inTownVoting = false;
@@ -2572,6 +2598,7 @@ function getRandomHaloSpot() {
   function attemptGrabVotingCard(x, y) {
     const key = getKeyString(x, y);
     if (votingCards[key] && !players[playerId].votingCard) {
+      document.querySelector(".votingCardIcon").style.background = "url(images/items/voting_cardIcon.png)";
       playerRef.update({
         votingCard: true,
       })
@@ -2582,6 +2609,7 @@ function getRandomHaloSpot() {
   function attemptGrabGun(x, y) {
     const key = getKeyString(x, y);
     if (guns[key] && !players[playerId].gun) {
+      document.querySelector(".gunIcon").style.background = "url(images/items/gunIcon.png)";
       playerRef.update({
         gun: true,
       })
@@ -2592,6 +2620,7 @@ function getRandomHaloSpot() {
   function attemptGrabFlashlight(x, y) {
     const key = getKeyString(x, y);
     if (flashlights[key] && !players[playerId].flashlight) {
+      document.querySelector(".flashlightIcon").style.background = "url(images/items/flashlightIcon.png)";
       playerRef.update({
         flashlight: true,
       });
@@ -2618,6 +2647,7 @@ function getRandomHaloSpot() {
   function attemptGrabMagnifyingGlass(x, y) {
     const key = getKeyString(x, y);
     if (magnifyingGlasses[key] && !players[playerId].magnifyingGlass) {
+      document.querySelector(".magnifyingGlassIcon").style.background = "url(images/items/magnifyingGlassIcon.png)";
       playerRef.update({
         magnifyingGlass: true,
       })
@@ -2628,6 +2658,7 @@ function getRandomHaloSpot() {
   function attemptGrabHalo(x, y) {
     const key = getKeyString(x, y);
     if (halos[key] && !players[playerId].halo) {
+      document.querySelector(".haloIcon").style.background = "url(images/items/haloIcon.png)";
       playerRef.update({
         halo: true,
       })
@@ -2815,6 +2846,10 @@ function getRandomHaloSpot() {
 
           if (inShooterVoting) {
             checkShooterVoting();
+          }
+
+          if (inTownVoting) {
+            checkTownVoting();
           }
 
           //console.log(players[playerId].x + ", " + players[playerId].y);
