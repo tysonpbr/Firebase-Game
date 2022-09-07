@@ -3015,7 +3015,7 @@ function getRandomHaloSpot() {
         }
       }
       for (const player in players) {
-        if (players[player].x === newX && players[player].y === newY) {
+        if (players[player].x === newX && players[player].y === newY && players[player].alive) {
           playerInNextSpace = true;
         }
       }
