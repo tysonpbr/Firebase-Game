@@ -5,7 +5,6 @@
 Personal project multiplayer game based loosely on the card/party game Mafia and run via Firebase online servers.
 
 Tasks
-- update ghost skin
 - check win requirements
 - add win page and "play again"
 - block skip button after shooter picks target
