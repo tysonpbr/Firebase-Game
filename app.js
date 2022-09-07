@@ -1438,14 +1438,19 @@ function getRandomHaloSpot() {
   let inAngelVoting = false;
   let inDetectiveVoting = false;
   let inShooterVoting = false;
-  let inTownVoting = false;
+  let inTownVoting = false;                               
+  let isDetective = false;
+  let isAngel = false;
+  let isShooter = false;
+  let isVoters = false;
+
 
   const gameContainer = document.querySelector(".game-container");
   const playerSkinButton = document.querySelector("#b2");
   const startButton = document.querySelector("#b1");
 
   function startClock() {
-    startTime = 15/60; //min
+    startTime = 5/60; //min
     time = startTime * 60; //secs
     clock = document.createElement("div");
     clock.classList.add("timer");
@@ -1596,6 +1601,27 @@ function getRandomHaloSpot() {
     inRound = false;
     clearInterval(clockInterval);
     clock.remove();
+
+    isDetective = false;
+    isAngel = false;
+    isShooter = false;
+    isVoters = false;
+
+    Object.keys(players).forEach((key) => {
+      if (players[key].magnifyingGlass) {
+        isDetective = true;
+      }
+      if (players[key].halo) {
+        isAngel = true;
+      }
+      if (players[key].gun) {
+        isShooter = true;
+      }
+      if (players[key].votingCard) {
+        isVoters = true;
+      }
+    });
+
     const index = playerOrder.indexOf(playerId);
     const {i,j} = meetingSpots[index];
     teleportTo(i, j);
@@ -1909,13 +1935,7 @@ function getRandomHaloSpot() {
 
   // ANGEL VOTING
   function startAngelWaiting() {
-    let angelExists = false;
-    Object.keys(players).forEach((key) => {
-      if (players[key].halo) {
-        angelExists = true;
-      }
-    });
-    if (!angelExists) {
+    if (!isAngel) {
       if (players[playerId].magnifyingGlass) {
         startDetectiveVoting();
         return;
@@ -2020,13 +2040,7 @@ function getRandomHaloSpot() {
   // DETECTIVE VOTING
   
   function startDetectiveWaiting() {
-    let detectiveExists = false;
-    Object.keys(players).forEach((key) => {
-      if (players[key].magnifyingGlass) {
-        detectiveExists = true;
-      }
-    });
-    if (!detectiveExists) {
+    if (!isDetective) {
       if (players[playerId].gun) {
         startShooterVoting();
         return;
@@ -2135,13 +2149,7 @@ function getRandomHaloSpot() {
   // SHOOTER VOTING
   
   function startShooterWaiting() {
-    let shooterExists = false;
-    Object.keys(players).forEach((key) => {
-      if (players[key].gun) {
-        shooterExists = true;
-      }
-    });
-    if (!shooterExists) {
+    if (!isShooter) {
       announceMafiaKill();
       return;
     }
@@ -2315,6 +2323,10 @@ function getRandomHaloSpot() {
   }
 
   function announceShooterKill() {
+    if (!isShooter) {
+      exectuteMafiaKill();
+      return;
+    }
     const shooterNotification = document.createElement("div");
     shooterNotification.classList.add("notification");
     document.querySelector(".gameInterface").appendChild(shooterNotification);
@@ -2366,12 +2378,6 @@ function getRandomHaloSpot() {
     else {
       successfulKill = true;
       executeMafiaKillNotification.innerHTML = `THE MAFIA SUCCESSFULLY KILLED ${mafiaKill}`;
-      setTimeout(function () {
-        firebase.database().ref(`players/${votesRef.mafiaVote}`).update({
-          char: "ghost",
-          alive: false,
-        });
-      }, 5000);
     }
 
     setTimeout(function () {
@@ -2385,10 +2391,12 @@ function getRandomHaloSpot() {
 
         deathAnimation(votesRef.mafiaVote);
 
-        firebase.database().ref(`players/${votesRef.mafiaVote}`).update({
-          char: "ghost",
-          alive: false,
-        });
+        setTimeout(function () {
+          firebase.database().ref(`players/${votesRef.mafiaVote}`).update({
+            char: "ghost",
+            alive: false,
+          });
+        }, 1000);
 
         setTimeout(function () {
           if (goToShooter) {
@@ -2438,10 +2446,12 @@ function getRandomHaloSpot() {
 
         deathAnimation(votesRef.shooterVote);
 
-        firebase.database().ref(`players/${votesRef.shooterVote}`).update({
-          char: "ghost",
-          alive: false,
-        });
+        setTimeout(function () {
+          firebase.database().ref(`players/${votesRef.shooterVote}`).update({
+            char: "ghost",
+            alive: false,
+          });
+        }, 1000);
 
         setTimeout(function () {
           exectuteInvestigation();
@@ -2454,6 +2464,15 @@ function getRandomHaloSpot() {
   }
 
   function exectuteInvestigation() {
+    if (!isDetective) {
+      if (players[playerId].votingCard) {
+        startTownVoting();
+      }
+      else {
+        startTownWaiting();
+      }
+      return;
+    }
     const executeInvestigationNotification = document.createElement("div");
     executeInvestigationNotification.classList.add("notification");
     document.querySelector(".gameInterface").appendChild(executeInvestigationNotification);
@@ -2489,12 +2508,16 @@ function getRandomHaloSpot() {
   }
 
   function deathAnimation(deathUser) {
+    const divLeft = (16 * (players[deathUser].x - players[playerId].x)) + 185 + "px";
+
     const bomb = document.createElement("div");
     bomb.classList.add("bomb");
+    bomb.style.left = divLeft;
     document.querySelector(".gameInterface").appendChild(bomb);
 
     const explosionSpace = document.createElement("div");
     explosionSpace.classList.add("explosionSpace");
+    explosionSpace.style.left = divLeft;
     document.querySelector(".gameInterface").appendChild(explosionSpace);
 
     setTimeout(function () {
@@ -2506,28 +2529,23 @@ function getRandomHaloSpot() {
 
       setTimeout(function () {
         document.querySelector(".explosionSpace").remove();
-      }, 4000);
-    }, 1000);
+      }, 400);
+    }, 800);
   }
 
   // TOWN VOTING
 
   function startTownWaiting() {
-    let votersExists = false;
-      Object.keys(players).forEach((key) => {
-        if (players[key].votingCard) {
-          votersExists = true;
+    if (!isVoters) {
+      console.log("START NEW ROUND");
+      teleportTo(85,60);
+      setTimeout(function() {
+        if (!inRound) {
+          nextRound();
         }
-      });
-      if (!votersExists) {
-        console.log("START NEW ROUND");
-        teleportTo(85,60);
-        setTimeout(function() {
-          if (!inRound) {
-            nextRound();
-          }
-        }, 800);
-      }
+      }, 800);
+      return;
+    }
 
     const townInterface = document.createElement("div");
     townInterface.classList.add("townInterface");

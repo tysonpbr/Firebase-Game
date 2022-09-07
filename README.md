@@ -5,9 +5,10 @@
 Personal project multiplayer game based loosely on the card/party game Mafia and run via Firebase online servers.
 
 Tasks
-- add killing animation
 - remove ghost shadows
+- make ghosts non visible when in round
 - remove ghost permissions
+- add ghost walls
 - fix "No items picked up"
 - add name
 - add only one of each skin

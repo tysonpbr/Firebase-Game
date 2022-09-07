@@ -1511,11 +1511,11 @@ body {
   width: 32px;
   height: 32px;
   top: -32px;
-  left: 193px;
+  left: 185px;
   background: url(images/items/bomb.png);
   transform: scale(0.5);
   z-index: 10;
-  animation: bombDrop 1s steps(60);
+  animation: bombDrop 0.8s steps(60);
 }
 
 @keyframes bombDrop {
@@ -1529,10 +1529,10 @@ body {
 
 .explosionSpace {
   position: absolute;
-  width: 16px;
-  height: 16px;
+  width: 32px;
+  height: 32px;
   top: 100px;
-  left: 193px;
+  left: 185px;
   background: none;
   overflow: hidden;
   outline: 1px solid red;
@@ -1544,12 +1544,12 @@ body {
   position: absolute;
   width: 384px;
   height: 32px;
-  top: 0px;
+  top: px;
   left: 0px;
   background: url(images/items/explosion.png);
-  transform: scale(0.5);
+  transform: scale(1);
   z-index: 10;
-  animation: explode 4s steps(11);
+  animation: explode 0.4s steps(11);
 }
 
 @keyframes explode {
