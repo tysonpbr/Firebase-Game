@@ -5,9 +5,6 @@
 Personal project multiplayer game based loosely on the card/party game Mafia and run via Firebase online servers.
 
 Tasks
-- only vote for living players
-- remove ghost shadow
-- remove ghost ability to pick up items
 - remove ghost as occupying space
 - remove you are mafia icon when ghost
 - add town vote kill animation

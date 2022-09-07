@@ -2725,11 +2725,13 @@ function getRandomHaloSpot() {
           checkTownVoting();
         }
 
-        attemptGrabVotingCard(players[playerId].x, players[playerId].y);
-        attemptGrabGun(players[playerId].x, players[playerId].y);
-        attemptGrabFlashlight(players[playerId].x, players[playerId].y);
-        attemptGrabMagnifyingGlass(players[playerId].x, players[playerId].y);
-        attemptGrabHalo(players[playerId].x, players[playerId].y);
+        if (players[playerId].alive) {
+          attemptGrabVotingCard(players[playerId].x, players[playerId].y);
+          attemptGrabGun(players[playerId].x, players[playerId].y);
+          attemptGrabFlashlight(players[playerId].x, players[playerId].y);
+          attemptGrabMagnifyingGlass(players[playerId].x, players[playerId].y);
+          attemptGrabHalo(players[playerId].x, players[playerId].y);
+        }
 
         const ML = ((startingX - players[playerId].x) * 16) + 'px';
         const MT = ((startingY - players[playerId].y) * 16) + 'px';
@@ -3169,11 +3171,13 @@ function getRandomHaloSpot() {
 
           //console.log(players[playerId].x + ", " + players[playerId].y);
 
-          attemptGrabVotingCard(players[playerId].x, players[playerId].y);
-          attemptGrabGun(players[playerId].x, players[playerId].y);
-          attemptGrabFlashlight(players[playerId].x, players[playerId].y);
-          attemptGrabMagnifyingGlass(players[playerId].x, players[playerId].y);
-          attemptGrabHalo(players[playerId].x, players[playerId].y);
+          if (players[playerId].alive) {
+            attemptGrabVotingCard(players[playerId].x, players[playerId].y);
+            attemptGrabGun(players[playerId].x, players[playerId].y);
+            attemptGrabFlashlight(players[playerId].x, players[playerId].y);
+            attemptGrabMagnifyingGlass(players[playerId].x, players[playerId].y);
+            attemptGrabHalo(players[playerId].x, players[playerId].y);
+          }
 
           const ML = ((startingX - players[playerId].x) * 16) + 'px';
           const MT = ((startingY - players[playerId].y) * 16) + 'px';
