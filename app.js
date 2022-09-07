@@ -3095,7 +3095,20 @@ function getRandomHaloSpot() {
         el.setAttribute("data-walking", characterState.walking);
         const left = 16 * (characterState.x - players[playerId].x + 12) + "px";
         const top = 16 * (characterState.y - players[playerId].y + 7) - 1 + "px";
-        el.style.transform = `translate3d(${left}, ${top}, 0)`;
+
+        if (inRound) {
+          if (players[playerId].alive && players[key].alive) {
+            el.style.transform = `translate3d(${left}, ${top}, 0)`;
+          }
+          else if (!players[playerId].alive && !players[key].alive) {
+            el.style.transform = `translate3d(${left}, ${top}, 0)`;
+          }
+        }
+        else {
+          el.style.transform = `translate3d(${left}, ${top}, 0)`;
+        }
+
+        if (players[playerId].alive && players[playerId].alive)
 
         if (!inRound && !inLobby) {
           const voteCounter = document.querySelector(".user-" + key);

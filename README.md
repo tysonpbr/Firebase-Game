@@ -5,8 +5,9 @@
 Personal project multiplayer game based loosely on the card/party game Mafia and run via Firebase online servers.
 
 Tasks
-- make ghosts non visible when in round
-- remove ghost permissions
+- start next round 
+- remove ghost ability to pick up items
+- remove ghost as occupying space
 - add ghost walls
 - fix "No items picked up"
 - add name
