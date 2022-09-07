@@ -2613,7 +2613,9 @@ function getRandomHaloSpot() {
     townSkipButton.classList.add("skipButton");
     townSkipButton.innerHTML = `SKIP`
     townSkipButton.addEventListener("click", () => {
-      confirmSkipTown();
+      if (players[playerId].voteFor !== "skip") {
+        confirmSkipTown();
+      }
     })
     document.querySelector(".townInterface").appendChild(townSkipButton);
   }
@@ -2632,6 +2634,25 @@ function getRandomHaloSpot() {
     buttonYes.classList.add("buttonYes");
     buttonYes.innerHTML = `YES`;
     buttonYes.addEventListener("click", () => {
+
+      if (players[playerId].voteFor === "none") {
+        firebase.database().ref(`players/${playerId}`).update({
+          voteFor: "skip",
+        });
+      }
+      else {
+        const oldVote = players[playerId].voteFor;
+        
+        const updateCount = players[oldVote].votes - 1;
+
+        firebase.database().ref(`players/${oldVote}`).update({
+          votes: updateCount,
+        });
+
+        firebase.database().ref(`players/${playerId}`).update({
+          voteFor: "skip",
+        });
+      }
       
       firebase.database().ref(`players/${playerId}`).update({
         voteFor: "skip",
