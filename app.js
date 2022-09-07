@@ -1443,6 +1443,7 @@ function getRandomHaloSpot() {
   let isAngel = false;
   let isShooter = false;
   let isVoters = false;
+  let playerAlive = 0;
 
 
   const gameContainer = document.querySelector(".game-container");
@@ -1450,7 +1451,7 @@ function getRandomHaloSpot() {
   const startButton = document.querySelector("#b1");
 
   function startClock() {
-    startTime = 5/60; //min
+    startTime = 15/60; //min
     time = startTime * 60; //secs
     clock = document.createElement("div");
     clock.classList.add("timer");
@@ -1540,6 +1541,15 @@ function getRandomHaloSpot() {
   }
 
   function startRound() {
+    playerAlive = 0;
+    Object.keys(players).forEach((key) => {
+      if (players[key].alive) {
+        playerAlive++;
+      }
+    });
+
+    // add item here
+
     if (players[playerId].mafia) {
       const youAreMafia = document.createElement("div");
       youAreMafia.classList.add("youAreMafiaBig");
@@ -1681,6 +1691,9 @@ function getRandomHaloSpot() {
         votingCard: false,
       });
     });
+
+    startRound();
+
   }
 
   // GENERAL VOTING 
@@ -1855,38 +1868,37 @@ function getRandomHaloSpot() {
   
   function checkMafiaVoting(){
     let numMafia = 0;
-    const numPlayer = playerOrder.length;
-    if (numPlayer === 2) {
+    if (playerAlive === 2) {
       numMafia = 1;
     }
-    else if (numPlayer === 3) {
+    else if (playerAlive === 3) {
       numMafia = 1;
     }
-    else if (numPlayer === 4) {
+    else if (playerAlive === 4) {
       numMafia = 1;
     }
-    else if (numPlayer === 5) {
+    else if (playerAlive === 5) {
       numMafia = 2;
     }
-    else if (numPlayer === 6) {
+    else if (playerAlive === 6) {
       numMafia = 2;
     }
-    else if (numPlayer === 7) {
+    else if (playerAlive === 7) {
       numMafia = 2;
     }
-    else if (numPlayer === 8) {
+    else if (playerAlive === 8) {
       numMafia = 3;
     }
-    else if (numPlayer === 9) {
+    else if (playerAlive === 9) {
       numMafia = 3;
     }
-    else if (numPlayer === 10) {
+    else if (playerAlive === 10) {
       numMafia = 3;
     }
-    else if (numPlayer === 11) {
+    else if (playerAlive === 11) {
       numMafia = 4;
     }
-    else if (numPlayer === 12) {
+    else if (playerAlive === 12) {
       numMafia = 4;
     }
     Object.keys(players).forEach((key) => {
@@ -2674,7 +2686,17 @@ function getRandomHaloSpot() {
       const left = 16 * (characterState.x - players[playerId].x + 12) + "px";
       const top = 16 * (characterState.y - players[playerId].y + 7) - 1 + "px";
 
-      el.style.transform = `translate3d(${left}, ${top}, 0)`;
+      if (inRound) {
+        if (players[playerId].alive && players[key].alive) {
+          el.style.transform = `translate3d(${left}, ${top}, 0)`;
+        }
+        else if (!players[playerId].alive) {
+          el.style.transform = `translate3d(${left}, ${top}, 0)`;
+        }
+      }
+      else {
+        el.style.transform = `translate3d(${left}, ${top}, 0)`;
+      }
       
       if (key == playerId) {
         if (inMafiaVoting) {
@@ -3100,7 +3122,7 @@ function getRandomHaloSpot() {
           if (players[playerId].alive && players[key].alive) {
             el.style.transform = `translate3d(${left}, ${top}, 0)`;
           }
-          else if (!players[playerId].alive && !players[key].alive) {
+          else if (!players[playerId].alive) {
             el.style.transform = `translate3d(${left}, ${top}, 0)`;
           }
         }
