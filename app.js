@@ -1550,7 +1550,7 @@ function getRandomHaloSpot() {
 
     // add item here
 
-    if (players[playerId].mafia) {
+    if (players[playerId].mafia && players[playerId].alive) {
       const youAreMafia = document.createElement("div");
       youAreMafia.classList.add("youAreMafiaBig");
       youAreMafia.innerHTML = `YOU ARE MAFIA`;
@@ -1593,13 +1593,13 @@ function getRandomHaloSpot() {
     votingCardIcon.classList.add("votingCardIcon");
     backpack.appendChild(votingCardIcon);
 
-    if (players[playerId].flashlight){
+    if (players[playerId].flashlight && players[playerId].alive){
       const shadowBig = document.createElement("div");
       shadowBig.classList.add("shadowBig");
       shadowBig.style.background = "url(images/maps/shadowUp.png)";
       document.querySelector(".gameInterface").appendChild(shadowBig);
     }
-    else {
+    else if (players[playerId].alive) {
       const shadow = document.createElement("div");
       shadow.classList.add("shadow");
       shadow.style.background = "url(images/maps/shadowUp.png)";
@@ -1636,7 +1636,7 @@ function getRandomHaloSpot() {
     const {i,j} = meetingSpots[index];
     teleportTo(i, j);
     setTimeout(function() {
-      if (players[playerId].mafia) {
+      if (players[playerId].mafia && players[playerId].alive) {
         document.querySelector(".youAreMafia").classList.add("hideYouAreMafia");
         document.querySelector(".youAreMafia").classList.remove("youAreMafia");
         setTimeout(function() {
@@ -1650,10 +1650,10 @@ function getRandomHaloSpot() {
         document.querySelector(".backpackClose").remove();
       }, 500);
 
-      if (players[playerId].flashlight){
+      if (players[playerId].flashlight && players[playerId].alive){
         document.querySelector(".shadowBig").remove();
       }
-      else {
+      else if (players[playerId].alive) {
         document.querySelector(".shadow").remove();
       }
       Object.keys(players).forEach((key) => {
@@ -2973,10 +2973,10 @@ function getRandomHaloSpot() {
       if (xChange === 1 && (inRound || inLobby)) {
         players[playerId].direction = "right";
         if (inRound) {
-          if (players[playerId].flashlight) {
+          if (players[playerId].flashlight && players[playerId].alive) {
             document.querySelector(".shadowBig").style.background = "url(images/maps/shadowRight.png)";
           }
-          else {
+          else if (players[playerId].alive) {
             document.querySelector(".shadow").style.background = "url(images/maps/shadowRight.png)";
           }
         }
@@ -2984,10 +2984,10 @@ function getRandomHaloSpot() {
       if (xChange === -1 && (inRound || inLobby)) {
         players[playerId].direction = "left";
         if (inRound) {
-          if (players[playerId].flashlight) {
+          if (players[playerId].flashlight && players[playerId].alive) {
             document.querySelector(".shadowBig").style.background = "url(images/maps/shadowLeft.png)";
           }
-          else {
+          else if (players[playerId].alive) {
             document.querySelector(".shadow").style.background = "url(images/maps/shadowLeft.png)";
           }
         }
@@ -2995,10 +2995,10 @@ function getRandomHaloSpot() {
       if (yChange === -1 && (inRound || inLobby)) {
         players[playerId].direction = "up";
         if (inRound) {
-          if (players[playerId].flashlight) {
+          if (players[playerId].flashlight && players[playerId].alive) {
             document.querySelector(".shadowBig").style.background = "url(images/maps/shadowUp.png)";
           }
-          else {
+          else if (players[playerId].alive) {
             document.querySelector(".shadow").style.background = "url(images/maps/shadowUp.png)";
           }
         }
@@ -3006,10 +3006,10 @@ function getRandomHaloSpot() {
       if (yChange === 1 && (inRound || inLobby)) {
         players[playerId].direction = "down";
         if (inRound) {
-          if (players[playerId].flashlight) {
+          if (players[playerId].flashlight && players[playerId].alive) {
             document.querySelector(".shadowBig").style.background = "url(images/maps/shadowDown.png)";
           }
-          else {
+          else if (players[playerId].alive) {
             document.querySelector(".shadow").style.background = "url(images/maps/shadowDown.png)";
           }
         }
