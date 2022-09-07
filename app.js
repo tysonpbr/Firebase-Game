@@ -1868,39 +1868,11 @@ function getRandomHaloSpot() {
   
   function checkMafiaVoting(){
     let numMafia = 0;
-    if (playerAlive === 2) {
-      numMafia = 1;
-    }
-    else if (playerAlive === 3) {
-      numMafia = 1;
-    }
-    else if (playerAlive === 4) {
-      numMafia = 1;
-    }
-    else if (playerAlive === 5) {
-      numMafia = 2;
-    }
-    else if (playerAlive === 6) {
-      numMafia = 2;
-    }
-    else if (playerAlive === 7) {
-      numMafia = 2;
-    }
-    else if (playerAlive === 8) {
-      numMafia = 3;
-    }
-    else if (playerAlive === 9) {
-      numMafia = 3;
-    }
-    else if (playerAlive === 10) {
-      numMafia = 3;
-    }
-    else if (playerAlive === 11) {
-      numMafia = 4;
-    }
-    else if (playerAlive === 12) {
-      numMafia = 4;
-    }
+    Object.keys(players).forEach((key) => {
+      if (players[key].mafia) {
+        numMafia++;
+      }
+    });
     Object.keys(players).forEach((key) => {
       if (players[key].votes === numMafia && inMafiaVoting) {
         inMafiaVoting = false;
@@ -2409,6 +2381,7 @@ function getRandomHaloSpot() {
           firebase.database().ref(`players/${votesRef.mafiaVote}`).update({
             char: "ghost",
             alive: false,
+            mafia: false,
           });
         }, 1000);
 
@@ -2464,6 +2437,7 @@ function getRandomHaloSpot() {
           firebase.database().ref(`players/${votesRef.shooterVote}`).update({
             char: "ghost",
             alive: false,
+            mafia: false,
           });
         }, 1000);
 
