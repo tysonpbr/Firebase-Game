@@ -1914,7 +1914,7 @@ function getRandomHaloSpot() {
       else {
         startAngelWaiting();
       }
-    }, 2300);
+    }, 3000);
   }
 
   // ANGEL VOTING
@@ -2021,7 +2021,7 @@ function getRandomHaloSpot() {
       else {
         startDetectiveWaiting();
       }
-    }, 2300);
+    }, 3000);
   }
   // DETECTIVE VOTING
   
@@ -2130,7 +2130,7 @@ function getRandomHaloSpot() {
       else {
         startShooterWaiting();
       }
-    }, 2300);
+    }, 3000);
   }
   // SHOOTER VOTING
   
@@ -2283,7 +2283,7 @@ function getRandomHaloSpot() {
     }, 1600);
     setTimeout(function () {
       announceMafiaKill();
-    }, 2300);
+    }, 3000);
   }
 
   // ANNOUNCEMENTS
@@ -2386,6 +2386,12 @@ function getRandomHaloSpot() {
         }, 1000);
 
         setTimeout(function () {
+          const gameOver = checkWin();
+
+          if (gameOver) {
+            return;
+          }
+
           if (goToShooter) {
             exectuteShooterKill();
           }
@@ -2442,6 +2448,12 @@ function getRandomHaloSpot() {
         }, 1000);
 
         setTimeout(function () {
+          const gameOver = checkWin();
+
+          if (gameOver) {
+            return;
+          }
+
           exectuteInvestigation();
         }, 2000);
       }
@@ -2607,7 +2619,6 @@ function getRandomHaloSpot() {
         numVotes++;
       }
     });
-    console.log("numVotes");
     Object.keys(players).forEach((key) => {
       if (players[key].votes >= Math.ceil(numVotes/2) && inTownVoting) {
         inTownVoting = false;
@@ -2617,7 +2628,6 @@ function getRandomHaloSpot() {
   }
 
   function endTownVoting(votedPlayer) {
-    console.log("END TOWN VOTING");
 
     if (playerOrder[0] === playerId) {
       firebase.database().ref(`votes`).update({
@@ -2644,14 +2654,53 @@ function getRandomHaloSpot() {
       document.querySelector(".townInterface").remove();
     }, 1600);
     setTimeout(function () {
-      console.log("START NEW ROUND");
-      teleportTo(85,60);
-      setTimeout(function() {
-        if (!inRound) {
-          nextRound();
+      exectuteTownKill();
+    }, 3000);
+  }
+
+  function exectuteTownKill() {
+    const executeTownKillNotification = document.createElement("div");
+    executeTownKillNotification.classList.add("notification");
+    document.querySelector(".gameInterface").appendChild(executeTownKillNotification);
+
+    const townKill = players[votesRef.townVote].name;
+
+    executeTownKillNotification.innerHTML = `THE TOWNSPEOPLE HAVE CHOSE TO KILL ${townKill}`;
+
+    setTimeout(function () {
+      executeTownKillNotification.classList.add("notificationClose");
+      executeTownKillNotification.classList.remove("notification");
+    }, 4000);
+
+    setTimeout(function () {
+      document.querySelector(".notificationClose").remove();
+
+      deathAnimation(votesRef.townVote);
+
+      setTimeout(function () {
+        firebase.database().ref(`players/${votesRef.townVote}`).update({
+          char: "ghost",
+          alive: false,
+          mafia: false,
+        });
+      }, 1000);
+      setTimeout(function () {
+        const gameOver = checkWin();
+        if (gameOver) {
+          return;
         }
-      }, 800);
-    }, 2300);
+        
+        console.log("START NEW ROUND");
+
+        teleportTo(85,60);
+
+        setTimeout(function() {
+          if (!inRound) {
+            nextRound();
+          }
+        }, 800);
+      }, 2000);
+    }, 5000);
   }
 
   // WIN RULES AND PAGES
@@ -2680,11 +2729,11 @@ function getRandomHaloSpot() {
   }
 
   function mafiaWin() {
-
+    console.log("MAFIA WIN");
   }
 
   function townsPeopleWin() {
-    
+    console.log("TOWNSPEOPLE WIN");
   }
 
   function updateDom() {
