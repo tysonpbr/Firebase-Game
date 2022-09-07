@@ -1533,7 +1533,7 @@ body {
   }
 }
 
-.shooterSkipButton {
+.skipButton {
   position: absolute;
   padding-top: 4px;
   width: 48px;

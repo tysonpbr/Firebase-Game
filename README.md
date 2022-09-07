@@ -5,7 +5,6 @@
 Personal project multiplayer game based loosely on the card/party game Mafia and run via Firebase online servers.
 
 Tasks
-- add skip button for townsvote
 - add townspeople skip button counter
 - town vote kill shows their role
 - add UI path for when mafia and shooter kill same person
@@ -16,6 +15,8 @@ Tasks
 - 3 player min / 12 player max
 - game name
 - add play agian functionality
+- add clickable buttons 
+- add music / sounds effects
 
 Tyson's Current Task
 - 

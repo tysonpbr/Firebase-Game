@@ -1365,6 +1365,7 @@ function isSolid(x,y) {
 function getRandomVotingCardSpot() {
   return randomFromArray([
     { i: 84, j: 54 },
+    { i: 83, j: 54 },
     //{ i: 103, j: 31 },
     //{ i: 82, j: 24 },
     //{ i: 79, j: 46 },
@@ -1484,7 +1485,6 @@ function getRandomHaloSpot() {
       playerOrder.unshift(key);
     });
     if (playerOrder[0] === playerId) {
-      console.log("I am the admin")
 
       firebase.database().ref(`votes`).set({
         mafiaVote: "none",
@@ -1535,7 +1535,6 @@ function getRandomHaloSpot() {
           currPlayer = playerOrder[Math.floor(Math.random() * numPlayer)];
         }
         firebase.database().ref(`players/${currPlayer}/mafia`).set(true);
-        console.log("Mafia: " + currPlayer);
       }
     }
   }
@@ -2231,7 +2230,7 @@ function getRandomHaloSpot() {
     });
 
     const shooterSkipButton = document.createElement("div");
-    shooterSkipButton.classList.add("shooterSkipButton");
+    shooterSkipButton.classList.add("skipButton");
     shooterSkipButton.innerHTML = `SKIP`
     shooterSkipButton.addEventListener("click", () => {
       confirmSkip();
@@ -2537,7 +2536,6 @@ function getRandomHaloSpot() {
 
   function startTownWaiting() {
     if (!isVoters) {
-      console.log("START NEW ROUND");
       teleportTo(85,60);
       setTimeout(function() {
         if (!inRound) {
@@ -2611,31 +2609,33 @@ function getRandomHaloSpot() {
     });
     inTownVoting = true;
 
-    const shooterSkipButton = document.createElement("div");
-    shooterSkipButton.classList.add("shooterSkipButton");
-    shooterSkipButton.innerHTML = `SKIP`
-    shooterSkipButton.addEventListener("click", () => {
+    const townSkipButton = document.createElement("div");
+    townSkipButton.classList.add("skipButton");
+    townSkipButton.innerHTML = `SKIP`
+    townSkipButton.addEventListener("click", () => {
       confirmSkipTown();
     })
-    document.querySelector(".shooterInterface").appendChild(shooterSkipButton);
+    document.querySelector(".townInterface").appendChild(townSkipButton);
   }
 
   function confirmSkipTown() {
     const blocker = document.createElement("div");
     blocker.classList.add("blocker");
-    document.querySelector(".shooterInterface").appendChild(blocker);
+    document.querySelector(".townInterface").appendChild(blocker);
 
     const skipConfirmUI = document.createElement("div");
     skipConfirmUI.classList.add("votingConfirmUI");
     skipConfirmUI.innerHTML = `ARE YOU SURE YOU WANT TO SKIP?`
-    document.querySelector(".shooterInterface").appendChild(skipConfirmUI);
+    document.querySelector(".townInterface").appendChild(skipConfirmUI);
 
     const buttonYes = document.createElement("div");
     buttonYes.classList.add("buttonYes");
     buttonYes.innerHTML = `YES`;
     buttonYes.addEventListener("click", () => {
       
-
+      firebase.database().ref(`players/${playerId}`).update({
+        voteFor: "skip",
+      });
 
       document.querySelector(".votingConfirmUI").classList.add("votingConfirmUIClose");
       document.querySelector(".votingConfirmUI").classList.remove("votingConfirmUI");
@@ -2667,7 +2667,7 @@ function getRandomHaloSpot() {
       if (players[key].votingCard) {
         numVotes++;
       }
-      if (players[playerId].voteFor === "skip") {
+      if (players[key].voteFor === "skip") {
         numSkip++;
       }
     });
@@ -2677,7 +2677,8 @@ function getRandomHaloSpot() {
         endTownVoting(key);
       }
     });
-    if (numSkip >= Math.ceil(numVotes/2)) {
+    if (numSkip >= Math.ceil(numVotes/2) && inTownVoting) {
+      inTownVoting = false;
       endTownVoting("skip");
     }
   }
@@ -2685,6 +2686,7 @@ function getRandomHaloSpot() {
   function endTownVoting(votedPlayer) {
 
     if (playerOrder[0] === playerId) {
+      
       firebase.database().ref(`votes`).update({
         townVote: votedPlayer,
       });
@@ -2754,8 +2756,6 @@ function getRandomHaloSpot() {
             return;
           }
 
-          console.log("START NEW ROUND");
-
           teleportTo(85,60);
 
           setTimeout(function() {
@@ -2771,8 +2771,6 @@ function getRandomHaloSpot() {
           if (gameOver) {
             return;
           }
-
-          console.log("START NEW ROUND");
 
           teleportTo(85,60);
 
@@ -2812,7 +2810,6 @@ function getRandomHaloSpot() {
   }
 
   function mafiaWin() {
-    console.log("MAFIA WIN");
 
     const gameOver = document.createElement("div");
     gameOver.classList.add("gameOver");
@@ -2826,7 +2823,6 @@ function getRandomHaloSpot() {
   }
 
   function townsPeopleWin() {
-    console.log("TOWNSPEOPLE WIN");
 
     const gameOver = document.createElement("div");
     gameOver.classList.add("gameOver");
@@ -2932,7 +2928,6 @@ function getRandomHaloSpot() {
   }
 
   function teleportTo(teleport_x, teleport_y) {
-    //console.log("Teleport to: " + teleport_x + ", " + teleport_y);
     setTimeout(function() {
       playerRef.update({
         x: teleport_x,
@@ -2954,6 +2949,7 @@ function getRandomHaloSpot() {
     placeFlashlight();
     placeGun();
     placeVotingCard();
+    placeVotingCard();
     placeMagnifyingGlass();
     placeHalo();
   }
@@ -2969,7 +2965,6 @@ function getRandomHaloSpot() {
       y = j;
       key = getKeyString(x, y);
     }
-    //console.log("NEW VOTING CARD: " + key + " / " + x + ", " + y);
     const votingCardRef = firebase.database().ref(`votingCard/${key}`);
     votingCardRef.set({
       x,
@@ -2988,7 +2983,6 @@ function getRandomHaloSpot() {
       y = j;
       key = getKeyString(x, y);
     }
-    //console.log("NEW GUN: " + key + " / " + x + ", " + y);
     const gunRef = firebase.database().ref(`gun/${key}`);
     gunRef.set({
       x,
@@ -3007,7 +3001,6 @@ function getRandomHaloSpot() {
       y = j;
       key = getKeyString(x, y);
     }
-    //console.log("NEW FLASHLIGHT: " + key + " / " + x + ", " + y);
     const flashlightRef = firebase.database().ref(`flashlight/${key}`);
     flashlightRef.set({
       x,
@@ -3026,7 +3019,6 @@ function getRandomHaloSpot() {
       y = j;
       key = getKeyString(x, y);
     }
-    //console.log("NEW MAGNIFYING GLASS: " + key + " / " + x + ", " + y);
     const magnifyingGlassRef = firebase.database().ref(`magnifyingGlass/${key}`);
     magnifyingGlassRef.set({
       x,
@@ -3045,7 +3037,6 @@ function getRandomHaloSpot() {
       y = j;
       key = getKeyString(x, y);
     }
-    //console.log("NEW HALO: " + key + " / " + x + ", " + y);
     const haloRef = firebase.database().ref(`halo/${key}`);
     haloRef.set({
       x,
@@ -3328,8 +3319,6 @@ function getRandomHaloSpot() {
             checkTownVoting();
           }
 
-          //console.log(players[playerId].x + ", " + players[playerId].y);
-
           if (players[playerId].alive) {
             attemptGrabVotingCard(players[playerId].x, players[playerId].y);
             attemptGrabGun(players[playerId].x, players[playerId].y);
@@ -3452,7 +3441,6 @@ function getRandomHaloSpot() {
     });
     allVotingCardRef.on("child_removed", (snapshot) => {
       const {x,y} = snapshot.val();
-      //console.log("Voting Card removed: " + x + ", " + y);
       const keyToRemove = getKeyString(x,y);
       gameContainer.removeChild( votingCardElements[keyToRemove] );
       delete votingCardElements[keyToRemove];
@@ -3483,7 +3471,6 @@ function getRandomHaloSpot() {
     });
     allGunRef.on("child_removed", (snapshot) => {
       const {x,y} = snapshot.val();
-      //console.log("Gun removed: " + x + ", " + y);
       const keyToRemove = getKeyString(x,y);
       gameContainer.removeChild( gunElements[keyToRemove] );
       delete gunElements[keyToRemove];
@@ -3514,7 +3501,6 @@ function getRandomHaloSpot() {
     });
     allFlashlightRef.on("child_removed", (snapshot) => {
       const {x,y} = snapshot.val();
-      //console.log("Flashlight removed: " + x + ", " + y);
       const keyToRemove = getKeyString(x,y);
       gameContainer.removeChild( flashlightElements[keyToRemove] );
       delete flashlightElements[keyToRemove];
@@ -3545,7 +3531,6 @@ function getRandomHaloSpot() {
     });
     allMagnifyingGlassRef.on("child_removed", (snapshot) => {
       const {x,y} = snapshot.val();
-      //console.log("MagnifyingGlass removed: " + x + ", " + y);
       const keyToRemove = getKeyString(x,y);
       gameContainer.removeChild( magnifyingGlassElements[keyToRemove] );
       delete magnifyingGlassElements[keyToRemove];
@@ -3576,7 +3561,6 @@ function getRandomHaloSpot() {
     });
     allHaloRef.on("child_removed", (snapshot) => {
       const {x,y} = snapshot.val();
-      //console.log("Halo removed: " + x + ", " + y);
       const keyToRemove = getKeyString(x,y);
       gameContainer.removeChild( haloElements[keyToRemove] );
       delete haloElements[keyToRemove];
@@ -3633,9 +3617,7 @@ function getRandomHaloSpot() {
   }
 
   firebase.auth().onAuthStateChanged((user) => {
-    //console.log(user)
     if (user) {
-      //You're logged in!
       playerId = user.uid;
       playerRef = firebase.database().ref(`players/${playerId}`);
 
@@ -3671,8 +3653,6 @@ function getRandomHaloSpot() {
   firebase.auth().signInAnonymously().catch((error) => {
     var errorCode = error.code;
     var errorMessage = error.message;
-    // ...
-    //console.log(errorCode, errorMessage);
   });
 
 
