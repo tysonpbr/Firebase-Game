@@ -1827,7 +1827,7 @@ function getRandomHaloSpot() {
     document.querySelector(".mafiaInterface").appendChild(votingUITop);
 
     Object.keys(players).forEach((key) => {
-      if (!players[key].mafia) {
+      if (!players[key].mafia && players[key].alive) {
         const divLeft = (16 * (players[key].x - players[playerId].x)) + 193 + "px";
         const button = document.createElement("div");
         button.classList.add("b3");
@@ -1980,28 +1980,30 @@ function getRandomHaloSpot() {
     document.querySelector(".angelInterface").appendChild(votingUITop);
 
     Object.keys(players).forEach((key) => {
-      const divLeft = (16 * (players[key].x - players[playerId].x)) + 193 + "px";
-      const button = document.createElement("div");
-      button.classList.add("b3");
-      const p = key
-      button.addEventListener("click", () => {
-        if (players[playerId].voteFor === "none") {
-          const potentialVote = document.createElement("div");
-          potentialVote.classList.add("potentialVote");
-          const divLeft = (16 * (players[p].x - players[playerId].x)) + 197 + "px";
-          potentialVote.style.left = divLeft;
-          document.querySelector(".angelInterface").appendChild(potentialVote);
-          confirmVote(p, angelInterface);
-        }
-      });
-      button.style.left = divLeft;
-      document.querySelector(".angelInterface").appendChild(button);
-      const voteCounter = document.createElement("div");
-      voteCounter.classList.add("voteCounter");
-      voteCounter.classList.add("user-" + p);
-      voteCounter.style.left = divLeft;
-      voteCounter.innerHTML = `0`;
-      document.querySelector(".angelInterface").appendChild(voteCounter);
+      if (players[key].alive) {
+        const divLeft = (16 * (players[key].x - players[playerId].x)) + 193 + "px";
+        const button = document.createElement("div");
+        button.classList.add("b3");
+        const p = key
+        button.addEventListener("click", () => {
+          if (players[playerId].voteFor === "none") {
+            const potentialVote = document.createElement("div");
+            potentialVote.classList.add("potentialVote");
+            const divLeft = (16 * (players[p].x - players[playerId].x)) + 197 + "px";
+            potentialVote.style.left = divLeft;
+            document.querySelector(".angelInterface").appendChild(potentialVote);
+            confirmVote(p, angelInterface);
+          }
+        });
+        button.style.left = divLeft;
+        document.querySelector(".angelInterface").appendChild(button);
+        const voteCounter = document.createElement("div");
+        voteCounter.classList.add("voteCounter");
+        voteCounter.classList.add("user-" + p);
+        voteCounter.style.left = divLeft;
+        voteCounter.innerHTML = `0`;
+        document.querySelector(".angelInterface").appendChild(voteCounter);
+      }
     });
     inAngelVoting = true;
   }
@@ -2085,7 +2087,7 @@ function getRandomHaloSpot() {
     document.querySelector(".detectiveInterface").appendChild(votingUITop);
 
     Object.keys(players).forEach((key) => {
-      if (!players[key].magnifyingGlass) {
+      if (!players[key].magnifyingGlass && players[key].alive) {
         const divLeft = (16 * (players[key].x - players[playerId].x)) + 193 + "px";
         const button = document.createElement("div");
         button.classList.add("b3");
@@ -2188,7 +2190,7 @@ function getRandomHaloSpot() {
     document.querySelector(".shooterInterface").appendChild(votingUITop);
 
     Object.keys(players).forEach((key) => {
-      if (!players[key].gun) {
+      if (!players[key].gun && players[key].alive) {
         const divLeft = (16 * (players[key].x - players[playerId].x)) + 193 + "px";
         const button = document.createElement("div");
         button.classList.add("b3");
@@ -2582,40 +2584,44 @@ function getRandomHaloSpot() {
     document.querySelector(".townInterface").appendChild(votingUITop);
 
     Object.keys(players).forEach((key) => {
-      const divLeft = (16 * (players[key].x - players[playerId].x)) + 193 + "px";
-      const p = key
-      if (key !== playerId) {
-        const button = document.createElement("div");
-        button.classList.add("b3");
-        button.addEventListener("click", () => {
-          if (players[playerId].voteFor === "none") {
-            const potentialVote = document.createElement("div");
-            potentialVote.classList.add("potentialVote");
-            const divLeft = (16 * (players[p].x - players[playerId].x)) + 197 + "px";
-            potentialVote.style.left = divLeft;
-            document.querySelector(".townInterface").appendChild(potentialVote);
+      if (players[key].alive) {
+        const divLeft = (16 * (players[key].x - players[playerId].x)) + 193 + "px";
+        const p = key
+        if (key !== playerId) {
+          const button = document.createElement("div");
+          button.classList.add("b3");
+          button.addEventListener("click", () => {
+            if (players[playerId].voteFor === "none") {
+              const potentialVote = document.createElement("div");
+              potentialVote.classList.add("potentialVote");
+              const divLeft = (16 * (players[p].x - players[playerId].x)) + 197 + "px";
+              potentialVote.style.left = divLeft;
+              document.querySelector(".townInterface").appendChild(potentialVote);
 
-            confirmVote(p, townInterface);
-          }
-          else if (players[playerId].voteFor !== p) {
-            const potentialVote = document.createElement("div");
-            potentialVote.classList.add("potentialVote");
-            const divLeft = (16 * (players[p].x - players[playerId].x)) + 197 + "px";
-            potentialVote.style.left = divLeft;
-            document.querySelector(".townInterface").appendChild(potentialVote);
+              confirmVote(p, townInterface);
+            }
+            else if (players[playerId].voteFor !== p) {
+              const potentialVote = document.createElement("div");
+              potentialVote.classList.add("potentialVote");
+              const divLeft = (16 * (players[p].x - players[playerId].x)) + 197 + "px";
+              potentialVote.style.left = divLeft;
+              document.querySelector(".townInterface").appendChild(potentialVote);
 
-            changeVote(p, townInterface);
-          }
-        });
-        button.style.left = divLeft;
-        document.querySelector(".townInterface").appendChild(button);
+              changeVote(p, townInterface);
+            }
+          });
+          button.style.left = divLeft;
+          document.querySelector(".townInterface").appendChild(button);
+        }
+        if (players[key].alive) {
+          const voteCounter = document.createElement("div");
+          voteCounter.classList.add("voteCounter");
+          voteCounter.classList.add("user-" + p);
+          voteCounter.style.left = divLeft;
+          voteCounter.innerHTML = `0`;
+          document.querySelector(".townInterface").appendChild(voteCounter);
+        }
       }
-      const voteCounter = document.createElement("div");
-      voteCounter.classList.add("voteCounter");
-      voteCounter.classList.add("user-" + p);
-      voteCounter.style.left = divLeft;
-      voteCounter.innerHTML = `0`;
-      document.querySelector(".townInterface").appendChild(voteCounter);
     });
     inTownVoting = true;
   }
