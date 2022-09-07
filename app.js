@@ -2730,10 +2730,30 @@ function getRandomHaloSpot() {
 
   function mafiaWin() {
     console.log("MAFIA WIN");
+
+    const gameOver = document.createElement("div");
+    gameOver.classList.add("gameOver");
+    gameOver.innerHTML = `THE MAFIA WIN`;
+    document.querySelector(".gameInterface").appendChild(gameOver);
+    
+    const playAgainButton = document.createElement("div");
+    playAgainButton.classList.add("playAgainButton");
+    playAgainButton.innerHTML = `PLAY AGAIN`;
+    document.querySelector(".gameOver").appendChild(playAgainButton);
   }
 
   function townsPeopleWin() {
     console.log("TOWNSPEOPLE WIN");
+
+    const gameOver = document.createElement("div");
+    gameOver.classList.add("gameOver");
+    gameOver.innerHTML = `THE TOWNSPEOPLE WIN`;
+    document.querySelector(".gameInterface").appendChild(gameOver);
+
+    const playAgainButton = document.createElement("div");
+    playAgainButton.classList.add("playAgainButton");
+    playAgainButton.innerHTML = `PLAY AGAIN`;
+    document.querySelector(".gameOver").appendChild(playAgainButton);
   }
 
   function updateDom() {

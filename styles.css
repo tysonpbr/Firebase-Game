@@ -1576,7 +1576,7 @@ body {
   position: absolute;
   width: 384px;
   height: 32px;
-  top: px;
+  top: 0px;
   left: 0px;
   background: url(images/items/explosion.png);
   transform: scale(1);
@@ -1591,4 +1591,51 @@ body {
   to {
     left: -352px;
   }
+}
+.gameOver {
+  position: absolute;
+  padding-top: 40px;
+  width: 400px;
+  height: 208px;
+  top: 0px;
+  left: 0px;
+  background: #777;
+  image-rendering: pixelated;
+  overflow: hidden;
+  font-family: silkscreen;
+  font-size: 30px;
+  color: white;
+  outline: 4px solid white;
+  justify-content: center;
+  display: inline-flex;
+  z-index: 10;
+  transform: scale(1);
+  animation: gameOverAppear 0.7s steps(70);
+}
+
+@keyframes gameOverAppear {
+  from {
+    transform: scale(0);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+.playAgainButton {
+  position: absolute;
+  padding-top: 6px;
+  width: 48px;
+  height: 16px;
+  top: 120px;
+  left: 176px;
+  outline: none;
+  background: url(images/startScreen/button_up.png);
+  font-family: silkscreen;
+  font-size: 4px;
+  color: white;
+  justify-content: center;
+  display: inline-flex;
+  transform: scale(3);
+  z-index: 8;
 }
