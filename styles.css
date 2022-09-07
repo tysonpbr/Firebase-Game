@@ -725,6 +725,10 @@ body {
   background-position-x: 0px;
   background-position-y: 96px;
 }
+.Character[data-char="ghost"][data-direction="right"][data-walking="no"]
+  .Character_shadow {
+  background: none;
+}
 .Character[data-char="ghost"][data-direction="right"][data-walking="yes"]
   .Character_sprite {
   background: url(images/characters/ghost.png);
@@ -733,11 +737,19 @@ body {
   animation: walk 0.3s steps(4) infinite;
   animation-delay: 0s;
 }
+.Character[data-char="ghost"][data-direction="right"][data-walking="yes"]
+  .Character_shadow {
+    background: none;
+}
 .Character[data-char="ghost"][data-direction="left"][data-walking="no"]
   .Character_sprite {
   background: url(images/characters/ghost.png);
   background-position-x: 0px;
   background-position-y: 32px;
+}
+.Character[data-char="ghost"][data-direction="left"][data-walking="no"]
+  .Character_shadow {
+    background: none;
 }
 .Character[data-char="ghost"][data-direction="left"][data-walking="yes"]
   .Character_sprite {
@@ -747,11 +759,19 @@ body {
   animation: walk 0.3s steps(4) infinite;
   animation-delay: 0s;
 }
+.Character[data-char="ghost"][data-direction="left"][data-walking="yes"]
+  .Character_shadow {
+    background: none;
+}
 .Character[data-char="ghost"][data-direction="up"][data-walking="no"]
   .Character_sprite {
   background: url(images/characters/ghost.png);
   background-position-x: 0px;
   background-position-y: 64px;
+}
+.Character[data-char="ghost"][data-direction="up"][data-walking="no"]
+  .Character_shadow {
+    background: none;
 }
 .Character[data-char="ghost"][data-direction="up"][data-walking="yes"]
   .Character_sprite {
@@ -761,11 +781,19 @@ body {
   animation: walk 0.3s steps(4) infinite;
   animation-delay: 0s;
 }
+.Character[data-char="ghost"][data-direction="up"][data-walking="yes"]
+  .Character_shadow {
+    background: none;
+}
 .Character[data-char="ghost"][data-direction="down"][data-walking="no"]
   .Character_sprite {
   background: url(images/characters/ghost.png);
   background-position-x: 0px;
   background-position-y: 0px;
+}
+.Character[data-char="ghost"][data-direction="down"][data-walking="no"]
+  .Character_shadow {
+    background: none;
 }
 .Character[data-char="ghost"][data-direction="down"][data-walking="yes"]
   .Character_sprite {
@@ -774,6 +802,10 @@ body {
   background-position-y: 0px;
   animation: walk 0.3s steps(4) infinite;
   animation-delay: 0s;
+}
+.Character[data-char="ghost"][data-direction="down"][data-walking="yes"]
+  .Character_shadow {
+    background: none;
 }
 .stillScreen {
   position: absolute;
@@ -1535,7 +1567,7 @@ body {
   left: 185px;
   background: none;
   overflow: hidden;
-  outline: 1px solid red;
+  outline: none;
   transform: scale(1);
   z-index: 10;
 }
