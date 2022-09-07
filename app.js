@@ -1800,6 +1800,46 @@ function getRandomHaloSpot() {
     document.querySelector(".votingConfirmUI").appendChild(buttonNo);
   }
 
+  function confirmSkip() {
+    const blocker = document.createElement("div");
+    blocker.classList.add("blocker");
+    document.querySelector(".shooterInterface").appendChild(blocker);
+
+    const skipConfirmUI = document.createElement("div");
+    skipConfirmUI.classList.add("votingConfirmUI");
+    skipConfirmUI.innerHTML = `ARE YOU SURE YOU WANT TO SKIP?`
+    document.querySelector(".shooterInterface").appendChild(skipConfirmUI);
+
+    const buttonYes = document.createElement("div");
+    buttonYes.classList.add("buttonYes");
+    buttonYes.innerHTML = `YES`;
+    buttonYes.addEventListener("click", () => {
+      firebase.database().ref(`players/${playerId}`).update({
+        votes: 1,
+      });
+      document.querySelector(".votingConfirmUI").classList.add("votingConfirmUIClose");
+      document.querySelector(".votingConfirmUI").classList.remove("votingConfirmUI");
+      document.querySelector(".blocker").remove();
+      setTimeout(function () {
+        document.querySelector(".votingConfirmUIClose").remove();
+      }, 1200);
+    });
+    document.querySelector(".votingConfirmUI").appendChild(buttonYes);
+
+    const buttonNo = document.createElement("div");
+    buttonNo.classList.add("buttonNo");
+    buttonNo.innerHTML = `NO`;
+    buttonNo.addEventListener("click", () => {
+      document.querySelector(".votingConfirmUI").classList.add("votingConfirmUIClose");
+      document.querySelector(".votingConfirmUI").classList.remove("votingConfirmUI");
+      document.querySelector(".blocker").remove();
+      setTimeout(function () {
+        document.querySelector(".votingConfirmUIClose").remove();
+      }, 1200);
+    });
+    document.querySelector(".votingConfirmUI").appendChild(buttonNo);
+  }
+
 
   // MAFIA VOTING
 
@@ -2200,46 +2240,6 @@ function getRandomHaloSpot() {
 
     inShooterVoting = true;
   }
-
-  function confirmSkip() {
-    const blocker = document.createElement("div");
-    blocker.classList.add("blocker");
-    document.querySelector(".shooterInterface").appendChild(blocker);
-
-    const skipConfirmUI = document.createElement("div");
-    skipConfirmUI.classList.add("votingConfirmUI");
-    skipConfirmUI.innerHTML = `ARE YOU SURE YOU WANT TO SKIP?`
-    document.querySelector(".shooterInterface").appendChild(skipConfirmUI);
-
-    const buttonYes = document.createElement("div");
-    buttonYes.classList.add("buttonYes");
-    buttonYes.innerHTML = `YES`;
-    buttonYes.addEventListener("click", () => {
-      firebase.database().ref(`players/${playerId}`).update({
-        votes: 1,
-      });
-      document.querySelector(".votingConfirmUI").classList.add("votingConfirmUIClose");
-      document.querySelector(".votingConfirmUI").classList.remove("votingConfirmUI");
-      document.querySelector(".blocker").remove();
-      setTimeout(function () {
-        document.querySelector(".votingConfirmUIClose").remove();
-      }, 1200);
-    });
-    document.querySelector(".votingConfirmUI").appendChild(buttonYes);
-
-    const buttonNo = document.createElement("div");
-    buttonNo.classList.add("buttonNo");
-    buttonNo.innerHTML = `NO`;
-    buttonNo.addEventListener("click", () => {
-      document.querySelector(".votingConfirmUI").classList.add("votingConfirmUIClose");
-      document.querySelector(".votingConfirmUI").classList.remove("votingConfirmUI");
-      document.querySelector(".blocker").remove();
-      setTimeout(function () {
-        document.querySelector(".votingConfirmUIClose").remove();
-      }, 1200);
-    });
-    document.querySelector(".votingConfirmUI").appendChild(buttonNo);
-  }
   
   function checkShooterVoting(){
     Object.keys(players).forEach((key) => {
@@ -2610,13 +2610,65 @@ function getRandomHaloSpot() {
       }
     });
     inTownVoting = true;
+
+    const shooterSkipButton = document.createElement("div");
+    shooterSkipButton.classList.add("shooterSkipButton");
+    shooterSkipButton.innerHTML = `SKIP`
+    shooterSkipButton.addEventListener("click", () => {
+      confirmSkipTown();
+    })
+    document.querySelector(".shooterInterface").appendChild(shooterSkipButton);
+  }
+
+  function confirmSkipTown() {
+    const blocker = document.createElement("div");
+    blocker.classList.add("blocker");
+    document.querySelector(".shooterInterface").appendChild(blocker);
+
+    const skipConfirmUI = document.createElement("div");
+    skipConfirmUI.classList.add("votingConfirmUI");
+    skipConfirmUI.innerHTML = `ARE YOU SURE YOU WANT TO SKIP?`
+    document.querySelector(".shooterInterface").appendChild(skipConfirmUI);
+
+    const buttonYes = document.createElement("div");
+    buttonYes.classList.add("buttonYes");
+    buttonYes.innerHTML = `YES`;
+    buttonYes.addEventListener("click", () => {
+      
+
+
+      document.querySelector(".votingConfirmUI").classList.add("votingConfirmUIClose");
+      document.querySelector(".votingConfirmUI").classList.remove("votingConfirmUI");
+      document.querySelector(".blocker").remove();
+      setTimeout(function () {
+        document.querySelector(".votingConfirmUIClose").remove();
+      }, 1200);
+    });
+    document.querySelector(".votingConfirmUI").appendChild(buttonYes);
+
+    const buttonNo = document.createElement("div");
+    buttonNo.classList.add("buttonNo");
+    buttonNo.innerHTML = `NO`;
+    buttonNo.addEventListener("click", () => {
+      document.querySelector(".votingConfirmUI").classList.add("votingConfirmUIClose");
+      document.querySelector(".votingConfirmUI").classList.remove("votingConfirmUI");
+      document.querySelector(".blocker").remove();
+      setTimeout(function () {
+        document.querySelector(".votingConfirmUIClose").remove();
+      }, 1200);
+    });
+    document.querySelector(".votingConfirmUI").appendChild(buttonNo);
   }
   
   function checkTownVoting(){
     let numVotes = 0;
+    let numSkip = 0;
     Object.keys(players).forEach((key) => {
       if (players[key].votingCard) {
         numVotes++;
+      }
+      if (players[playerId].voteFor === "skip") {
+        numSkip++;
       }
     });
     Object.keys(players).forEach((key) => {
@@ -2625,6 +2677,9 @@ function getRandomHaloSpot() {
         endTownVoting(key);
       }
     });
+    if (numSkip >= Math.ceil(numVotes/2)) {
+      endTownVoting("skip");
+    }
   }
 
   function endTownVoting(votedPlayer) {
@@ -2663,9 +2718,17 @@ function getRandomHaloSpot() {
     executeTownKillNotification.classList.add("notification");
     document.querySelector(".gameInterface").appendChild(executeTownKillNotification);
 
-    const townKill = players[votesRef.townVote].name;
+    let successfulKill = false;
 
-    executeTownKillNotification.innerHTML = `THE TOWNSPEOPLE HAVE CHOSE TO KILL ${townKill}`;
+    if (votesRef.townVote === "skip") {
+      executeTownKillNotification.innerHTML = `THE TOWNSPEOPLE HAVE CHOSE TO SKIP`;
+    }
+    else {
+      successfulKill = true;
+      const townKill = players[votesRef.townVote].name;
+      executeTownKillNotification.innerHTML = `THE TOWNSPEOPLE HAVE CHOSE TO KILL ${townKill}`;
+    }
+
 
     setTimeout(function () {
       executeTownKillNotification.classList.add("notificationClose");
@@ -2673,33 +2736,53 @@ function getRandomHaloSpot() {
     }, 4000);
 
     setTimeout(function () {
-      document.querySelector(".notificationClose").remove();
+      if (successfulKill) {
+        document.querySelector(".notificationClose").remove();
 
-      deathAnimation(votesRef.townVote);
+        deathAnimation(votesRef.townVote);
 
-      setTimeout(function () {
-        firebase.database().ref(`players/${votesRef.townVote}`).update({
-          char: "ghost",
-          alive: false,
-          mafia: false,
-        });
-      }, 1000);
-      setTimeout(function () {
-        const gameOver = checkWin();
-        if (gameOver) {
-          return;
-        }
-        
-        console.log("START NEW ROUND");
-
-        teleportTo(85,60);
-
-        setTimeout(function() {
-          if (!inRound) {
-            nextRound();
+        setTimeout(function () {
+          firebase.database().ref(`players/${votesRef.townVote}`).update({
+            char: "ghost",
+            alive: false,
+            mafia: false,
+          });
+        }, 1000);
+        setTimeout(function () {
+          const gameOver = checkWin();
+          if (gameOver) {
+            return;
           }
-        }, 800);
-      }, 2000);
+
+          console.log("START NEW ROUND");
+
+          teleportTo(85,60);
+
+          setTimeout(function() {
+            if (!inRound) {
+              nextRound();
+            }
+          }, 800);
+        }, 2000);
+      }
+      else {
+        setTimeout(function () {
+          const gameOver = checkWin();
+          if (gameOver) {
+            return;
+          }
+
+          console.log("START NEW ROUND");
+
+          teleportTo(85,60);
+
+          setTimeout(function() {
+            if (!inRound) {
+              nextRound();
+            }
+          }, 800);
+        }, 1000);
+      }
     }, 5000);
   }
 
