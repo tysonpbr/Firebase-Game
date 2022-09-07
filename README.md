@@ -5,10 +5,8 @@
 Personal project multiplayer game based loosely on the card/party game Mafia and run via Firebase online servers.
 
 Tasks
-- add win page and "play again"
-- block skip button after shooter picks target
 - add skip button for townsvote
-- add townspeople skin button counter
+- add townspeople skip button counter
 - town vote kill shows their role
 - add UI path for when mafia and shooter kill same person
 - add name

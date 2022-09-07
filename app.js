@@ -1898,9 +1898,9 @@ function getRandomHaloSpot() {
       }, 1800);
     }
 
-    const blocker = document.createElement("div");
-    blocker.classList.add("blocker");
-    document.querySelector(".mafiaInterface").appendChild(blocker);
+    const endOfVoteBlocker = document.createElement("div");
+    endOfVoteBlocker.classList.add("endOfVoteBlocker");
+    document.querySelector(".mafiaInterface").appendChild(endOfVoteBlocker);
 
     document.querySelector(".votingUITop").classList.add("votingUITopClose");
     document.querySelector(".votingUITop").classList.remove("votingUITop");
@@ -2005,9 +2005,9 @@ function getRandomHaloSpot() {
       }, 1800);
     }
 
-    const blocker = document.createElement("div");
-    blocker.classList.add("blocker");
-    document.querySelector(".angelInterface").appendChild(blocker);
+    const endOfVoteBlocker = document.createElement("div");
+    endOfVoteBlocker.classList.add("endOfVoteBlocker");
+    document.querySelector(".angelInterface").appendChild(endOfVoteBlocker);
 
     document.querySelector(".votingUITop").classList.add("votingUITopClose");
     document.querySelector(".votingUITop").classList.remove("votingUITop");
@@ -2114,9 +2114,9 @@ function getRandomHaloSpot() {
       }, 1800);
     }
 
-    const blocker = document.createElement("div");
-    blocker.classList.add("blocker");
-    document.querySelector(".detectiveInterface").appendChild(blocker);
+    const endOfVoteBlocker = document.createElement("div");
+    endOfVoteBlocker.classList.add("endOfVoteBlocker");
+    document.querySelector(".detectiveInterface").appendChild(endOfVoteBlocker);
 
     document.querySelector(".votingUITop").classList.add("votingUITopClose");
     document.querySelector(".votingUITop").classList.remove("votingUITop");
@@ -2215,14 +2215,14 @@ function getRandomHaloSpot() {
     buttonYes.classList.add("buttonYes");
     buttonYes.innerHTML = `YES`;
     buttonYes.addEventListener("click", () => {
+      firebase.database().ref(`players/${playerId}`).update({
+        votes: 1,
+      });
       document.querySelector(".votingConfirmUI").classList.add("votingConfirmUIClose");
       document.querySelector(".votingConfirmUI").classList.remove("votingConfirmUI");
       document.querySelector(".blocker").remove();
       setTimeout(function () {
         document.querySelector(".votingConfirmUIClose").remove();
-        firebase.database().ref(`players/${playerId}`).update({
-          votes: 1,
-        });
       }, 1200);
     });
     document.querySelector(".votingConfirmUI").appendChild(buttonYes);
@@ -2272,9 +2272,9 @@ function getRandomHaloSpot() {
       }, 1800);
     }
 
-    const blocker = document.createElement("div");
-    blocker.classList.add("blocker");
-    document.querySelector(".shooterInterface").appendChild(blocker);
+    const endOfVoteBlocker = document.createElement("div");
+    endOfVoteBlocker.classList.add("endOfVoteBlocker");
+    document.querySelector(".shooterInterface").appendChild(endOfVoteBlocker);
 
     document.querySelector(".votingUITop").classList.add("votingUITopClose");
     document.querySelector(".votingUITop").classList.remove("votingUITop");
@@ -2644,9 +2644,9 @@ function getRandomHaloSpot() {
       }, 1800);
     }
 
-    const blocker = document.createElement("div");
-    blocker.classList.add("blocker");
-    document.querySelector(".townInterface").appendChild(blocker);
+    const endOfVoteBlocker = document.createElement("div");
+    endOfVoteBlocker.classList.add("endOfVoteBlocker");
+    document.querySelector(".townInterface").appendChild(endOfVoteBlocker);
 
     document.querySelector(".votingUITop").classList.add("votingUITopClose");
     document.querySelector(".votingUITop").classList.remove("votingUITop");

@@ -1246,6 +1246,19 @@ body {
   z-index: 30;
 }
 
+.endOfVoteBlocker {
+  position: absolute;
+  top: 60px;
+  left: 0px;
+  width: 400px;
+  height: 148px;
+  background: none;
+  outline: none;
+  image-rendering: pixelated;
+  overflow: hidden;
+  z-index: 30;
+}
+
 .myVote {
   padding-top: 12px;
   top: 75px;
