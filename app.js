@@ -2654,6 +2654,39 @@ function getRandomHaloSpot() {
     }, 2300);
   }
 
+  // WIN RULES AND PAGES
+
+  function checkWin() {
+    let numNormies = 0;
+    let numMafia = 0;
+    Object.keys(players).forEach((key) => {
+      if (players[key].mafia) {
+        numMafia++;
+      }
+      else if (players[key].alive) {
+        numNormies++;
+      }
+    });
+
+    if (numMafia == 0) {
+      townsPeopleWin();
+      return true;
+    }
+
+    if (numMafia == numNormies) {
+      mafiaWin();
+      return true;
+    }
+  }
+
+  function mafiaWin() {
+
+  }
+
+  function townsPeopleWin() {
+    
+  }
+
   function updateDom() {
     Object.keys(players).forEach((key) => {
       const characterState = players[key];
