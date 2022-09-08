@@ -5,15 +5,15 @@
 Personal project multiplayer game based loosely on the card/party game Mafia and run via Firebase online servers.
 
 Tasks
-- 3 player min / 12 player max
 - add play agian functionality
-
 - add name
-- improve win screen
+- create 2 (i think) more skins
 - add only one of each skin
 - add items based on alive player number and remove current items
-- game name
 - add clickable buttons 
+
+- improve win screen
+- game name
 - add music / sounds effects
 
 Tyson's Current Task

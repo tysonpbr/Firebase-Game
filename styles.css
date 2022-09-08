@@ -1492,7 +1492,7 @@ body {
   justify-content: center;
   display: inline-flex;
   transform: scale(1);
-  z-index: 8;
+  z-index: 12;
   animation: notificationAppear 0.5s steps(30);
 }
 

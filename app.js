@@ -1446,6 +1446,8 @@ function getRandomHaloSpot() {
   let isShooter = false;
   let isVoters = false;
   let playerAlive = 0;
+  let notified = false;
+  let blockNextNotification = false;
 
 
   const gameContainer = document.querySelector(".game-container");
@@ -1481,7 +1483,7 @@ function getRandomHaloSpot() {
         else if (inTownVoting) {
           clearInterval(clockInterval);
           clock.remove();
-          
+
           const endOfVoteBlocker = document.createElement("div");
           endOfVoteBlocker.classList.add("endOfVoteBlocker");
           document.querySelector(".townInterface").appendChild(endOfVoteBlocker);
@@ -1567,7 +1569,7 @@ function getRandomHaloSpot() {
       }
     });
 
-    // add item here
+    // add item here (use playerAlive)
 
     if (players[playerId].mafia && players[playerId].alive) {
       const youAreMafia = document.createElement("div");
@@ -3028,6 +3030,9 @@ function getRandomHaloSpot() {
     playAgainButton.classList.add("playAgainButton");
     playAgainButton.innerHTML = `PLAY AGAIN`;
     document.querySelector(".gameOver").appendChild(playAgainButton);
+    playAgainButton.addEventListener("click", () => {
+      playAgain()
+    });
   }
 
   function townsPeopleWin() {
@@ -3041,6 +3046,13 @@ function getRandomHaloSpot() {
     playAgainButton.classList.add("playAgainButton");
     playAgainButton.innerHTML = `PLAY AGAIN`;
     document.querySelector(".gameOver").appendChild(playAgainButton);
+    playAgainButton.addEventListener("click", () => {
+      playAgain()
+    });
+  }
+
+  function playAgain() {
+    
   }
 
   function updateDom() {
@@ -3552,22 +3564,73 @@ function getRandomHaloSpot() {
           document.querySelector(".mapUpper").style.transform = `translate3d(${ML}, ${MT}, 0)`;
           document.querySelector(".mapLower").style.transform = `translate3d(${ML}, ${MT}, 0)`;
 
+
+          Object.keys(players).forEach((key) => {
+            if ((players[key].x !== 133 || players[key].y !== 11) && inLobby && notified && !blockNextNotification) {
+              notified = false;
+            }
+          });
+
           if (players[playerId].x === 133 && players[playerId].y === 11) {
             let allPlayersHere = true;
+            let playerCount = 0;
             Object.keys(players).forEach((key) => {
               if (players[key].x !== 133 || players[key].y !== 11) {
                 allPlayersHere = false;
               }
+              playerCount++;
             });
             if (allPlayersHere && inLobby) {
-              inLobby = false;
-              teleportTo(85,60);
-              firstRound();
-              setTimeout(function() {
-                if (!inRound) {
-                  startRound();
+              if (playerCount < 4) {
+                if (!notified) {
+                  notified = true;
+                  blockNextNotification = true;
+                  const notEnoughPlayers = document.createElement("div");
+                  notEnoughPlayers.classList.add("notification");
+                  notEnoughPlayers.innerHTML = `THERE CAN BE NO FEWER THAN 4 PLAYERS TO START A GAME`;
+                  document.querySelector(".gameInterface").appendChild(notEnoughPlayers);
+                  
+                  setTimeout(function () {
+                    notEnoughPlayers.classList.add("notificationClose");
+                    notEnoughPlayers.classList.remove("notification");
+                  }, 4000);
+  
+                  setTimeout(function () {
+                    notEnoughPlayers.remove();
+                    blockNextNotification = false;
+                  }, 5000);
                 }
-              }, 800);
+              }
+              else if (playerCount > 12) {
+                if (!notified) {
+                  notified = true;
+                  blockNextNotification = true;
+                  const tooManyPlayers = document.createElement("div");
+                  tooManyPlayers.classList.add("notification");
+                  tooManyPlayers.innerHTML = `THERE CAN BE NO MORE THAN 12 PLAYERS TO START A GAME`;
+                  document.querySelector(".gameInterface").appendChild(tooManyPlayers);
+          
+                  setTimeout(function () {
+                    tooManyPlayers.classList.add("notificationClose");
+                    tooManyPlayers.classList.remove("notification");
+                  }, 4000);
+  
+                  setTimeout(function () {
+                    tooManyPlayers.remove();
+                    blockNextNotification = false;
+                  }, 5000);
+                }
+              }
+              else {
+                inLobby = false;
+                teleportTo(85,60);
+                firstRound();
+                setTimeout(function() {
+                  if (!inRound) {
+                    startRound();
+                  }
+                }, 800);
+              }
             }
           }
         }
