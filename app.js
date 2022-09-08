@@ -1366,6 +1366,7 @@ function getRandomVotingCardSpot() {
   return randomFromArray([
     { i: 84, j: 54 },
     { i: 83, j: 54 },
+    { i: 82, j: 54 },
     //{ i: 103, j: 31 },
     //{ i: 82, j: 24 },
     //{ i: 79, j: 46 },
@@ -1565,32 +1566,34 @@ function getRandomHaloSpot() {
 
     inRound = true;
 
-    const backpack = document.createElement("div");
-    backpack.classList.add("backpack");
-    document.querySelector(".gameInterface").appendChild(backpack);
-    
-    const flashlightIcon = document.createElement("div");
-    flashlightIcon.classList.add("flashlightIcon");
-    if (players[playerId].flashlight) {
-      flashlightIcon.style.background = "url(images/items/flashlightIcon.png)";
+    if (players[playerId].alive) {
+      const backpack = document.createElement("div");
+      backpack.classList.add("backpack");
+      document.querySelector(".gameInterface").appendChild(backpack);
+      
+      const flashlightIcon = document.createElement("div");
+      flashlightIcon.classList.add("flashlightIcon");
+      if (players[playerId].flashlight) {
+        flashlightIcon.style.background = "url(images/items/flashlightIcon.png)";
+      }
+      backpack.appendChild(flashlightIcon);
+
+      const gunIcon = document.createElement("div");
+      gunIcon.classList.add("gunIcon");
+      backpack.appendChild(gunIcon);
+
+      const haloIcon = document.createElement("div");
+      haloIcon.classList.add("haloIcon");
+      backpack.appendChild(haloIcon);
+
+      const magnifyingGlassIcon = document.createElement("div");
+      magnifyingGlassIcon.classList.add("magnifyingGlassIcon");
+      backpack.appendChild(magnifyingGlassIcon);
+
+      const votingCardIcon = document.createElement("div");
+      votingCardIcon.classList.add("votingCardIcon");
+      backpack.appendChild(votingCardIcon);
     }
-    backpack.appendChild(flashlightIcon);
-    
-    const gunIcon = document.createElement("div");
-    gunIcon.classList.add("gunIcon");
-    backpack.appendChild(gunIcon);
-
-    const haloIcon = document.createElement("div");
-    haloIcon.classList.add("haloIcon");
-    backpack.appendChild(haloIcon);
-
-    const magnifyingGlassIcon = document.createElement("div");
-    magnifyingGlassIcon.classList.add("magnifyingGlassIcon");
-    backpack.appendChild(magnifyingGlassIcon);
-
-    const votingCardIcon = document.createElement("div");
-    votingCardIcon.classList.add("votingCardIcon");
-    backpack.appendChild(votingCardIcon);
 
     if (players[playerId].flashlight && players[playerId].alive){
       const shadowBig = document.createElement("div");
@@ -1643,11 +1646,13 @@ function getRandomHaloSpot() {
         }, 500);
       }
 
-      document.querySelector(".backpack").classList.add("backpackClose");
-      document.querySelector(".backpack").classList.remove("backpack");
-      setTimeout(function() {
-        document.querySelector(".backpackClose").remove();
-      }, 500);
+      if (players[playerId].alive) {
+        document.querySelector(".backpack").classList.add("backpackClose");
+        document.querySelector(".backpack").classList.remove("backpack");
+        setTimeout(function() {
+          document.querySelector(".backpackClose").remove();
+        }, 500);
+      }
 
       if (players[playerId].flashlight && players[playerId].alive){
         document.querySelector(".shadowBig").remove();
@@ -2381,6 +2386,11 @@ function getRandomHaloSpot() {
             char: "ghost",
             alive: false,
             mafia: false,
+            votingCard: false,
+            gun: false,
+            flashlight: false,
+            magnifyingGlass: false,
+            halo: false,
           });
         }, 1000);
 
@@ -2443,6 +2453,11 @@ function getRandomHaloSpot() {
             char: "ghost",
             alive: false,
             mafia: false,
+            votingCard: false,
+            gun: false,
+            flashlight: false,
+            magnifyingGlass: false,
+            halo: false,
           });
         }, 1000);
 
@@ -2551,8 +2566,18 @@ function getRandomHaloSpot() {
 
     const votingUITop = document.createElement("div");
     votingUITop.classList.add("votingUITop");
-    votingUITop.innerHTML = `THE TOWNS PEOPLE ARE MEETING`
+    votingUITop.innerHTML = `THE TOWNS PEOPLE ARE MEETING`;
     document.querySelector(".townInterface").appendChild(votingUITop);
+
+    const skipButtonCounterSpace = document.createElement("div");
+    skipButtonCounterSpace.classList.add("skipButtonCounterSpace");
+    skipButtonCounterSpace.innerHTML = `SKIP`;
+    document.querySelector(".townInterface").appendChild(skipButtonCounterSpace);
+
+    const skipButtonCounter = document.createElement("div");
+    skipButtonCounter.classList.add("skipButtonCounter");
+    skipButtonCounter.innerHTML = `0`;
+    document.querySelector(".skipButtonCounterSpace").appendChild(skipButtonCounter);
 
     inTownVoting = true;
   }
@@ -2567,6 +2592,16 @@ function getRandomHaloSpot() {
     votingUITop.innerHTML = `WHO DO THE TOWNS PEOPLE THINK IS IN THE MAFIA?`
     document.querySelector(".townInterface").appendChild(votingUITop);
 
+    const skipButtonCounterSpace = document.createElement("div");
+    skipButtonCounterSpace.classList.add("skipButtonCounterSpace");
+    skipButtonCounterSpace.innerHTML = `SKIP`;
+    document.querySelector(".townInterface").appendChild(skipButtonCounterSpace);
+
+    const skipButtonCounter = document.createElement("div");
+    skipButtonCounter.classList.add("skipButtonCounter");
+    skipButtonCounter.innerHTML = `0`;
+    document.querySelector(".skipButtonCounterSpace").appendChild(skipButtonCounter);
+
     Object.keys(players).forEach((key) => {
       if (players[key].alive) {
         const divLeft = (16 * (players[key].x - players[playerId].x)) + 193 + "px";
@@ -2575,7 +2610,7 @@ function getRandomHaloSpot() {
           const button = document.createElement("div");
           button.classList.add("b3");
           button.addEventListener("click", () => {
-            if (players[playerId].voteFor === "none") {
+            if (players[playerId].voteFor === "none" || players[playerId].voteFor === "skip") {
               const potentialVote = document.createElement("div");
               potentialVote.classList.add("potentialVote");
               const divLeft = (16 * (players[p].x - players[playerId].x)) + 197 + "px";
@@ -2634,6 +2669,11 @@ function getRandomHaloSpot() {
     buttonYes.classList.add("buttonYes");
     buttonYes.innerHTML = `YES`;
     buttonYes.addEventListener("click", () => {
+
+      const myVote = document.querySelector(".myVote");
+      if (myVote) {
+        myVote.remove();
+      }
 
       if (players[playerId].voteFor === "none") {
         firebase.database().ref(`players/${playerId}`).update({
@@ -2769,6 +2809,11 @@ function getRandomHaloSpot() {
             char: "ghost",
             alive: false,
             mafia: false,
+            votingCard: false,
+            gun: false,
+            flashlight: false,
+            magnifyingGlass: false,
+            halo: false,
           });
         }, 1000);
         setTimeout(function () {
@@ -2969,6 +3014,7 @@ function getRandomHaloSpot() {
   function placeItems() {
     placeFlashlight();
     placeGun();
+    placeVotingCard();
     placeVotingCard();
     placeVotingCard();
     placeMagnifyingGlass();
@@ -3315,6 +3361,16 @@ function getRandomHaloSpot() {
           const voteCounter = document.querySelector(".user-" + key);
           if (voteCounter) {
             voteCounter.innerHTML = `${players[key].votes}`;
+          }
+          const skipButtonCounter = document.querySelector(".skipButtonCounter");
+          if (skipButtonCounter) {
+            let numSkip = 0;
+            Object.keys(players).forEach((key) => {
+              if (players[key].voteFor === "skip") {
+                numSkip++;
+              }
+            });
+            skipButtonCounter.innerHTML = `${numSkip}`;
           }
         }
 

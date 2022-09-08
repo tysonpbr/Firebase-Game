@@ -5,7 +5,6 @@
 Personal project multiplayer game based loosely on the card/party game Mafia and run via Firebase online servers.
 
 Tasks
-- add townspeople skip button counter
 - town vote kill and shooter kill shows dead players role
 - if shooter kills normie, they die also 
 - add UI path for when mafia and shooter kill same person

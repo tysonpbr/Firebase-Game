@@ -1551,6 +1551,44 @@ body {
   z-index: 8;
 }
 
+.skipButtonCounterSpace {
+  position: absolute;
+  padding-top: 2px;
+  width: 30px;
+  height: 36px;
+  top: 140px;
+  left: 351px;
+  outline: none;
+  background: #777;
+  outline: 2px solid white;
+  font-family: silkscreen;
+  font-size: 8px;
+  color: white;
+  justify-content: center;
+  display: inline-flex;
+  transform: scale(1);
+  z-index: 8;
+}
+
+.skipButtonCounter {
+  position: absolute;
+  padding-top: 0px;
+  width: 22px;
+  height: 20px;
+  top: 12px;
+  left: 4px;
+  outline: none;
+  background: white;
+  outline: none;
+  font-family: silkscreen;
+  font-size: 20px;
+  color: black;
+  justify-content: center;
+  display: inline-flex;
+  transform: scale(1);
+  z-index: 8;
+}
+
 .bomb {
   position: absolute;
   width: 32px;
