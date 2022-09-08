@@ -5,7 +5,6 @@
 Personal project multiplayer game based loosely on the card/party game Mafia and run via Firebase online servers.
 
 Tasks
-- add timer to town vote
 - 3 player min / 12 player max
 - add play agian functionality
 

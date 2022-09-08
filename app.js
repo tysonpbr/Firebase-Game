@@ -1452,8 +1452,8 @@ function getRandomHaloSpot() {
   const playerSkinButton = document.querySelector("#b2");
   const startButton = document.querySelector("#b1");
 
-  function startClock() {
-    startTime = 15/60; //min
+  function startClock(sec) {
+    startTime = sec/60; //min
     time = startTime * 60; //secs
     clock = document.createElement("div");
     clock.classList.add("timer");
@@ -1475,7 +1475,26 @@ function getRandomHaloSpot() {
 
     if (time === 0) {
       setTimeout(function() {
-        endRound();
+        if (inRound) {
+          endRound();
+        }
+        else if (inTownVoting) {
+          clearInterval(clockInterval);
+          clock.remove();
+          
+          const endOfVoteBlocker = document.createElement("div");
+          endOfVoteBlocker.classList.add("endOfVoteBlocker");
+          document.querySelector(".townInterface").appendChild(endOfVoteBlocker);
+
+          document.querySelector(".votingUITop").classList.add("votingUITopClose");
+          document.querySelector(".votingUITop").classList.remove("votingUITop");
+          setTimeout(function () {
+            document.querySelector(".townInterface").remove();
+          }, 1600);
+          setTimeout(function () {
+            exectuteTownKill();
+          }, 3000);
+        }
       }, 1500);
     }
 
@@ -1562,7 +1581,7 @@ function getRandomHaloSpot() {
       }, 800);
     }
 
-    startClock();
+    startClock(15);
 
     inRound = true;
 
@@ -2654,6 +2673,8 @@ function getRandomHaloSpot() {
       return;
     }
 
+    startClock(30);
+
     const townInterface = document.createElement("div");
     townInterface.classList.add("townInterface");
     document.querySelector(".gameInterface").appendChild(townInterface);
@@ -2677,6 +2698,8 @@ function getRandomHaloSpot() {
   }
 
   function startTownVoting() {
+    startClock(30);
+
     const townInterface = document.createElement("div");
     townInterface.classList.add("townInterface");
     document.querySelector(".gameInterface").appendChild(townInterface);
@@ -2879,6 +2902,9 @@ function getRandomHaloSpot() {
 
     if (votesRef.townVote === "skip") {
       executeTownKillNotification.innerHTML = `THE TOWNSPEOPLE HAVE CHOSEN TO SKIP`;
+    }
+    else if (votesRef.townVote === "none") {
+      executeTownKillNotification.innerHTML = `THE TOWNS VOTE WAS INDECISIVE`;
     }
     else {
       successfulKill = true;

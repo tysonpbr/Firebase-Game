@@ -39,7 +39,7 @@ body {
   width: 44px;
   height: 16px;
   outline: 2px solid #fff;
-  z-index: 6;
+  z-index: 30;
 }
 
 .game-container {
