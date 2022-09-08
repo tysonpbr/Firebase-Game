@@ -2421,6 +2421,23 @@ function getRandomHaloSpot() {
   }
 
   function exectuteShooterKill() {
+    if (votesRef.mafiaVote === votesRef.shooterVote) {
+      const executeShooterKillNotification = document.createElement("div");
+      executeShooterKillNotification.classList.add("notification");
+      document.querySelector(".gameInterface").appendChild(executeShooterKillNotification);
+      executeShooterKillNotification.innerHTML = `${players[votesRef.shooterVote].name} WAS DEAD BEFORE THE SHOOTER COULD KILL THEM`;
+
+      setTimeout(function () {
+        executeShooterKillNotification.classList.add("notificationClose");
+        executeShooterKillNotification.classList.remove("notification");
+      }, 4000);
+
+      setTimeout(function () {
+        exectuteInvestigation();
+      }, 5000);
+      return;
+    }
+
     const executeShooterKillNotification = document.createElement("div");
     executeShooterKillNotification.classList.add("notification");
     document.querySelector(".gameInterface").appendChild(executeShooterKillNotification);
@@ -2572,10 +2589,10 @@ function getRandomHaloSpot() {
 
     if (players[playerId].magnifyingGlass) {
       if (players[suspect].mafia) {
-        executeInvestigationNotification.innerHTML = `${players[suspect].name} IS IN THE MAFIA`;
+        executeInvestigationNotification.innerHTML = `INVESTIGATION RESULT: ${players[suspect].name} IS IN THE MAFIA`;
       }
       else {
-        executeInvestigationNotification.innerHTML = `${players[suspect].name} IS A NORMIE`;
+        executeInvestigationNotification.innerHTML = `INVESTIGATION RESULT: ${players[suspect].name} IS A NORMIE`;
       }
     }
     else {
