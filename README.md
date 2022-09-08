@@ -7,11 +7,14 @@ Personal project multiplayer game based loosely on the card/party game Mafia and
 Tasks
 - town vote kill and shooter kill shows dead players role
 - if shooter kills normie, they die also 
+
 - add UI path for when mafia and shooter kill same person
 - add name
 - add only one of each skin
 - add items based on alive player number
 - add ghost can walk over people
+- add new detective message
+- change town vote to strict majority with timer
 - 3 player min / 12 player max
 - game name
 - add play agian functionality

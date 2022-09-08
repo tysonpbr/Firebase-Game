@@ -2427,6 +2427,8 @@ function getRandomHaloSpot() {
 
     let successfulKill = false;
 
+    let killedMafia = false;
+
     const shooterKill = players[votesRef.shooterVote].name;
 
     if (votesRef.angelVote === votesRef.shooterVote) {
@@ -2446,6 +2448,10 @@ function getRandomHaloSpot() {
       document.querySelector(".notificationClose").remove();
       if (successfulKill) {
 
+        if (players[votesRef.shooterVote].mafia) {
+          killedMafia = true;
+        }
+
         deathAnimation(votesRef.shooterVote);
 
         setTimeout(function () {
@@ -2462,13 +2468,84 @@ function getRandomHaloSpot() {
         }, 1000);
 
         setTimeout(function () {
-          const gameOver = checkWin();
 
-          if (gameOver) {
-            return;
+          const executeShooterKillNotification = document.createElement("div");
+          executeShooterKillNotification.classList.add("notification");
+          document.querySelector(".gameInterface").appendChild(executeShooterKillNotification);
+
+          if (killedMafia) {
+            executeShooterKillNotification.innerHTML = `${shooterKill} WAS IN THE MAFIA`;
           }
+          else {
+            executeShooterKillNotification.innerHTML = `${shooterKill} WAS A NORMIE`;
+          }
+          
+          setTimeout(function () {
+            executeShooterKillNotification.classList.add("notificationClose");
+            executeShooterKillNotification.classList.remove("notification");
+          }, 4000);
 
-          exectuteInvestigation();
+          setTimeout(function () {
+            document.querySelector(".notificationClose").remove();
+            if (killedMafia) {
+              const gameOver = checkWin();
+              if (gameOver) {
+                return;
+              }
+
+              exectuteInvestigation();
+            }
+            else {
+              const executeShooterKillNotification = document.createElement("div");
+              executeShooterKillNotification.classList.add("notification");
+              document.querySelector(".gameInterface").appendChild(executeShooterKillNotification);
+
+              let shooter = "name";
+
+              Object.keys(players).forEach((key) => {
+                if (players[key].gun) {
+                  shooter = key;
+                }
+              });
+
+              executeShooterKillNotification.innerHTML = `THEREFORE ${players[shooter].name} DIES ALSO`;
+
+              setTimeout(function () {
+                executeShooterKillNotification.classList.add("notificationClose");
+                executeShooterKillNotification.classList.remove("notification");
+              }, 4000);
+            
+              setTimeout(function () {
+                document.querySelector(".notificationClose").remove();
+
+                deathAnimation(shooter);
+
+                setTimeout(function () {
+                  firebase.database().ref(`players/${shooter}`).update({
+                    char: "ghost",
+                    alive: false,
+                    mafia: false,
+                    votingCard: false,
+                    gun: false,
+                    flashlight: false,
+                    magnifyingGlass: false,
+                    halo: false,
+                  });
+                }, 1000);
+
+                setTimeout(function () {
+                  const gameOver = checkWin();
+                  if (gameOver) {
+                    return;
+                  }
+                
+                  exectuteInvestigation();
+                }, 2000);
+                
+              }, 5000);
+            }
+
+          }, 5000);
         }, 2000);
       }
       else {
@@ -2566,7 +2643,7 @@ function getRandomHaloSpot() {
 
     const votingUITop = document.createElement("div");
     votingUITop.classList.add("votingUITop");
-    votingUITop.innerHTML = `THE TOWNS PEOPLE ARE MEETING`;
+    votingUITop.innerHTML = `THE TOWNSPEOPLE ARE MEETING`;
     document.querySelector(".townInterface").appendChild(votingUITop);
 
     const skipButtonCounterSpace = document.createElement("div");
@@ -2589,7 +2666,7 @@ function getRandomHaloSpot() {
 
     const votingUITop = document.createElement("div");
     votingUITop.classList.add("votingUITop");
-    votingUITop.innerHTML = `WHO DO THE TOWNS PEOPLE THINK IS IN THE MAFIA?`
+    votingUITop.innerHTML = `WHO DO THE TOWNSPEOPLE THINK IS IN THE MAFIA?`
     document.querySelector(".townInterface").appendChild(votingUITop);
 
     const skipButtonCounterSpace = document.createElement("div");
@@ -2784,14 +2861,13 @@ function getRandomHaloSpot() {
     let successfulKill = false;
 
     if (votesRef.townVote === "skip") {
-      executeTownKillNotification.innerHTML = `THE TOWNSPEOPLE HAVE CHOSE TO SKIP`;
+      executeTownKillNotification.innerHTML = `THE TOWNSPEOPLE HAVE CHOSEN TO SKIP`;
     }
     else {
       successfulKill = true;
       const townKill = players[votesRef.townVote].name;
-      executeTownKillNotification.innerHTML = `THE TOWNSPEOPLE HAVE CHOSE TO KILL ${townKill}`;
+      executeTownKillNotification.innerHTML = `THE TOWNSPEOPLE HAVE CHOSEN TO KILL ${townKill}`;
     }
-
 
     setTimeout(function () {
       executeTownKillNotification.classList.add("notificationClose");
@@ -2801,6 +2877,12 @@ function getRandomHaloSpot() {
     setTimeout(function () {
       if (successfulKill) {
         document.querySelector(".notificationClose").remove();
+
+        let wasMafia = false;
+
+        if (players[votesRef.townVote].mafia) {
+          wasMafia = true;
+        }
 
         deathAnimation(votesRef.townVote);
 
@@ -2817,18 +2899,35 @@ function getRandomHaloSpot() {
           });
         }, 1000);
         setTimeout(function () {
-          const gameOver = checkWin();
-          if (gameOver) {
-            return;
+          const executeTownKillNotification = document.createElement("div");
+          executeTownKillNotification.classList.add("notification");
+          document.querySelector(".gameInterface").appendChild(executeTownKillNotification);
+
+          if (wasMafia) {
+            executeTownKillNotification.innerHTML = `${players[votesRef.townVote].name} WAS IN THE MAFIA`;
           }
+          else {
+            executeTownKillNotification.innerHTML = `${players[votesRef.townVote].name} WAS A NORMIE`;
+          }
+        
+          setTimeout(function () {
+            executeTownKillNotification.classList.add("notificationClose");
+            executeTownKillNotification.classList.remove("notification");
+          }, 4000);
 
-          teleportTo(85,60);
-
-          setTimeout(function() {
-            if (!inRound) {
-              nextRound();
+          setTimeout(function () {
+            const gameOver = checkWin();
+            if (gameOver) {
+              return;
             }
-          }, 800);
+
+            teleportTo(85,60);
+            setTimeout(function() {
+              if (!inRound) {
+                nextRound();
+              }
+            }, 800);
+          }, 5000);
         }, 2000);
       }
       else {
@@ -2892,7 +2991,7 @@ function getRandomHaloSpot() {
 
     const gameOver = document.createElement("div");
     gameOver.classList.add("gameOver");
-    gameOver.innerHTML = `THE TOWNSPEOPLE WIN`;
+    gameOver.innerHTML = `THE NORMIES WIN`;
     document.querySelector(".gameInterface").appendChild(gameOver);
 
     const playAgainButton = document.createElement("div");
