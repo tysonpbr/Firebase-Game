@@ -2827,12 +2827,12 @@ function getRandomHaloSpot() {
       }
     });
     Object.keys(players).forEach((key) => {
-      if (players[key].votes >= Math.ceil(numVotes/2) && inTownVoting) {
+      if (players[key].votes > Math.floor(numVotes/2) && inTownVoting) {
         inTownVoting = false;
         endTownVoting(key);
       }
     });
-    if (numSkip >= Math.ceil(numVotes/2) && inTownVoting) {
+    if (numSkip > Math.floor(numVotes/2) && inTownVoting) {
       inTownVoting = false;
       endTownVoting("skip");
     }
@@ -3348,7 +3348,7 @@ function getRandomHaloSpot() {
         }
       }
       for (const player in players) {
-        if (players[player].x === newX && players[player].y === newY && players[player].alive) {
+        if (players[player].x === newX && players[player].y === newY && players[player].alive && players[playerId].alive) {
           playerInNextSpace = true;
         }
       }
