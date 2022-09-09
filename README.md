@@ -10,9 +10,9 @@ Tasks
 - add items based on alive player number
 - create 2 (i think) more skins
 - add only one of each skin
-- add clickable buttons 
 
 - improve win screen
+- add clickable buttons 
 - game name
 - add music / sounds effects
 

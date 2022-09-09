@@ -1463,8 +1463,17 @@ function getRandomHaloSpot() {
 
 
   const gameContainer = document.querySelector(".game-container");
-  const playerSkinButton = document.querySelector("#b2");
   const startButton = document.querySelector("#b1");
+
+  //const playerNameInput = document.querySelector("#player-name");
+//
+  //playerNameInput.addEventListener("change", (e) => {
+  //  const newName = e.target.value || createName();
+  //  playerNameInput.value = newName;
+  //  playerRef.update({
+  //    name: newName
+  //  })
+  //})
 
   function startClock(sec) {
     startTime = sec/60; //min
@@ -3926,7 +3935,7 @@ function getRandomHaloSpot() {
       delete haloElements[keyToRemove];
     });
 
-    playerSkinButton.addEventListener("click", () => {
+    function nextSkin() {
       const mySkinIndex = skinID.indexOf(players[playerId].char);
       const nextSkin = skinID[mySkinIndex + 1] || skinID[0];
       playerRef.update({
@@ -3963,17 +3972,119 @@ function getRandomHaloSpot() {
       if (nextSkin === "nine") {
         skinPreview.style.background="url(images/characters/9.png)";
       }
-    });
+    }
 
     startButton.addEventListener("click", () => {
-      mySkin = players[playerId].char;
-      document.querySelector('.stillScreen').remove();
-      document.querySelector('.scrollScreen').remove();
-      document.querySelector('.buttons').remove();
-      setTimeout(function () {
-        inTitleScreen = false;
-      },200);
+      removeTitleAndStartButton();
     });
+
+    function removeTitleAndStartButton() {
+      const gameTitle = document.querySelector('.gameTitle');
+      const startButton = document.querySelector('.b1');
+
+      gameTitle.classList.add('gameTitleClose');
+      gameTitle.classList.remove('gameTitle');
+
+      startButton.classList.add('b1Close');
+      startButton.classList.remove('b1');
+
+      setTimeout(function () {
+        gameTitle.remove();
+        startButton.remove();
+
+        chooseSkinAndName();
+      },500);
+    }
+
+    function chooseSkinAndName() {
+      const changeSkinButton = document.createElement("div");
+      changeSkinButton.classList.add("b2");
+      changeSkinButton.innerHTML = `CHANGE SKIN`;
+      changeSkinButton.addEventListener("click", () => {
+        nextSkin();
+      });
+      document.querySelector(".buttons").appendChild(changeSkinButton);
+
+      const confirmButton = document.createElement("div");
+      confirmButton.classList.add("b4");
+      confirmButton.innerHTML = `CONFIRM`;
+      confirmButton.addEventListener("click", () => {
+        confirmRemoveTitleScreen();
+      });
+      document.querySelector(".buttons").appendChild(confirmButton);
+
+      const skinPreview = document.createElement("div");
+      skinPreview.classList.add("skinPreview");
+      document.querySelector(".stillScreen").appendChild(skinPreview);
+
+      const nameTextBox = document.createElement("input");
+      nameTextBox.classList.add("nameTextBox");
+      nameTextBox.maxLength = "10";
+      nameTextBox.type = "text";
+      nameTextBox.spellcheck = false;
+      nameTextBox.value = "YOUR NAME HERE";
+      document.querySelector(".buttons").appendChild(nameTextBox);
+    }
+
+    function confirmRemoveTitleScreen() {
+      const titleBlocker = document.createElement("div");
+      titleBlocker.classList.add("titleBlocker");
+      document.querySelector(".buttons").appendChild(titleBlocker);
+
+      const startConfirmUI = document.createElement("div");
+      startConfirmUI.classList.add("startConfirmUI");
+      startConfirmUI.innerHTML = `ARE YOU SURE YOU WANT TO CHOOSE THIS NAME AND SKIN`
+      document.querySelector(".buttons").appendChild(startConfirmUI);
+
+      const buttonYes = document.createElement("div");
+      buttonYes.classList.add("buttonYes");
+      buttonYes.innerHTML = `YES`;
+      buttonYes.style.top = "45px"
+      buttonYes.addEventListener("click", () => {
+        document.querySelector(".startConfirmUI").classList.add("startConfirmUIClose");
+        document.querySelector(".startConfirmUI").classList.remove("startConfirmUI");
+        setTimeout(function () {
+          document.querySelector(".titleBlocker").remove();
+          removeTitleScreen();
+          document.querySelector(".startConfirmUIClose").remove();
+        }, 400);
+      });
+      document.querySelector(".startConfirmUI").appendChild(buttonYes);
+
+      const buttonNo = document.createElement("div");
+      buttonNo.classList.add("buttonNo");
+      buttonNo.innerHTML = `NO`;
+      buttonNo.style.top = "45px"
+      buttonNo.addEventListener("click", () => {
+        document.querySelector(".startConfirmUI").classList.add("startConfirmUIClose");
+        document.querySelector(".startConfirmUI").classList.remove("startConfirmUI");
+        document.querySelector(".titleBlocker").remove();
+        setTimeout(function () {
+          document.querySelector(".startConfirmUIClose").remove();
+        }, 400);
+      });
+      document.querySelector(".startConfirmUI").appendChild(buttonNo);
+    }
+
+    function removeTitleScreen() {
+      document.querySelector(".buttons").classList.add("buttonsClose");
+      document.querySelector(".buttons").classList.remove("buttons");
+      setTimeout(function () {
+        document.querySelector(".buttonsClose").remove();
+      }, 500);
+
+      document.querySelector(".stillScreen").classList.add("stillScreenClose");
+      document.querySelector(".stillScreen").classList.remove("stillScreen");
+      setTimeout(function () {
+        document.querySelector(".stillScreenClose").remove();
+      }, 500);
+
+      document.querySelector(".scrollScreen").classList.add("scrollScreenClose");
+      document.querySelector(".scrollScreen").classList.remove("scrollScreen");
+      setTimeout(function () {
+        document.querySelector(".scrollScreenClose").remove();
+      }, 500);
+    }
 
   }
 
