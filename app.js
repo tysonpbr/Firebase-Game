@@ -1437,7 +1437,7 @@ function getRandomHaloSpot() {
   let magnifyingGlassElements = {};
   let halos = {};
   let haloElements = {};
-  let mySkin;
+  let mySkin = "zero";
   let inRound = false;
   let inLobby = true;
   const startingX = 133;
@@ -1460,20 +1460,11 @@ function getRandomHaloSpot() {
   let playerAlive = 0;
   let notified = false;
   let blockNextNotification = false;
+  let changedName = false;
 
 
   const gameContainer = document.querySelector(".game-container");
   const startButton = document.querySelector("#b1");
-
-  //const playerNameInput = document.querySelector("#player-name");
-//
-  //playerNameInput.addEventListener("change", (e) => {
-  //  const newName = e.target.value || createName();
-  //  playerNameInput.value = newName;
-  //  playerRef.update({
-  //    name: newName
-  //  })
-  //})
 
   function startClock(sec) {
     startTime = sec/60; //min
@@ -1662,6 +1653,12 @@ function getRandomHaloSpot() {
     isAngel = false;
     isShooter = false;
     isVoters = false;
+
+    firebase.database().ref(`gun`).remove();
+    firebase.database().ref(`flashlight`).remove();
+    firebase.database().ref(`halo`).remove();
+    firebase.database().ref(`magnifyingGlass`).remove();
+    firebase.database().ref(`votingCard`).remove();
 
     Object.keys(players).forEach((key) => {
       if (players[key].magnifyingGlass) {
@@ -4023,6 +4020,18 @@ function getRandomHaloSpot() {
       nameTextBox.type = "text";
       nameTextBox.spellcheck = false;
       nameTextBox.value = "YOUR NAME HERE";
+      nameTextBox.addEventListener("change", (e) => {
+        const newName = e.target.value;
+        playerRef.update({
+          name: newName
+        })
+      })
+      nameTextBox.addEventListener("click", (e) => {
+        if (!changedName) {
+          changedName = true;
+          nameTextBox.value = "";
+        }
+      })
       document.querySelector(".buttons").appendChild(nameTextBox);
     }
 
@@ -4044,9 +4053,45 @@ function getRandomHaloSpot() {
         document.querySelector(".startConfirmUI").classList.add("startConfirmUIClose");
         document.querySelector(".startConfirmUI").classList.remove("startConfirmUI");
         setTimeout(function () {
-          document.querySelector(".titleBlocker").remove();
-          removeTitleScreen();
           document.querySelector(".startConfirmUIClose").remove();
+          if (players[playerId].name.length > 0 && changedName) {
+            document.querySelector(".titleBlocker").remove();
+            removeTitleScreen();
+          }
+          else if (!changedName) {
+            const nameNotification = document.createElement("div");
+            nameNotification.classList.add("notification");
+            document.querySelector(".buttons").appendChild(nameNotification);
+
+            nameNotification.innerHTML = `YOU MUST ENTER A NAME`;
+
+            setTimeout(function () {
+              nameNotification.classList.add("notificationClose");
+              nameNotification.classList.remove("notification");
+            }, 4000);
+          
+            setTimeout(function () {
+              document.querySelector(".notificationClose").remove();
+              document.querySelector(".titleBlocker").remove();
+            }, 5000);
+          }
+          else if (players[playerId].name.length <= 0) {
+            const nameNotification = document.createElement("div");
+            nameNotification.classList.add("notification");
+            document.querySelector(".buttons").appendChild(nameNotification);
+
+            nameNotification.innerHTML = `YOUR NAME CANNOT BE BLANK`;
+
+            setTimeout(function () {
+              nameNotification.classList.add("notificationClose");
+              nameNotification.classList.remove("notification");
+            }, 4000);
+          
+            setTimeout(function () {
+              document.querySelector(".notificationClose").remove();
+              document.querySelector(".titleBlocker").remove();
+            }, 5000);
+          }
         }, 400);
       });
       document.querySelector(".startConfirmUI").appendChild(buttonYes);
@@ -4067,22 +4112,23 @@ function getRandomHaloSpot() {
     }
 
     function removeTitleScreen() {
+      mySkin = players[playerId].char;
+      
       document.querySelector(".buttons").classList.add("buttonsClose");
       document.querySelector(".buttons").classList.remove("buttons");
-      setTimeout(function () {
-        document.querySelector(".buttonsClose").remove();
-      }, 500);
 
       document.querySelector(".stillScreen").classList.add("stillScreenClose");
       document.querySelector(".stillScreen").classList.remove("stillScreen");
-      setTimeout(function () {
-        document.querySelector(".stillScreenClose").remove();
-      }, 500);
 
       document.querySelector(".scrollScreen").classList.add("scrollScreenClose");
       document.querySelector(".scrollScreen").classList.remove("scrollScreen");
+
       setTimeout(function () {
+        document.querySelector(".buttonsClose").remove();
+        document.querySelector(".stillScreenClose").remove();
         document.querySelector(".scrollScreenClose").remove();
+
+        inTitleScreen = false;
       }, 500);
     }
 
@@ -4094,7 +4140,7 @@ function getRandomHaloSpot() {
       playerRef = firebase.database().ref(`players/${playerId}`);
 
       playerRef.set({
-        name: "Tyson",
+        name: "",
         id: playerId,
         direction: "down",
         char: "zero",

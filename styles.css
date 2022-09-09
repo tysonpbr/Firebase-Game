@@ -1031,7 +1031,7 @@ body {
   color: black;
   justify-content: center;
   display: inline-flex;
-  outline: 4px solid #653184;
+  outline: 3px solid #653184;
   animation: nameAppear 0.5s steps(80);
 }
 @keyframes nameAppear {
