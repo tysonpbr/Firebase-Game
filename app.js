@@ -6,6 +6,17 @@ const mapData = {
   blockedSpaces: {
 
     /* LOBBY */
+    "131x18": true,
+    "131x19": true,
+    "132x17": true,
+    "132x18": true,
+    "132x19": true,
+    "133x19": true,
+    "134x18": true,
+    "134x19": true,
+    "135x18": true,
+    "135x19": true,
+
     "127x20": true,
     "128x20": true,
     "129x20": true,
@@ -1430,7 +1441,7 @@ function getRandomHaloSpot() {
   let inRound = false;
   let inLobby = true;
   const startingX = 133;
-  const startingY = 17;
+  const startingY = 18;
   let startTime;
   let time;
   let clock;
@@ -3175,8 +3186,8 @@ function getRandomHaloSpot() {
           attemptGrabHalo(players[playerId].x, players[playerId].y);
         }
 
-        const ML = ((startingX - players[playerId].x) * 16) + 'px';
-        const MT = ((startingY - players[playerId].y) * 16) + 'px';
+        const ML = ((133 - players[playerId].x) * 16) + 'px';
+        const MT = ((17 - players[playerId].y) * 16) + 'px';
 
         document.querySelector(".mapUpper").style.transform = `translate3d(${ML}, ${MT}, 0)`;
         document.querySelector(".mapLower").style.transform = `translate3d(${ML}, ${MT}, 0)`;
@@ -3625,8 +3636,8 @@ function getRandomHaloSpot() {
             attemptGrabHalo(players[playerId].x, players[playerId].y);
           }
 
-          const ML = ((startingX - players[playerId].x) * 16) + 'px';
-          const MT = ((startingY - players[playerId].y) * 16) + 'px';
+          const ML = ((133 - players[playerId].x) * 16) + 'px';
+          const MT = ((17 - players[playerId].y) * 16) + 'px';
 
           document.querySelector(".mapUpper").style.transform = `translate3d(${ML}, ${MT}, 0)`;
           document.querySelector(".mapLower").style.transform = `translate3d(${ML}, ${MT}, 0)`;
