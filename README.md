@@ -5,7 +5,7 @@
 Personal project multiplayer game based loosely on the card/party game Mafia and run via Firebase online servers.
 
 Tasks
-- add items based on alive player number
+- add items locations
 - add mafia companion list
 - create 2 (i think) more skins
 - add only one of each skin

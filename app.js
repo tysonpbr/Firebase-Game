@@ -1378,6 +1378,9 @@ function getRandomVotingCardSpot() {
     { i: 84, j: 54 },
     { i: 83, j: 54 },
     { i: 82, j: 54 },
+    { i: 84, j: 55 },
+    { i: 83, j: 55 },
+    { i: 82, j: 55 },
     //{ i: 103, j: 31 },
     //{ i: 82, j: 24 },
     //{ i: 79, j: 46 },
@@ -1402,6 +1405,8 @@ function getRandomGunSpot() {
 
 function getRandomFlashlightSpot() {
   return randomFromArray([
+    { i: 86, j: 54 },
+    { i: 86, j: 55 },
     { i: 86, j: 54 },
   ]);
 }
@@ -1522,6 +1527,12 @@ function getRandomHaloSpot() {
     }
     if (playerOrder[0] === playerId) {
 
+      firebase.database().ref(`gun`).remove();
+      firebase.database().ref(`flashlight`).remove();
+      firebase.database().ref(`halo`).remove();
+      firebase.database().ref(`magnifyingGlass`).remove();
+      firebase.database().ref(`votingCard`).remove();
+
       firebase.database().ref(`votes`).set({
         mafiaVote: "none",
         angelVote: "none",
@@ -1583,7 +1594,22 @@ function getRandomHaloSpot() {
       }
     });
 
-    // add item here (use playerAlive)
+    if (playerOrder[0] === playerId) {
+      placeMagnifyingGlass();
+      placeHalo();
+      placeGun();
+
+      console.log(playerAlive);
+
+      for (let i = 0; i < playerAlive; i++) {
+        console.log("placeVotingCard");
+        placeVotingCard();
+      }
+
+      for (let i = 0; i < Math.floor(playerAlive/2); i++) {
+        placeFlashlight();
+      }
+    }
 
     if (players[playerId].mafia && players[playerId].alive) {
       const youAreMafia = document.createElement("div");
@@ -1654,11 +1680,13 @@ function getRandomHaloSpot() {
     isShooter = false;
     isVoters = false;
 
-    firebase.database().ref(`gun`).remove();
-    firebase.database().ref(`flashlight`).remove();
-    firebase.database().ref(`halo`).remove();
-    firebase.database().ref(`magnifyingGlass`).remove();
-    firebase.database().ref(`votingCard`).remove();
+    if (playerOrder[0] === playerId) {
+      firebase.database().ref(`gun`).remove();
+      firebase.database().ref(`flashlight`).remove();
+      firebase.database().ref(`halo`).remove();
+      firebase.database().ref(`magnifyingGlass`).remove();
+      firebase.database().ref(`votingCard`).remove();
+    }
 
     Object.keys(players).forEach((key) => {
       if (players[key].magnifyingGlass) {
@@ -3545,7 +3573,7 @@ function getRandomHaloSpot() {
     new KeyPressListener("KeyS", () => handleArrowPress("KeyS"))
     new KeyPressListener("KeyA", () => handleArrowPress("KeyA"))
     new KeyPressListener("KeyD", () => handleArrowPress("KeyD"))
-    new KeyPressListener("Space", () => placeItems())
+    //new KeyPressListener("Space", () => placeItems())
 
     new KeyReleaseListener("ArrowUp", () => handleArrowRelease("ArrowUp"))
     new KeyReleaseListener("ArrowDown", () => handleArrowRelease("ArrowDown"))
