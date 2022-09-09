@@ -1643,6 +1643,7 @@ body {
     left: -352px;
   }
 }
+
 .gameOver {
   position: absolute;
   padding-top: 40px;
@@ -1670,6 +1671,36 @@ body {
   }
   to {
     transform: scale(1);
+  }
+}
+
+.gameOverClose {
+  position: absolute;
+  padding-top: 40px;
+  width: 400px;
+  height: 208px;
+  top: 0px;
+  left: 0px;
+  background: #777;
+  image-rendering: pixelated;
+  overflow: hidden;
+  font-family: silkscreen;
+  font-size: 30px;
+  color: white;
+  outline: 4px solid white;
+  justify-content: center;
+  display: inline-flex;
+  z-index: 10;
+  transform: scale(0);
+  animation: gameOverDisappear 0.7s steps(70);
+}
+
+@keyframes gameOverDisappear {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(0);
   }
 }
 

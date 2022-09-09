@@ -1426,6 +1426,7 @@ function getRandomHaloSpot() {
   let magnifyingGlassElements = {};
   let halos = {};
   let haloElements = {};
+  let mySkin;
   let inRound = false;
   let inLobby = true;
   const startingX = 133;
@@ -1503,9 +1504,11 @@ function getRandomHaloSpot() {
   }
 
   function firstRound(){
-    Object.keys(players).forEach((key) => {
-      playerOrder.unshift(key);
-    });
+    if (playerOrder.length == 0) {
+      Object.keys(players).forEach((key) => {
+        playerOrder.unshift(key);
+      });
+    }
     if (playerOrder[0] === playerId) {
 
       firebase.database().ref(`votes`).set({
@@ -2865,6 +2868,9 @@ function getRandomHaloSpot() {
 
   function endTownVoting(votedPlayer) {
 
+    clearInterval(clockInterval);
+    clock.remove();
+
     if (playerOrder[0] === playerId) {
       
       firebase.database().ref(`votes`).update({
@@ -3033,6 +3039,25 @@ function getRandomHaloSpot() {
     playAgainButton.addEventListener("click", () => {
       playAgain()
     });
+
+    setTimeout(function() {
+      playerRef.update({
+        char: mySkin,
+        direction: "down",
+        walking: "no",
+        alive: true,
+        votingCard: false,
+        gun: false,
+        flashlight: false,
+        magnifyingGlass: false,
+        halo: false,
+        votes: 0,
+        voteFor: "none",
+        mafia: false,
+        x: startingX,
+        y: startingY,
+      });
+    }, 800);
   }
 
   function townsPeopleWin() {
@@ -3049,10 +3074,52 @@ function getRandomHaloSpot() {
     playAgainButton.addEventListener("click", () => {
       playAgain()
     });
+
+    setTimeout(function() {
+      playerRef.update({
+        char: mySkin,
+        direction: "down",
+        walking: "no",
+        alive: true,
+        votingCard: false,
+        gun: false,
+        flashlight: false,
+        magnifyingGlass: false,
+        halo: false,
+        votes: 0,
+        voteFor: "none",
+        mafia: false,
+        x: startingX,
+        y: startingY,
+      });
+    }, 800);
   }
 
   function playAgain() {
-    
+    inRound = false;
+    inLobby = true;
+    inTitleScreen = false;
+    inMafiaVoting = false;
+    inAngelVoting = false;
+    inDetectiveVoting = false;
+    inShooterVoting = false;
+    inTownVoting = false;                               
+    isDetective = false;
+    isAngel = false;
+    isShooter = false;
+    isVoters = false;
+    playerAlive = 0;
+    notified = false;
+    blockNextNotification = false;
+
+    const gameOverScreen = document.querySelector(".gameOver");
+    gameOverScreen.classList.add("gameOverClose");
+    gameOverScreen.classList.remove("gameOver");
+
+    setTimeout(function() {
+      gameOverScreen.remove();
+      updateDom();
+    }, 800);
   }
 
   function updateDom() {
@@ -3888,6 +3955,7 @@ function getRandomHaloSpot() {
     });
 
     startButton.addEventListener("click", () => {
+      mySkin = players[playerId].char;
       document.querySelector('.stillScreen').remove();
       document.querySelector('.scrollScreen').remove();
       document.querySelector('.buttons').remove();
