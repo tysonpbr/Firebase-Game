@@ -1336,7 +1336,7 @@ const mapData = {
   },
 };
 
-const skinID = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"];
+const skinID = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven"];
 
 const meetingSpots = [
   { i: 72, j: 95 },
@@ -1598,21 +1598,71 @@ function getRandomHaloSpot() {
 
     Object.keys(players).forEach((key) => {
       const playerName = document.createElement("div");
+      const playerHead = document.createElement("div");
 
       if (players[playerId].mafia && players[key].mafia) {
         playerName.style.color = "red";
       }
 
-      playerName.innerHTML = `${players[key].name}`
+      playerName.innerHTML = `${players[key].name}`;
+
+      const playerChar = players[key].char;
+      if (playerChar === "zero") {
+        playerHead.style.background="url(images/characterHeads/0.png)";
+      }
+      else if (playerChar === "one") {
+        playerHead.style.background="url(images/characterHeads/1.png)";
+      }
+      else if (playerChar === "two") {
+        playerHead.style.background="url(images/characterHeads/2.png)";
+      }
+      else if (playerChar === "three") {
+        playerHead.style.background="url(images/characterHeads/3.png)";
+      }
+      else if (playerChar === "four") {
+        playerHead.style.background="url(images/characterHeads/4.png)";
+      }
+      else if (playerChar === "five") {
+        playerHead.style.background="url(images/characterHeads/5.png)";
+      }
+      else if (playerChar === "six") {
+        playerHead.style.background="url(images/characterHeads/6.png)";
+      }
+      else if (playerChar === "seven") {
+        playerHead.style.background="url(images/characterHeads/7.png)";
+      }
+      else if (playerChar === "eight") {
+        playerHead.style.background="url(images/characterHeads/8.png)";
+      }
+      else if (playerChar === "nine") {
+        playerHead.style.background="url(images/characterHeads/9.png)";
+      }
+      else if (playerChar === "ten") {
+        playerHead.style.background="url(images/characterHeads/10.png)";
+      }
+      else if (playerChar === "eleven") {
+        playerHead.style.background="url(images/characterHeads/11.png)";
+      }
+      else if (playerChar === "ghost") {
+        playerHead.style.background="url(images/characterHeads/ghost.png)";
+      }
 
       if (count%2 == 0) {
         playerName.style.top = Math.floor(count/2)*20 + 33 + "px";
+
+        playerHead.style.top = Math.floor(count/2)*20 + 35 + "px";
+        playerHead.style.left = "6px";
       }
       else {
         playerName.style.top = Math.floor(count/2)*20 + 33 + "px";
-        playerName.style.left = "180px"
+        playerName.style.left = "171px"
+
+        playerHead.style.top = Math.floor(count/2)*20 + 35 + "px";
+        playerHead.style.left = "177px";
       }
+      playerHead.classList.add("playerHeadDiv");
       playerName.classList.add("playerNameDiv");
+      document.querySelector(".playerListTab").appendChild(playerHead);
       document.querySelector(".playerListTab").appendChild(playerName);
 
       count++;
@@ -1741,7 +1791,7 @@ function getRandomHaloSpot() {
       }, 800);
     }
 
-    startClock(600);
+    startClock(40);
 
     inRound = true;
 
@@ -3760,8 +3810,6 @@ function getRandomHaloSpot() {
 
         if (key == playerId) {
 
-          console.log("(" + players[playerId].x + ", " + players[playerId].y + ")");
-
           if (inMafiaVoting) {
             checkMafiaVoting();
           }
@@ -4090,32 +4138,38 @@ function getRandomHaloSpot() {
       if (nextSkin === "zero") {
         skinPreview.style.background="url(images/characters/0.png)";
       }
-      if (nextSkin === "one") {
+      else if (nextSkin === "one") {
         skinPreview.style.background="url(images/characters/1.png)";
       }
-      if (nextSkin === "two") {
+      else if (nextSkin === "two") {
         skinPreview.style.background="url(images/characters/2.png)";
       }
-      if (nextSkin === "three") {
+      else if (nextSkin === "three") {
         skinPreview.style.background="url(images/characters/3.png)";
       }
-      if (nextSkin === "four") {
+      else if (nextSkin === "four") {
         skinPreview.style.background="url(images/characters/4.png)";
       }
-      if (nextSkin === "five") {
+      else if (nextSkin === "five") {
         skinPreview.style.background="url(images/characters/5.png)";
       }
-      if (nextSkin === "six") {
+      else if (nextSkin === "six") {
         skinPreview.style.background="url(images/characters/6.png)";
       }
-      if (nextSkin === "seven") {
+      else if (nextSkin === "seven") {
         skinPreview.style.background="url(images/characters/7.png)";
       }
-      if (nextSkin === "eight") {
+      else if (nextSkin === "eight") {
         skinPreview.style.background="url(images/characters/8.png)";
       }
-      if (nextSkin === "nine") {
+      else if (nextSkin === "nine") {
         skinPreview.style.background="url(images/characters/9.png)";
+      }
+      else if (nextSkin === "ten") {
+        skinPreview.style.background="url(images/characters/10.png)";
+      }
+      else if (nextSkin === "eleven") {
+        skinPreview.style.background="url(images/characters/11.png)";
       }
     }
 

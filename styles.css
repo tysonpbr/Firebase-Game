@@ -719,6 +719,118 @@ body {
   animation: walk 0.3s steps(4) infinite;
   animation-delay: 0s;
 }
+.Character[data-char="ten"][data-direction="right"][data-walking="no"]
+  .Character_sprite {
+  background: url(images/characters/10.png);
+  background-position-x: 0px;
+  background-position-y: 96px;
+}
+.Character[data-char="ten"][data-direction="right"][data-walking="yes"]
+  .Character_sprite {
+  background: url(images/characters/10.png);
+  background-position-x: 0px;
+  background-position-y: 96px;
+  animation: walk 0.3s steps(4) infinite;
+  animation-delay: 0s;
+}
+.Character[data-char="ten"][data-direction="left"][data-walking="no"]
+  .Character_sprite {
+  background: url(images/characters/10.png);
+  background-position-x: 0px;
+  background-position-y: 32px;
+}
+.Character[data-char="ten"][data-direction="left"][data-walking="yes"]
+  .Character_sprite {
+  background: url(images/characters/10.png);
+  background-position-x: 0px;
+  background-position-y: 32px;
+  animation: walk 0.3s steps(4) infinite;
+  animation-delay: 0s;
+}
+.Character[data-char="ten"][data-direction="up"][data-walking="no"]
+  .Character_sprite {
+  background: url(images/characters/10.png);
+  background-position-x: 0px;
+  background-position-y: 64px;
+}
+.Character[data-char="ten"][data-direction="up"][data-walking="yes"]
+  .Character_sprite {
+  background: url(images/characters/10.png);
+  background-position-x: 0px;
+  background-position-y: 64px;
+  animation: walk 0.3s steps(4) infinite;
+  animation-delay: 0s;
+}
+.Character[data-char="ten"][data-direction="down"][data-walking="no"]
+  .Character_sprite {
+  background: url(images/characters/10.png);
+  background-position-x: 0px;
+  background-position-y: 0px;
+}
+.Character[data-char="ten"][data-direction="down"][data-walking="yes"]
+  .Character_sprite {
+  background: url(images/characters/10.png);
+  background-position-x: 0px;
+  background-position-y: 0px;
+  animation: walk 0.3s steps(4) infinite;
+  animation-delay: 0s;
+}
+.Character[data-char="eleven"][data-direction="right"][data-walking="no"]
+  .Character_sprite {
+  background: url(images/characters/11.png);
+  background-position-x: 0px;
+  background-position-y: 96px;
+}
+.Character[data-char="eleven"][data-direction="right"][data-walking="yes"]
+  .Character_sprite {
+  background: url(images/characters/11.png);
+  background-position-x: 0px;
+  background-position-y: 96px;
+  animation: walk 0.3s steps(4) infinite;
+  animation-delay: 0s;
+}
+.Character[data-char="eleven"][data-direction="left"][data-walking="no"]
+  .Character_sprite {
+  background: url(images/characters/11.png);
+  background-position-x: 0px;
+  background-position-y: 32px;
+}
+.Character[data-char="eleven"][data-direction="left"][data-walking="yes"]
+  .Character_sprite {
+  background: url(images/characters/11.png);
+  background-position-x: 0px;
+  background-position-y: 32px;
+  animation: walk 0.3s steps(4) infinite;
+  animation-delay: 0s;
+}
+.Character[data-char="eleven"][data-direction="up"][data-walking="no"]
+  .Character_sprite {
+  background: url(images/characters/11.png);
+  background-position-x: 0px;
+  background-position-y: 64px;
+}
+.Character[data-char="eleven"][data-direction="up"][data-walking="yes"]
+  .Character_sprite {
+  background: url(images/characters/11.png);
+  background-position-x: 0px;
+  background-position-y: 64px;
+  animation: walk 0.3s steps(4) infinite;
+  animation-delay: 0s;
+}
+.Character[data-char="eleven"][data-direction="down"][data-walking="no"]
+  .Character_sprite {
+  background: url(images/characters/11.png);
+  background-position-x: 0px;
+  background-position-y: 0px;
+}
+.Character[data-char="eleven"][data-direction="down"][data-walking="yes"]
+  .Character_sprite {
+  background: url(images/characters/11.png);
+  background-position-x: 0px;
+  background-position-y: 0px;
+  animation: walk 0.3s steps(4) infinite;
+  animation-delay: 0s;
+}
 .Character[data-char="ghost"][data-direction="right"][data-walking="no"]
   .Character_sprite {
   background: url(images/characters/ghost.png);
@@ -1992,11 +2104,11 @@ body {
 .playerListTab {
   position: absolute;
   padding-top: 1px;
-  width: 360px;
-  height: 170px;
-  top: 20px;
-  left: 20px;
-  background-color: rgba(0, 0, 0, 0.5);
+  width: 341px;
+  height: 160px;
+  top: 22px;
+  left: 30px;
+  background-color: rgba(0, 0, 0, 0.781);
   outline: 2px solid white;
   font-family: silkscreen;
   font-size: 9px;
@@ -2009,7 +2121,7 @@ body {
 .playerNameTopBar {
   position: absolute;
   padding-top: 5px;
-  width: 360px;
+  width: 341px;
   height: 30px;
   left: 0;
   background-color: black;
@@ -2043,17 +2155,28 @@ body {
 
 .playerNameDiv {
   position: absolute;
-  padding-top: 3px;
-  width: 180px;
+  padding-top: 2px;
+  padding-left: 30px;
+  width: 170px;
   height: 20px;
+  left: 0px;
+  background: none;
+  opacity: 100%;
+  outline: 1px solid rgb(255, 255, 255);
+  font-family: silkscreen;
+  font-size: 15px;
+  color: white;
+  display: inline-flex;
+  z-index: 20;
+}
+.playerHeadDiv {
+  position: absolute;
+  width: 16px;
+  height: 16px;
   left: 0;
   background: none;
   opacity: 100%;
   outline: none;
-  font-family: silkscreen;
-  font-size: 15px;
-  color: white;
-  justify-content: center;
-  display: inline-flex;
   z-index: 20;
+  transform: scale(1.25);
 }
