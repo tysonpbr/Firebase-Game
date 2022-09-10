@@ -1519,6 +1519,35 @@ function getRandomHaloSpot() {
 
   }
 
+  function openPlayerList() {
+    const playerListTab = document.createElement("div");
+    playerListTab.classList.add("playerListTab");
+    document.querySelector(".gameInterface").appendChild(playerListTab);
+
+    let count = 0;
+
+    Object.keys(players).forEach((key) => {
+      const playerName = document.createElement("div");
+      if (count%2 == 0) {
+        playerName.style.top = Math.floor(count/2) + "px";
+      }
+      else {
+        playerName.style.top = Math.floor(count/2) + "px";
+        playerName.style.left = "180px"
+      }
+      playerName.classList.add("playerNameDiv");
+      document.querySelector(".playerListTab").appendChild(playerName);
+
+      count++;
+    });
+
+    const playerName1 = document.createElement("div");
+    playerName1.classList.add("playerName1");
+    playerName1.classList.add("playerNameDiv");
+    document.querySelector(".playerListTab").appendChild(playerName1);
+
+  }
+
   function firstRound(){
     if (playerOrder.length == 0) {
       Object.keys(players).forEach((key) => {
@@ -1584,6 +1613,16 @@ function getRandomHaloSpot() {
         firebase.database().ref(`players/${currPlayer}/mafia`).set(true);
       }
     }
+
+    const playerList = document.createElement("div");
+    playerList.classList.add("playerList");
+    playerList.innerHTML = 'PLAYER LIST';
+    document.querySelector(".outerBlock").appendChild(playerList);
+
+    playerList.addEventListener("click", () => {
+      openPlayerList();
+    });
+
   }
 
   function startRound() {
@@ -3693,7 +3732,7 @@ function getRandomHaloSpot() {
               playerCount++;
             });
             if (allPlayersHere && inLobby) {
-              if (playerCount < 4) {
+              if (false) {//playerCount < 4) {
                 if (!notified) {
                   notified = true;
                   blockNextNotification = true;

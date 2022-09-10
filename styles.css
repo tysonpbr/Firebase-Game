@@ -739,7 +739,7 @@ body {
 }
 .Character[data-char="ghost"][data-direction="right"][data-walking="yes"]
   .Character_shadow {
-    background: none;
+  background: none;
 }
 .Character[data-char="ghost"][data-direction="left"][data-walking="no"]
   .Character_sprite {
@@ -749,7 +749,7 @@ body {
 }
 .Character[data-char="ghost"][data-direction="left"][data-walking="no"]
   .Character_shadow {
-    background: none;
+  background: none;
 }
 .Character[data-char="ghost"][data-direction="left"][data-walking="yes"]
   .Character_sprite {
@@ -761,7 +761,7 @@ body {
 }
 .Character[data-char="ghost"][data-direction="left"][data-walking="yes"]
   .Character_shadow {
-    background: none;
+  background: none;
 }
 .Character[data-char="ghost"][data-direction="up"][data-walking="no"]
   .Character_sprite {
@@ -771,7 +771,7 @@ body {
 }
 .Character[data-char="ghost"][data-direction="up"][data-walking="no"]
   .Character_shadow {
-    background: none;
+  background: none;
 }
 .Character[data-char="ghost"][data-direction="up"][data-walking="yes"]
   .Character_sprite {
@@ -783,7 +783,7 @@ body {
 }
 .Character[data-char="ghost"][data-direction="up"][data-walking="yes"]
   .Character_shadow {
-    background: none;
+  background: none;
 }
 .Character[data-char="ghost"][data-direction="down"][data-walking="no"]
   .Character_sprite {
@@ -793,7 +793,7 @@ body {
 }
 .Character[data-char="ghost"][data-direction="down"][data-walking="no"]
   .Character_shadow {
-    background: none;
+  background: none;
 }
 .Character[data-char="ghost"][data-direction="down"][data-walking="yes"]
   .Character_sprite {
@@ -805,7 +805,7 @@ body {
 }
 .Character[data-char="ghost"][data-direction="down"][data-walking="yes"]
   .Character_shadow {
-    background: none;
+  background: none;
 }
 .stillScreen {
   position: absolute;
@@ -1142,7 +1142,6 @@ body {
     top: 212px;
   }
 }
-
 
 /* votingCard */
 .VotingCard {
@@ -1962,4 +1961,65 @@ body {
   display: inline-flex;
   transform: scale(3);
   z-index: 8;
+}
+
+.outerBlock {
+  z-index: 3;
+  outline: none;
+  width: 400;
+  height: 240;
+  transform: scale(3);
+  overflow: hidden;
+}
+
+.playerList {
+  position: absolute;
+  padding-top: 1px;
+  width: 70px;
+  height: 10px;
+  bottom: 2px;
+  left: 165px;
+  background: black;
+  outline: 2px solid white;
+  font-family: silkscreen;
+  font-size: 9px;
+  color: white;
+  justify-content: center;
+  display: inline-flex;
+  z-index: 20;
+}
+
+.playerListTab {
+  position: absolute;
+  padding-top: 1px;
+  width: 360px;
+  height: 170px;
+  top: 20px;
+  left: 20px;
+  background-color: black;
+  opacity: 50%;
+  outline: 2px solid white;
+  font-family: silkscreen;
+  font-size: 9px;
+  color: white;
+  justify-content: center;
+  display: inline-flex;
+  z-index: 20;
+}
+
+.playerNameDiv {
+  position: absolute;
+  padding-top: 1px;
+  width: 180px;
+  height: 20px;
+  left: 0;
+  background-color: black;
+  /* opacity: 50%; */
+  outline: 1px solid red;
+  font-family: silkscreen;
+  font-size: 9px;
+  color: white;
+  justify-content: center;
+  display: inline-flex;
+  z-index: 20;
 }
