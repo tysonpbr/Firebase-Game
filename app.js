@@ -3232,7 +3232,7 @@ function getRandomHaloSpot() {
       return true;
     }
 
-    if (numMafia == numNormies) {
+    if (numMafia >= numNormies) {
       mafiaWin();
       return true;
     }
