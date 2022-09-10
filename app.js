@@ -1407,7 +1407,7 @@ function getRandomFlashlightSpot() {
   return randomFromArray([
     { i: 86, j: 54 },
     { i: 86, j: 55 },
-    { i: 86, j: 54 },
+    { i: 86, j: 56 },
   ]);
 }
 
@@ -1466,6 +1466,7 @@ function getRandomHaloSpot() {
   let notified = false;
   let blockNextNotification = false;
   let changedName = false;
+  let isPlayerListOpen = false;
 
 
   const gameContainer = document.querySelector(".game-container");
@@ -1524,15 +1525,38 @@ function getRandomHaloSpot() {
     playerListTab.classList.add("playerListTab");
     document.querySelector(".gameInterface").appendChild(playerListTab);
 
+    const playerNameTopBar = document.createElement("div");
+    playerNameTopBar.classList.add("playerNameTopBar");
+    playerNameTopBar.innerHTML = `PLAYER LIST`;
+    document.querySelector(".playerListTab").appendChild(playerNameTopBar);
+
+    const playerListExit = document.createElement("div");
+    playerListExit.classList.add("playerListExit");
+    playerListExit.innerHTML = `X`;
+    document.querySelector(".playerListTab").appendChild(playerListExit);
+
+    playerListExit.addEventListener("click", () => {
+      closePlayerList();
+    });
+
+    isPlayerListOpen = true;
+
     let count = 0;
 
     Object.keys(players).forEach((key) => {
       const playerName = document.createElement("div");
+
+      if (players[playerId].mafia && players[key].mafia) {
+        playerName.style.color = "red";
+      }
+
+      playerName.innerHTML = `${players[key].name}`
+
       if (count%2 == 0) {
-        playerName.style.top = Math.floor(count/2) + "px";
+        playerName.style.top = Math.floor(count/2)*20 + 33 + "px";
       }
       else {
-        playerName.style.top = Math.floor(count/2) + "px";
+        playerName.style.top = Math.floor(count/2)*20 + 33 + "px";
         playerName.style.left = "180px"
       }
       playerName.classList.add("playerNameDiv");
@@ -1541,6 +1565,11 @@ function getRandomHaloSpot() {
       count++;
     });
 
+  }
+
+  function closePlayerList() {
+    document.querySelector(".playerListTab").remove();
+    isPlayerListOpen = false;
   }
 
   function firstRound(){
@@ -1615,7 +1644,12 @@ function getRandomHaloSpot() {
     document.querySelector(".outerBlock").appendChild(playerList);
 
     playerList.addEventListener("click", () => {
-      openPlayerList();
+      if (!isPlayerListOpen) {
+        openPlayerList();
+      } 
+      else {
+        closePlayerList();
+      }
     });
 
   }

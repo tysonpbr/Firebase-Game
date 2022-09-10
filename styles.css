@@ -1996,8 +1996,7 @@ body {
   height: 170px;
   top: 20px;
   left: 20px;
-  background-color: black;
-  opacity: 50%;
+  background-color: rgba(0, 0, 0, 0.5);
   outline: 2px solid white;
   font-family: silkscreen;
   font-size: 9px;
@@ -2007,17 +2006,52 @@ body {
   z-index: 20;
 }
 
-.playerNameDiv {
+.playerNameTopBar {
   position: absolute;
-  padding-top: 1px;
-  width: 180px;
-  height: 20px;
+  padding-top: 5px;
+  width: 360px;
+  height: 30px;
   left: 0;
   background-color: black;
-  /* opacity: 50%; */
+  opacity: 100%;
+  outline: 1px solid red;
+  font-family: silkscreen;
+  font-size: 18px;
+  color: white;
+  justify-content: center;
+  display: inline-flex;
+  z-index: 20;
+}
+
+.playerListExit {
+  position: absolute;
+  padding-top: 1px;
+  width: 10px;
+  height: 10px;
+  top: 5px;
+  right: 5px;
+  background-color: white;
+  opacity: 100%;
   outline: 1px solid red;
   font-family: silkscreen;
   font-size: 9px;
+  color: black;
+  justify-content: center;
+  display: inline-flex;
+  z-index: 20;
+}
+
+.playerNameDiv {
+  position: absolute;
+  padding-top: 3px;
+  width: 180px;
+  height: 20px;
+  left: 0;
+  background: none;
+  opacity: 100%;
+  outline: 1px solid red;
+  font-family: silkscreen;
+  font-size: 15px;
   color: white;
   justify-content: center;
   display: inline-flex;
