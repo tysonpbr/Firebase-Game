@@ -4202,8 +4202,24 @@ function getRandomHaloSpot() {
         document.querySelector(".startConfirmUI").classList.remove("startConfirmUI");
         setTimeout(function () {
           document.querySelector(".startConfirmUIClose").remove();
-          if (players[playerId].name.length > 0 && changedName) {
+          let uniqueChar = true;
+          let uniqueName = true;
+          Object.keys(players).forEach((key) => {
+            if (playerId !== key) {
+              if (players[playerId].char === players[key].setChar) {
+                uniqueChar = false;
+              }
+              if (players[playerId].name === players[key].name) {
+                uniqueName = false;
+              }
+            }
+          });
+          if (players[playerId].name.length > 0 && changedName && uniqueName && uniqueChar) {
             document.querySelector(".titleBlocker").remove();
+            const myChar = players[playerId].char;
+            playerRef.update({
+              setChar: myChar,
+            })
             removeTitleScreen();
           }
           else if (!changedName) {
@@ -4212,6 +4228,40 @@ function getRandomHaloSpot() {
             document.querySelector(".buttons").appendChild(nameNotification);
 
             nameNotification.innerHTML = `YOU MUST ENTER A NAME`;
+
+            setTimeout(function () {
+              nameNotification.classList.add("notificationClose");
+              nameNotification.classList.remove("notification");
+            }, 4000);
+          
+            setTimeout(function () {
+              document.querySelector(".notificationClose").remove();
+              document.querySelector(".titleBlocker").remove();
+            }, 5000);
+          }
+          else if (!uniqueChar) {
+            const nameNotification = document.createElement("div");
+            nameNotification.classList.add("notification");
+            document.querySelector(".buttons").appendChild(nameNotification);
+
+            nameNotification.innerHTML = `SOMEONE HAS ALREADY CHOSEN THIS CHARACTER`;
+
+            setTimeout(function () {
+              nameNotification.classList.add("notificationClose");
+              nameNotification.classList.remove("notification");
+            }, 4000);
+          
+            setTimeout(function () {
+              document.querySelector(".notificationClose").remove();
+              document.querySelector(".titleBlocker").remove();
+            }, 5000);
+          }
+          else if (!uniqueName) {
+            const nameNotification = document.createElement("div");
+            nameNotification.classList.add("notification");
+            document.querySelector(".buttons").appendChild(nameNotification);
+
+            nameNotification.innerHTML = `SOMEONE HAS ALREADY CHOSEN THIS NAME`;
 
             setTimeout(function () {
               nameNotification.classList.add("notificationClose");
@@ -4292,6 +4342,7 @@ function getRandomHaloSpot() {
         id: playerId,
         direction: "down",
         char: "zero",
+        setChar: "",
         x:startingX,
         y:startingY,
         walking: "no",
