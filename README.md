@@ -11,6 +11,7 @@ Tasks
 - add only one of each skin
 - only one of each name
 
+- add rules section
 - improve win screen
 - add clickable buttons 
 - game name
