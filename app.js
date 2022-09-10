@@ -1375,51 +1375,104 @@ function isSolid(x,y) {
 
 function getRandomVotingCardSpot() {
   return randomFromArray([
-    { i: 84, j: 54 },
-    { i: 83, j: 54 },
-    { i: 82, j: 54 },
-    { i: 84, j: 55 },
-    { i: 83, j: 55 },
-    { i: 82, j: 55 },
-    //{ i: 103, j: 31 },
-    //{ i: 82, j: 24 },
-    //{ i: 79, j: 46 },
-    //{ i: 59, j: 29 },
-    //{ i: 81, j: 13 },
-    //{ i: 61, j: 13 },
-    //{ i: 45, j: 3 },
-    //{ i: 32, j: 16 },
-    //{ i: 31, j: 32 },
-    //{ i: 27, j: 15 },
-  ]);
-}
-
-function getRandomGunSpot() {
-  return randomFromArray([
-    { i: 85, j: 54 },
-    //{ i: 9, j: 9 },
-    //{ i: 4, j: 29 },
-    //{ i: 23, j: 7 },
+    //{ i: 84, j: 54 },
+    //{ i: 83, j: 54 },
+    //{ i: 82, j: 54 },
+    //{ i: 84, j: 55 },
+    //{ i: 83, j: 55 },
+    //{ i: 82, j: 55 },
+    { i: 103, j: 31 },
+    { i: 95, j: 52 },
+    { i: 86, j: 17 },
+    { i: 82, j: 24 },
+    { i: 79, j: 46 },
+    { i: 76, j: 41 },
+    { i: 72, j: 12 },
+    { i: 70, j: 19 },
+    { i: 61, j: 13 },
+    { i: 59, j: 29 },
+    { i: 53, j: 17 },
+    { i: 53, j: 9 },
+    { i: 45, j: 3 },
+    { i: 42, j: 29 },
+    { i: 40, j: 30 },
+    { i: 40, j: 15 },
+    { i: 32, j: 4 },
+    { i: 31, j: 32 },
+    { i: 29, j: 29 },
+    { i: 24, j: 20 },
+    { i: 15, j: 31 },
+    { i: 15, j: 27 },
+    { i: 15, j: 18 },
+    { i: 4, j: 35 },
+    { i: 4, j: 23 },
   ]);
 }
 
 function getRandomFlashlightSpot() {
   return randomFromArray([
-    { i: 86, j: 54 },
-    { i: 86, j: 55 },
-    { i: 86, j: 56 },
+    //{ i: 86, j: 54 },
+    //{ i: 86, j: 55 },
+    //{ i: 86, j: 56 },
+    { i: 93, j: 35 },
+    { i: 76, j: 42 },
+    { i: 59, j: 39 },
+    { i: 56, j: 28 },
+    { i: 40, j: 29 },
+    { i: 39, j: 15 },
+    { i: 25, j: 20 },
+    { i: 23, j: 29 },
+    { i: 17, j: 29 },
+    { i: 13, j: 29 },
+    { i: 13, j: 10 },
+    { i: 9, j: 15 },
+    { i: 4, j: 33 },
+    { i: 4, j: 25 },
+  ]);
+}
+
+function getRandomGunSpot() {
+  return randomFromArray([
+    //{ i: 85, j: 54 },
+    { i: 81, j: 13 },
+    { i: 42, j: 2 },
+    { i: 34, j: 12 },
+    { i: 27, j: 15 },
+    { i: 23, j: 7 },
+    { i: 9, j: 9 },
+    { i: 4, j: 29 },
   ]);
 }
 
 function getRandomMagnifyingGlassSpot() {
   return randomFromArray([
-    { i: 87, j: 54 },
+    //{ i: 87, j: 54 },
+    { i: 86, j: 24 },
+    { i: 62, j: 12 },
+    { i: 57, j: 9 },
+    { i: 32, j: 16 },
+    { i: 32, j: 13 },
+    { i: 26, j: 20 },
+    { i: 25, j: 30 },
+    { i: 12, j: 18 },
+    { i: 12, j: 10 },
+    { i: 4, j: 31 },
   ]);
 }
 
 function getRandomHaloSpot() {
   return randomFromArray([
-    { i: 88, j: 54 },
+    //{ i: 88, j: 54 },
+    { i: 85, j: 17 },
+    { i: 61, j: 9 },
+    { i: 35, j: 15 },
+    { i: 32, j: 18 },
+    { i: 31, j: 29 },
+    { i: 27, j: 20 },
+    { i: 24, j: 12 },
+    { i: 9, j: 18 },
+    { i: 9, j: 8 },
+    { i: 4, j: 27 },
   ]);
 }
 
@@ -1667,10 +1720,7 @@ function getRandomHaloSpot() {
       placeHalo();
       placeGun();
 
-      console.log(playerAlive);
-
       for (let i = 0; i < playerAlive; i++) {
-        console.log("placeVotingCard");
         placeVotingCard();
       }
 
@@ -1691,7 +1741,7 @@ function getRandomHaloSpot() {
       }, 800);
     }
 
-    startClock(15);
+    startClock(600);
 
     inRound = true;
 
@@ -3709,6 +3759,8 @@ function getRandomHaloSpot() {
         }
 
         if (key == playerId) {
+
+          console.log("(" + players[playerId].x + ", " + players[playerId].y + ")");
 
           if (inMafiaVoting) {
             checkMafiaVoting();

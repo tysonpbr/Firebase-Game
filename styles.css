@@ -2014,7 +2014,7 @@ body {
   left: 0;
   background-color: black;
   opacity: 100%;
-  outline: 1px solid red;
+  outline: none;
   font-family: silkscreen;
   font-size: 18px;
   color: white;
@@ -2032,7 +2032,7 @@ body {
   right: 5px;
   background-color: white;
   opacity: 100%;
-  outline: 1px solid red;
+  outline: none;
   font-family: silkscreen;
   font-size: 9px;
   color: black;
@@ -2049,7 +2049,7 @@ body {
   left: 0;
   background: none;
   opacity: 100%;
-  outline: 1px solid red;
+  outline: none;
   font-family: silkscreen;
   font-size: 15px;
   color: white;
