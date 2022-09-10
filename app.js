@@ -1541,11 +1541,6 @@ function getRandomHaloSpot() {
       count++;
     });
 
-    const playerName1 = document.createElement("div");
-    playerName1.classList.add("playerName1");
-    playerName1.classList.add("playerNameDiv");
-    document.querySelector(".playerListTab").appendChild(playerName1);
-
   }
 
   function firstRound(){
