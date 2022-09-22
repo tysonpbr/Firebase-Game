@@ -1791,7 +1791,7 @@ function getRandomHaloSpot() {
       }, 800);
     }
 
-    startClock(40);
+    startClock(60);
 
     inRound = true;
 
